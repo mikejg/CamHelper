@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>CamHelper</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Icons.qrc">
+    <normaloff>:/Icons/camhelper.png</normaloff>:/Icons/camhelper.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_4">
     <item>
@@ -141,6 +145,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

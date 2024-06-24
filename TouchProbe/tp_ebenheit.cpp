@@ -78,6 +78,9 @@ Struct_Ebenheit TP_Ebenheit::get_Data()
     struct_Ebenheit.string_Punkt3Y = ui->lineEdit_Punkt3Y->text();
     struct_Ebenheit.string_Punkt4X = ui->lineEdit_Punkt4X->text();
     struct_Ebenheit.string_Punkt4Y = ui->lineEdit_Punkt4Y->text();
+    struct_Ebenheit.bool_Jump1 = ui->checkBox_Jump1->isChecked();
+    struct_Ebenheit.bool_Jump2 = ui->checkBox_Jump2->isChecked();
+    struct_Ebenheit.bool_Jump3 = ui->checkBox_Jump3->isChecked();
 
     return struct_Ebenheit;
 }
@@ -96,6 +99,9 @@ void TP_Ebenheit::set_Data(Struct_Ebenheit struct_Ebenheit)
     ui->lineEdit_Punkt3Y->setText(struct_Ebenheit.string_Punkt3Y);
     ui->lineEdit_Punkt4X->setText(struct_Ebenheit.string_Punkt4X);
     ui->lineEdit_Punkt4Y->setText(struct_Ebenheit.string_Punkt4Y);
+    ui->checkBox_Jump1->setChecked(struct_Ebenheit.bool_Jump1);
+    ui->checkBox_Jump2->setChecked(struct_Ebenheit.bool_Jump2);
+    ui->checkBox_Jump3->setChecked(struct_Ebenheit.bool_Jump3);
 }
 
 QStringList TP_Ebenheit::postProcessing()
@@ -155,7 +161,6 @@ QStringList TP_Ebenheit::postProcessing()
 
 QStringList TP_Ebenheit::postProcessing_Ebenheit()
 {
-    qDebug() << Q_FUNC_INFO;
 
     stringList_Ebenheit.clear();
     QString string_CYCL800;
@@ -243,7 +248,38 @@ QStringList TP_Ebenheit::postProcessing_Ebenheit()
             str = str.replace("$Py3$", ";Py3 = 0 ; Y für MessPunkt 2");
         }
 
-        //qDebug() << str;
+        //Wenn die CheckBox gesetzt ist füge Sprungbefehle ein
+        if(ui->checkBox_Jump1->isChecked())
+        {
+            str = str.replace("$UP1$", "G01 Z=(ANTAST_EBENE+50) F3000");
+            str = str.replace("$DOWN1$", "G01 Z=(ANTAST_EBENE+10) F3000");
+        }
+
+        if(ui->checkBox_Jump2->isChecked())
+        {
+            str = str.replace("$UP2$", "G01 Z=(ANTAST_EBENE+50) F3000");
+            str = str.replace("$DOWN2$", "G01 Z=(ANTAST_EBENE+10) F3000");
+        }
+
+        if(ui->checkBox_Jump3->isChecked())
+        {
+            str = str.replace("$UP3$", "G01 Z=(ANTAST_EBENE+50) F3000");
+            str = str.replace("$DOWN3$", "G01 Z=(ANTAST_EBENE+10) F3000");
+        }
+
+        //Wenn keine Sprungbefehle eingesetzt wurden loesche Platzhalter
+        if(str.contains("$UP1$"))
+            continue;
+        if(str.contains("DOWN1$"))
+            continue;
+        if(str.contains("$UP2$"))
+            continue;
+        if(str.contains("DOWN2$"))
+            continue;
+        if(str.contains("$UP3$"))
+            continue;
+        if(str.contains("DOWN3$"))
+            continue;
         stringList_Ebenheit.append(str);
     }
 

@@ -452,22 +452,6 @@ Item_Project DataBase::get_Project(QString string_Name, QString string_Clamping)
         item_Project.YPlus_Max = query.value("YPlus_Max").toString();
         item_Project.YMinus_Max = query.value("YMinus_Max").toString();
         item_Project.ZPlus_Max = query.value("ZPlus_Max").toString();
-
-        //Standart Werte setzten wenn noch keine vorhanden sind
-        /*if(query.value("XPlus_Max").toString().isEmpty())
-            item_Project.XPlus_Max = "2";
-        if(query.value("XMinus_Max").toString().isEmpty())
-            item_Project.XMinus_Max = "2";
-        if(query.value("YPlus_Max").toString().isEmpty())
-            item_Project.YPlus_Max = "2";
-        if(query.value("YMinus_Max").toString().isEmpty())
-            item_Project.YMinus_Max = "2";
-        if(query.value("ZPlus_Max").toString().isEmpty())
-            item_Project.ZPlus_Max = "2";
-        if(query.value("ZRawPart").toString().isEmpty())
-            item_Project.ZRawPart = "1";
-        if(query.value("RawPartInspection").toString().isEmpty())
-            item_Project.RawPartInspection = "Rohteilkontrolle00";*/
     }
 
     query.exec("SELECT * from Programm_Project "
@@ -735,6 +719,8 @@ void DataBase::get_Top100(ToolList* toolList)
 
 QList<Item_TouchProbe> DataBase::get_TouchProbe(QString string_ProjectID)
 {
+    //qDebug() << Q_FUNC_INFO << string_ProjectID;
+
     QList<Item_TouchProbe> list;
     QSqlQuery query (main_DataBase);
     Struct_Ausrichten struct_Ausrichten;
@@ -836,6 +822,9 @@ QList<Item_TouchProbe> DataBase::get_TouchProbe(QString string_ProjectID)
         struct_Ebenheit.string_Punkt3Y = query.value("Punkt3Y").toString();
         struct_Ebenheit.string_Punkt4X = query.value("Punkt4X").toString();
         struct_Ebenheit.string_Punkt4Y = query.value("Punkt4Y").toString();
+        struct_Ebenheit.bool_Jump1 = query.value("Jump1").toBool();
+        struct_Ebenheit.bool_Jump2 = query.value("Jump2").toBool();
+        struct_Ebenheit.bool_Jump3 = query.value("Jump3").toBool();
 
         item.state = Item_TouchProbe::Ebenheit;
         item.Pos = struct_Ebenheit.string_Pos.toInt();
@@ -947,6 +936,7 @@ QList<Item_TouchProbe> DataBase::get_TouchProbe(QString string_ProjectID)
         }
     }
 
+    //qDebug() << Q_FUNC_INFO << list.size();
     return list;
 }
 
@@ -1329,10 +1319,15 @@ void DataBase::insert_TPBohrung(Struct_Bohrung bohrung, QString string_ProjectID
 
 void DataBase::insert_TPEbenheit(Struct_Ebenheit ebenheit, QString string_ProjectID)
 {
+    int int_Jump1 = int(ebenheit.bool_Jump1);
+    int int_Jump2 = int(ebenheit.bool_Jump2);
+    int int_Jump3 = int(ebenheit.bool_Jump3);
+
     QSqlQuery query (main_DataBase);
 
     query.prepare("INSERT INTO TP_Ebenheit (project_id, Project, Pos, Frame, ZEbene, Vertrauensbereich, "
-                  "Punkt1X, Punkt1Y, Punkt2X, Punkt2Y, Punkt3X, Punkt3Y, Punkt4X, Punkt4Y) "
+                  "Punkt1X, Punkt1Y, Punkt2X, Punkt2Y, Punkt3X, Punkt3Y, Punkt4X, Punkt4Y, "
+                  "Jump1, Jump2, Jump3) "
                   "VALUES (:project_id, "
                   ":Project, "
                   ":Pos, "
@@ -1346,7 +1341,10 @@ void DataBase::insert_TPEbenheit(Struct_Ebenheit ebenheit, QString string_Projec
                   ":Punkt3X, "
                   ":Punkt3Y, "
                   ":Punkt4X, "
-                  ":Punkt4Y)");
+                  ":Punkt4Y, "
+                  ":Jump1, "
+                  ":Jump2, "
+                  ":Jump3)");
     query.bindValue(":project_id", string_ProjectID);
     query.bindValue(":Project", " ");
     query.bindValue(":Pos", ebenheit.string_Pos);
@@ -1361,7 +1359,9 @@ void DataBase::insert_TPEbenheit(Struct_Ebenheit ebenheit, QString string_Projec
     query.bindValue(":Punkt3Y", ebenheit.string_Punkt3Y);
     query.bindValue(":Punkt4X", ebenheit.string_Punkt4X);
     query.bindValue(":Punkt4Y", ebenheit.string_Punkt4Y);
-
+    query.bindValue(":Jump1", int_Jump1);
+    query.bindValue(":Jump2", int_Jump2);
+    query.bindValue(":Jump3", int_Jump3);
 
     if(!query.exec())
     {

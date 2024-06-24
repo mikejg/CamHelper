@@ -24,6 +24,7 @@ Magazin::Magazin(QWidget *parent) :
     palette.setColor(QPalette::HighlightedText, ui->tableView->palette().color(QPalette::Text));
 
     ui->tableView->setPalette(palette);
+    connect(&fileSystemWatcher, SIGNAL(fileChanged(QString)), this, SLOT(slot_MagazinChanged(QString)));
 }
 
 Magazin::~Magazin()
@@ -65,6 +66,8 @@ bool Magazin::create_ToolList()
 
     if(!mfile->read_Content())
         return false;
+    //fileSystemWatcher.addPath(string_DirPath);
+
     toolList->clear();
     QString string_ToolID;
     QString string_Temp;
@@ -270,4 +273,22 @@ void Magazin::slot_textEdited(QString str)
 
     contains(string_old, searchList);
     showToolList(searchList);
+}
+
+void Magazin::slot_MagazinChanged(QString str)
+{
+    disconnect(&fileSystemWatcher, SIGNAL(fileChanged(QString)), this, SLOT(slot_MagazinChanged(QString)));
+    fileSystemWatcher.removePath(str);
+
+    qDebug() << Q_FUNC_INFO << str;
+    log->message("void Magazin::slot_MagazinChanged " + str);
+
+    //Warte 10 Sekunden bis die Daten vollständig geschrieben wurden
+    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+    create_ToolList();
+
+    log->message("add " + str + " to QSytemFileWatcher");
+    fileSystemWatcher.addPath(str);
+    connect(&fileSystemWatcher, SIGNAL(fileChanged(QString)), this, SLOT(slot_MagazinChanged(QString)));
+    emit sig_NewMagazin();
 }

@@ -606,6 +606,11 @@ void CamHelper::slot_LoadProject(QString string_Project, QString string_Clamping
     action_New->setEnabled(true);
 }
 
+void CamHelper::slot_NewMagazin()
+{
+    showTable_Rustplan(false);
+}
+
 void CamHelper::slot_NewProject()
 {
     QString string_Comment;
@@ -870,6 +875,7 @@ void CamHelper::slot_startApplication()
    magazin->set_FilePath(settings->get_MagazinDir() + "/Magazin.INI");
    magazin->set_DataBase(dataBase);
    magazin->set_Logging(logging);
+   connect(magazin, SIGNAL(sig_NewMagazin()), this, SLOT(slot_NewMagazin()));
    if(!magazin->create_ToolList())
      return;
 

@@ -66,5 +66,6 @@
         <file>Icons/tag.png</file>
         <file>Icons/programm.png</file>
         <file>Icons/paste.png</file>
+        <file>Icons/camhelper.png</file>
     </qresource>
 </RCC>

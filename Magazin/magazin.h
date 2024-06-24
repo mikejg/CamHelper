@@ -2,7 +2,8 @@
 #define MAGAZIN_H
 
 #include <QWidget>
-
+#include <QFileSystemWatcher>
+#include <thread>
 #include "magazinmodel.h"
 #include "../database.h"
 #include "../logging.h"
@@ -20,12 +21,14 @@ class Magazin : public QWidget
 private:
     Ui::Magazin *ui;
     DataBase*      dataBase;
+    QString        string_DirPath;
     Logging*       log;
     MFile*         mfile;
     ToolList*      toolList;
     ToolList*      searchList;
     int            sizeIn;
     MagazinModel*  tableModel;
+    QFileSystemWatcher fileSystemWatcher;
 
     QList<QString> list_ToolID;
     QList<QString> list_ToolDescription;
@@ -47,17 +50,20 @@ public:
     int       get_Size(){return sizeIn;}
     ToolList* get_ToolList() {return toolList;}
     void      set_DataBase(DataBase* db) {dataBase = db;}
-    void      set_FilePath(QString str) {mfile->setFileName(str);}
+    //void      set_DirPath(QString str) {string_DirPath = str;}
+    void      set_FilePath(QString str) {mfile->setFileName(str);
+                                         fileSystemWatcher.addPath(str);}
     void      set_Logging(Logging* l) {log = l; mfile->set_Logging(l);}
     void      showToolList(ToolList*);
 
 signals:
-    //void sig_Err(QString);
+    void sig_NewMagazin();
     //void sig_Log(QString);
 
 public slots:
     void slot_TableClicked(const QModelIndex &);
     void slot_textEdited(QString);
+    void slot_MagazinChanged(QString);
 };
 
 #endif // MAGAZIN_H

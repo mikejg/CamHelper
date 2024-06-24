@@ -116,6 +116,7 @@ public slots:
     void slot_Export(bool);
     void slot_LicenseFaild();
     void slot_LoadProject(QString,QString);
+    void slot_NewMagazin();
     void slot_NewProject();
     void slot_Print(bool);
     void slot_PrintPage(QPrinter*);

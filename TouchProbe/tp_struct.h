@@ -41,6 +41,16 @@ struct Struct_Ebenheit
     QString string_Punkt3Y;
     QString string_Punkt4X;
     QString string_Punkt4Y;
+    bool bool_Jump1;
+    bool bool_Jump2;
+    bool bool_Jump3;
+
+    Struct_Ebenheit()
+    {
+        bool_Jump1 = false;
+        bool_Jump2 = false;
+        bool_Jump3 = false;
+    }
 };
 
 struct Struct_Steg

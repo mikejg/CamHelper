@@ -23,7 +23,11 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Datei Öffnen</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../Icons.qrc">
+    <normaloff>:/Icons/File_Open.png</normaloff>:/Icons/File_Open.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -85,7 +89,9 @@
    <header>Project/mlabel.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>
