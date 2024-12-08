@@ -42,13 +42,16 @@ private:
     QTimer*                timer;
     QList<Item_Programm> list_ItemProgramm;
     Item_Programm item_Programm;
+     QMap<QString, QString> map_Bruch;
 
     bool finish_Cleaning();
     bool finish_Load();
     bool finish_RawPartInspection();
+    bool finish_TouchSp0();
     bool finish_TouchSp1();
     QString formatString(QString);
     void init_ExportFiles();
+    bool loadBruch();
 
 public:
     explicit Project_Export(QObject *parent = nullptr,
@@ -65,7 +68,7 @@ public slots:
     void slot_NextProgramm();
 
 signals:
-
+    void sig_ExportTouchProbe();
 };
 
 #endif // PROJECT_EXPORT_H

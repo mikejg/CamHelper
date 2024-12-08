@@ -40,11 +40,18 @@ void Dialog_Settings::set_Settings(Settings* s)
     ui->checkBox_Numbering->setChecked(s->get_Numbering());
     ui->spinBox_WerkzeugPlatze->setValue(s->get_WerkzeugPlatze());
     ui->checkBox_AufmassMax->setChecked(s->get_MaxOverSize());
+    ui->lineEdit_X->setText(QString("%1").arg(s->get_OffsetX()));
+    ui->lineEdit_Y->setText(QString("%1").arg(s->get_OffsetY()));
+    ui->lineEdit_Z->setText(QString("%1").arg(s->get_OffsetZ()));
 }
 
 bool Dialog_Settings::checkSettings()
 {
     bool bool_Return = true;
+    bool bool_OffsetOK;
+    float float_OffsetTest;
+    QString string_OffsetTest;
+
     QFile file;
     QDir dir;
 
@@ -143,11 +150,42 @@ bool Dialog_Settings::checkSettings()
     }
     else
         ui->lineEdit_WerkzeugDB->setPalette(*paletteValid);
+
+    //Überprüfe ob sich der Text in OffsetX in ein float
+    //konvertieren lässt
+    ui->lineEdit_X->setPalette(*paletteValid);
+    string_OffsetTest = ui->lineEdit_X->text();
+    float_OffsetTest = string_OffsetTest.toFloat(&bool_OffsetOK);
+    if(!bool_OffsetOK)
+    {
+        bool_Return = false;
+        ui->lineEdit_X->setPalette(*paletteInValid);
+    }
+
+    ui->lineEdit_Y->setPalette(*paletteValid);
+    string_OffsetTest = ui->lineEdit_Y->text();
+    float_OffsetTest = string_OffsetTest.toFloat(&bool_OffsetOK);
+    if(!bool_OffsetOK)
+    {
+        bool_Return = false;
+        ui->lineEdit_Y->setPalette(*paletteInValid);
+    }
+
+    ui->lineEdit_Z->setPalette(*paletteValid);
+    string_OffsetTest = ui->lineEdit_Z->text();
+    float_OffsetTest = string_OffsetTest.toFloat(&bool_OffsetOK);
+    if(!bool_OffsetOK)
+    {
+        bool_Return = false;
+        ui->lineEdit_Z->setPalette(*paletteInValid);
+    }
     return bool_Return;
 }
 
 void Dialog_Settings::writeSettings()
 {
+    bool bool_OffsetOK;
+
     //überprüfe die Settings, wenn das fehlschlägt zeige den Dialog
     // bis alles ok ist
     if(!checkSettings())
@@ -165,7 +203,9 @@ void Dialog_Settings::writeSettings()
     settings->set_Numbering(QVariant(bool_Numbering).toString());
     settings->set_WerkzeugPlatze(ui->spinBox_WerkzeugPlatze->value());
     settings->set_AufmassMax(QVariant(bool_AufmassMax).toString());
-
+    settings->set_OffsetX(ui->lineEdit_X->text().toFloat(&bool_OffsetOK));
+    settings->set_OffsetY(ui->lineEdit_Y->text().toFloat(&bool_OffsetOK));
+    settings->set_OffsetZ(ui->lineEdit_Z->text().toFloat(&bool_OffsetOK));
     emit settingsOK();
 }
 

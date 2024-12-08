@@ -12,6 +12,7 @@ Dialog_RawPartInspection::Dialog_RawPartInspection(QWidget* parent,
     connect(ui->toolButton_RawPartInspection_00, SIGNAL(released()), this, SLOT(slot_Selected()));
     connect(ui->toolButton_RawPartInspection_01, SIGNAL(released()), this, SLOT(slot_Selected()));
     connect(ui->toolButton_RawPartInspection_02, SIGNAL(released()), this, SLOT(slot_Selected()));
+    connect(ui->toolButton_RawPartInspection_03, SIGNAL(released()), this, SLOT(slot_Selected()));
 }
 
 Dialog_RawPartInspection::~Dialog_RawPartInspection()
@@ -31,6 +32,9 @@ void Dialog_RawPartInspection::slot_Selected()
 
     if(sender() == ui->toolButton_RawPartInspection_02)
         project->set_RawPartInspection("Rohteilkontrolle02");
+
+    if(sender() == ui->toolButton_RawPartInspection_03)
+        project->set_RawPartInspection("Rohteilkontrolle03");
 
     // Sende das Signal sig_NewInspection
     emit sig_NewInspection(project->get_RawPartInspection());

@@ -32,10 +32,8 @@ private:
 public:
     explicit DataBase(QObject *parent = nullptr, Logging* l = nullptr);
 
-    //bool        deleteFrom_NCToolsProject(Item_NCToolProject);
     void        deleteFrom_NCToolsProject(QString);
     void        deleteFrom_ProgrammProject(QString);
-    //bool        deleteFrom_ProgrammProject(Item_ProgrammProject);
     void        delete_TP_Items(QString);
     void        delete_Pictures(QString);
     void        delete_Tags(QString);

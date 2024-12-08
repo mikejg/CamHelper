@@ -18,9 +18,12 @@ SOURCES += \
     Dialoge/dialog_settings.cpp \
     Dialoge/dialog_start.cpp \
     Dialoge/dialog_tag.cpp \
+    Dialoge/dialog_tools.cpp \
     Magazin/magazinmodel.cpp \
     Model/programmmodel.cpp \
+    Model/spinboxdelegate.cpp \
     Model/tablemodel.cpp \
+    Model/toolmodel.cpp \
     Parser/parser_placeholder.cpp \
     Parser/parser_programm.cpp \
     Project/mlabel.cpp \
@@ -29,7 +32,7 @@ SOURCES += \
     Project/project.cpp \
     Project/project_export.cpp \
     Project/selectorwidget.cpp \
-    Project/tab_project.cpp \  
+    Project/tab_project.cpp \
     Tools/tool.cpp \
     Tools/toollist.cpp \
     TouchProbe/touchprobe.cpp \
@@ -65,9 +68,12 @@ HEADERS += \
     Dialoge/dialog_settings.h \
     Dialoge/dialog_start.h \
     Dialoge/dialog_tag.h \
+    Dialoge/dialog_tools.h \
     Magazin/magazinmodel.h \
     Model/programmmodel.h \
+    Model/spinboxdelegate.h \
     Model/tablemodel.h \
+    Model/toolmodel.h \
     Parser/parser_placeholder.h \
     Parser/parser_programm.h \
     Project/mlabel.h \
@@ -76,7 +82,7 @@ HEADERS += \
     Project/project.h \
     Project/project_export.h \
     Project/selectorwidget.h \
-    Project/tab_project.h \ 
+    Project/tab_project.h \
     Tools/tool.h \
     Tools/toollist.h \
     TouchProbe/touchprobe.h \
@@ -113,6 +119,7 @@ FORMS += \
     Dialoge/dialog_settings.ui \
     Dialoge/dialog_start.ui \
     Dialoge/dialog_tag.ui \
+    Dialoge/dialog_tools.ui \
     Project/pix_scrollarea.ui \
     Project/pix_scrollcontent.ui \
     Project/selectorwidget.ui \

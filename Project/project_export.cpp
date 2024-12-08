@@ -32,9 +32,11 @@ bool Project_Export::finish_Cleaning()
 
 bool Project_Export::finish_Load()
 {
-    qDebug() << Q_FUNC_INFO;
+    loadBruch();
     QString string_Loading_Source;
     QString string_Loading_Destination;
+    QString string_ToolID;
+    QString string_Bruch;
 
     QStringList stringList_Head;
     QStringList stringList_Body;
@@ -48,7 +50,7 @@ bool Project_Export::finish_Load()
     /*Kopiert den Ordner Vorlagen.WPD/WKZ_beladen.WPD nach
      * Programme/E123456789.WPD/E123456789_E0_Sp1.WPD/E123456789_E0_Sp1_In.WPD*/
 
-    string_Loading_Destination = string_Destination + "/" + string_ProjectFullName + "_In.WPD";
+    string_Loading_Destination = string_Destination + "/Rusten_" + string_ProjectFullName + ".WPD";
     string_Loading_Source      = QDir::homePath() + "/CamHelper/Vorlagen/Verzeichnisse/WKZ_beladen.WPD";
 
     QDir dir_Vorlagen(string_Loading_Source);
@@ -63,11 +65,11 @@ bool Project_Export::finish_Load()
     }
     dir_Vorlagen.mkpath(string_Loading_Destination);
 
-    foreach (QString f, dir_Vorlagen.entryList(QDir::Files))
+    /*foreach (QString f, dir_Vorlagen.entryList(QDir::Files))
     {
         QFile::copy(string_Loading_Source + QDir::separator() + f,
-                    string_Destination + "/" + string_ProjectFullName + "_In.WPD" + QDir::separator() + f);
-    }
+                    string_Destination + "/Rusten_" + string_ProjectFullName + ".WPD" + QDir::separator() + f);
+    }*/
 
     // Lese den Inhalt der Datei WKZ_beladen_Kopf.spf in stringList_Head ein
     // Das gleiche gilt für stringList_Body und stringList_End
@@ -86,18 +88,17 @@ bool Project_Export::finish_Load()
         return false;
     stringList_End = mfile->get_Content();
 
-    mfile->setFileName(string_Destination + "/" + string_ProjectFullName + "_In.WPD" + QDir::separator() + "_WKZ_beladen.spf");
+    mfile->setFileName(string_Destination + "/Rusten_" + string_ProjectFullName + ".WPD" + QDir::separator() + "_WKZ_Kontrolle.spf");
 
     /*Gehe durch die stringList_Kopf
      * Schreibe string_Line in das File
      * Wenn du zum Marker 'Werkzeugliste Anfang' kommst gehe durch die Liste
      * der einzulagernden Werkzeuge. */
     int count = 1;
-    qDebug() << Q_FUNC_INFO;
+    //qDebug() << Q_FUNC_INFO;
     foreach(QString string_Line, stringList_Head)
     {
-
-        stringList_File.append(QString("N%1 ").arg(count) + string_Line + "\n" );
+        stringList_File.append(QString("N%1 ").arg(count) + string_Line); // + "\n" );
         count++;
         if(string_Line.contains("Werkzeugliste Anfang"))
         {
@@ -105,8 +106,8 @@ bool Project_Export::finish_Load()
             {
                 stringList_File.append(QString("N%1 ").arg(count) +
                                        "; T " + tool->get_Number() +
-                                       "  " + tool->get_Description() +
-                                       "\n");
+                                           "  " + tool->get_Description()); //+
+                                       //"\n");
                 count++;
             }
         }
@@ -127,10 +128,24 @@ bool Project_Export::finish_Load()
                 string_Body = string_Body + " ; " + tool->get_Description();
             }
 
-            if(tool->get_Number().startsWith("29_") && string_Body.contains("call"))
-                string_Body.replace("BRUCH", "BRUCH2");
-
-            stringList_File.append(QString("N%1 ").arg(count) + string_Body + "\n");
+            if(string_Body.contains("BRUCH"))
+            {
+                string_ToolID = tool->get_Number();
+                QMapIterator<QString, QString> iterator(map_Bruch);
+                while (iterator.hasNext())
+                {
+                    iterator.next();
+                    if(string_ToolID.first(iterator.key().length()) == iterator.key())
+                    {
+                        string_Bruch = iterator.value();
+                        string_Bruch = string_Bruch.remove("\"");
+                        string_Bruch = string_Bruch.remove("call");
+                        string_Body.replace("BRUCH", string_Bruch);
+                        break;
+                    }
+                }
+            }
+            stringList_File.append(QString("N%1 ").arg(count) + string_Body); // + "\n");
             count++;
         }
     }
@@ -138,12 +153,34 @@ bool Project_Export::finish_Load()
     /*Geh durch stringList_End und schreib jede Zeile in das File*/
     foreach(QString string_Line, stringList_End)
     {
-        stringList_File.append(QString("N%1 ").arg(count) + string_Line + "\n" );
+        stringList_File.append(QString("N%1 ").arg(count) + string_Line); // + "\n" );
         count++;
     }
 
     mfile->save(stringList_File);
 
+    mfile->setFileName(QDir::homePath() + "/CamHelper/config/Nullpunkt.spf");
+    if(!mfile->read_Content())
+        return false;
+    stringList_Body = mfile->get_Content();
+    stringList_File.clear();
+
+    foreach(QString string, stringList_Body)
+    {
+        if(string.contains("$G$"))
+            string = string.replace("$G$", "\"" + project->get_ProjectZeroPoint() + "\"");
+        if(string.contains("$NPx$"))
+            string = string.replace("$NPx$", project->get_NPx());
+        if(string.contains("$NPy$"))
+            string = string.replace("$NPy$", project->get_NPy());
+        if(string.contains("$NPz$"))
+            string = string.replace("$NPz$", project->get_NPz());
+
+        stringList_File.append(string);
+    }
+
+    mfile->setFileName(string_Destination + "/Rusten_" + string_ProjectFullName + ".WPD" + QDir::separator() + "_NP_Setzen.spf");
+    mfile->save(stringList_File);
     return true;
 }
 
@@ -163,6 +200,18 @@ bool Project_Export::finish_TouchSp1()
 {
     QStringList stringList_Content;
     mfile->setFileName(string_Destination + "/_Sp1_Rohteil_antasten.SPF");
+    if(!mfile->read_Content())
+        return false;
+    stringList_Content = mfile->get_Content();
+    stringList_Content = parser_PlaceHolder->set_PlaceHolder_Antasten(stringList_Content);
+    mfile->save(stringList_Content);
+    return true;
+}
+
+bool Project_Export::finish_TouchSp0()
+{
+    QStringList stringList_Content;
+    mfile->setFileName(string_Destination + "/_Sp0_Rohteil_antasten.SPF");
     if(!mfile->read_Content())
         return false;
     stringList_Content = mfile->get_Content();
@@ -204,6 +253,34 @@ void Project_Export::init_ExportFiles()
     timer->singleShot(0, this, SLOT(slot_NextProgramm()));
 }
 
+bool Project_Export::loadBruch()
+{
+    /*Öffne das File "/CamHelper/config/Bruch.txt" und lies es
+     * in die stringList_Lines ein.
+     * Geh durch stringList_Lines und splitte jede Zeile.
+     * Füge die ersten zwei Strings in QMap map_Bruch */
+
+    map_Bruch.clear();
+    QStringList stringList_Bruch;
+    mfile->setFileName(QDir::homePath() + "/CamHelper/config/Bruch.txt");
+    if(!mfile->read_Content())
+        return false;
+
+    foreach(QString string_Line, mfile->get_Content())
+    {
+        if(string_Line.contains(" || "))
+        {
+           stringList_Bruch = string_Line.split(" || ");
+           if(stringList_Bruch.size()>1)
+           {
+               map_Bruch.insert(stringList_Bruch.at(0), stringList_Bruch.at(1));
+           }
+        }
+    }
+
+    return true;
+}
+
 void Project_Export::slot_ExportProject(bool b)
 {
     bool_IncToolCounter = b;
@@ -214,7 +291,6 @@ void Project_Export::slot_ExportProject(bool b)
     string_ProjectFullName = project->get_ProjectFullName();
     string_ProjectClamping = project->get_ProjectClamping();
 
-    //stringList_Programme = project->get_ProgrammList();
     list_ItemProgramm = project->get_ListProgramm();
 
     /*Erzeugt im Ordern Programme den Ordner ProjektName.WPD/SpannungX.WPD
@@ -388,24 +464,20 @@ void Project_Export::slot_NextProgramm()
                 return;
         }
 
+        if(project->get_ProjectClamping().contains("Sp0"))
+        {
+            if(!finish_TouchSp0())
+                return;
+        }
+
+        if(project->get_ProjectClamping().contains("Sp2"))
+        {
+            emit sig_ExportTouchProbe();
+        }
 
         if(!finish_Load())
             return;
 
-        // Wenn es die Erst- bzw Wiederholfertigung ist speicher den Rüstplan und das Projekt in die Datenbank
-        /*if(bool_Repetition)
-        {
-            if(!save_Rustplan(QDir::homePath()+ "/MainGen/Ruestplaene/"
-                                   + project->get_ProjectFullName() + "_"
-                                   + QString("%1").arg(project->get_RepetitiveManufacturing())
-                                   + ".rpl", project->get_ToolList()))
-                return;
-            dbManager->insertProject(project->get_ProjectFullName() + "_"
-                                         + QString("%1").arg(project->get_RepetitiveManufacturing()),
-                                     project->get_ToolList(),
-                                     project->get_Data());
-        }*/
         dialog_Progress->hide();
-        //emit sig_Finished();
     }
 }

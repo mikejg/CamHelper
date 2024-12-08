@@ -9,10 +9,10 @@ Tool::Tool(QObject *parent)
     gage_Length   = " ";
     tool_Length     = " ";
     tip_Length      = " ";
-    //halterComment   = " ";
-    //holder_Name      = " ";
     cut_Length      = " ";
     state           = Out;
+    toolLife        = false;
+    parts           = 0;
 }
 
 void Tool::clear()
@@ -22,8 +22,6 @@ void Tool::clear()
     gage_Length = " ";
     tool_Length   = " ";
     tip_Length    = " ";
-    //halterComment = " ";
-    //holder_Name    = " ";
     cut_Length    = " ";
     counter = 0;
 }

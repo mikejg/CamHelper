@@ -14,7 +14,11 @@ private:
     Project* project;
     MFile*   mfile;
 
+    QStringList number_Programm(QStringList);
     bool writeG55(QStringList*);
+    bool writeG54(QStringList*);
+    void write_Parts(QStringList*);
+    void write_ToolLife(QStringList*);
 
 public:
     explicit Parser_PlaceHolder(QObject* parent = nullptr,
@@ -25,7 +29,6 @@ public:
     QStringList set_PlaceHolder_Cleaning(QStringList);
     QStringList set_PlaceHolder_MainProgramm(QStringList);
     QStringList set_PlaceHolder_RawPartInspection(QStringList);
-
     void set_Project(Project* p) {project = p;}
 signals:
 

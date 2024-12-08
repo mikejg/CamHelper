@@ -5,12 +5,16 @@ HighLighter::HighLighter(QTextDocument *parent) : QSyntaxHighlighter(parent)
     color_Call = Qt::cyan;
     color_Programm = QColor("#D69542");
     color_MFunction = QColor("#FF8080");
+    color_N = QColor("#778899");
 }
 
 void HighLighter::highlightBlock(const QString &text)
 {
     stringList_MFunction.clear();
     stringList_MFunction = scann_MFunction(text);
+
+    stringList_N.clear();
+    stringList_N = scann_N(text);
 
     setFormat(0,text.length(),QColor("#D6CF9A"));
 
@@ -19,7 +23,8 @@ void HighLighter::highlightBlock(const QString &text)
 
     if(text.contains("TOFFL"))
     {
-        setFormat(0,text.length(),Qt::darkYellow);
+        index = text.indexOf("TOFFL");
+        setFormat(index,text.length(),Qt::darkYellow);
     }
 
     if(text.contains("call"))
@@ -39,6 +44,12 @@ void HighLighter::highlightBlock(const QString &text)
     {
         int_Pos = text.indexOf(string_MFunction);
         setFormat(int_Pos,string_MFunction.length(),color_MFunction);
+    }
+
+    foreach(QString string_N, stringList_N)
+    {
+        int_Pos = text.indexOf(string_N);
+        setFormat(int_Pos,string_N.length(),color_N);
     }
 
     if(text.startsWith("Ⓦ "))
@@ -66,6 +77,35 @@ QStringList HighLighter::scann_MFunction(QString str)
     foreach(QString string, stringList_Words)
     {
         if(string.startsWith("M"))
+        {
+            //bool_isNumber = true;
+            for(int pos = 1; pos < string.length(); pos++)
+            {
+                string.sliced(pos,1).toInt(&boolOK);
+                if(!boolOK)
+                {
+                    //bool_isNumber = false;
+                    //qDebug() << string;
+                    break;
+                }
+            }
+            if(boolOK)
+                stringList_Return.append(string);
+        }
+
+    }
+    return stringList_Return;
+}
+
+QStringList HighLighter::scann_N(QString str)
+{
+    QStringList stringList_Return;
+    QStringList stringList_Words = str.split(" ");
+    bool boolOK;
+    bool bool_isNumber;
+    foreach(QString string, stringList_Words)
+    {
+        if(string.startsWith("N"))
         {
             //bool_isNumber = true;
             for(int pos = 1; pos < string.length(); pos++)

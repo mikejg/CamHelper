@@ -20,6 +20,8 @@ private:
     //QString halterComment;
     QString cut_Length;
     int counter;
+    bool toolLife;
+    int  parts;
 
 public:
     enum State {In, Out, Disassembled};
@@ -42,14 +44,14 @@ public:
     void    set_ToolLength(QString agl)     {tool_Length = agl;}
     QString get_ToolLength()                {return tool_Length;}
 
+    void    set_ToolLife(bool tl)           {toolLife = tl;}
+    bool    get_ToolLife()                  {return toolLife;}
+
     void    set_TipLength(QString tfl)      {tip_Length = tfl;}
     QString get_TipLength()                 {return tip_Length;}
 
-    //void     set_HolderName (QString n)     {holder_Name = n;}
-    //QString  get_HolderName()               {return holder_Name;}
-
-    //void     set_HalterComment (QString n)  {halterComment = n;}
-    //QString  get_HalterComment()            {return halterComment;}
+    void    set_Parts(int p)                {parts = p;}
+    int     get_Parts()                     {return parts;}
 
     void  set_State(State s)                {state = s;}
     State get_State()                       {return state;}

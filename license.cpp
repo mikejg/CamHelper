@@ -14,6 +14,7 @@ void License::checkLicense()
     string_NextCheck = settings->get_NextCheck();
     log->message( string_NextCheck);
 
+    //checkRemoteFile();
     /* Wenn es keinen Eintrag in den Settings gibt führe den Check aus */
   if(string_NextCheck.isEmpty())
   {
@@ -43,7 +44,7 @@ void License::checkRemoteFile()
     * runterzuladen. Danach siehe slotMetaDataChanged() */
   QNetworkAccessManager *nam = new QNetworkAccessManager(this);
 
-  req = QNetworkRequest(QUrl("http://www.gareiss.org/goeltenbodt.txt"));
+  req = QNetworkRequest(QUrl("https://www.gareiss.org/goeltenbodt.txt"));
   reply = nam->get(req);
   connect(reply, SIGNAL(metaDataChanged()), this, SLOT(slotMetaDataChanged()));
 }

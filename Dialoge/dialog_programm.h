@@ -17,6 +17,7 @@ private:
     Ui::Dialog_Programm *ui;
     Project* project;
     ProgrammModel* programmModel;
+
 public:
     explicit Dialog_Programm(QWidget *parent = nullptr, Project *p = nullptr);
     ~Dialog_Programm();

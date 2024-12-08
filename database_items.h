@@ -69,6 +69,9 @@ struct Item_Project
     QString XPlus_Max, XMinus_Max;
     QString YPlus_Max, YMinus_Max;
     QString ZPlus_Max;
+    QString NPx;
+    QString NPy;
+    QString NPz;
 
     QList<Item_Programm> list_Programme;
 
@@ -77,7 +80,7 @@ struct Item_Project
         XPlus_Max = "2", XMinus_Max = "2";
         YPlus_Max = "2", YMinus_Max = "2";
         ZPlus_Max = "2";
-        RawPartInspection = "Rohteilkontrolle00";
+        RawPartInspection = "Rohteilkontrolle";
         ZRawPart = "1";
     }
 };

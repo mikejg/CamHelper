@@ -16,7 +16,6 @@
 #include "Dialoge/dialog_start.h"
 #include "Dialoge/dialog_settings.h"
 #include "Dialoge/dialog_open.h"
-//#include "Dialoge/dialog_rawpartinspection.h"
 
 #include "Magazin/magazin.h"
 #include "Magazin/magazinmodel.h"
@@ -118,6 +117,7 @@ public slots:
     void slot_LoadProject(QString,QString);
     void slot_NewMagazin();
     void slot_NewProject();
+    void slot_NewToolList();
     void slot_Print(bool);
     void slot_PrintPage(QPrinter*);
     void slot_RepetitionAccepted();

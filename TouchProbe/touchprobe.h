@@ -39,6 +39,8 @@ public:
     explicit TouchProbe(QWidget *parent = nullptr);
     ~TouchProbe();
     void clear();
+    void createTouchprobe();
+    void exportTouchprobe();
     void insert_Item();
     void insert_Item(QList<Item_TouchProbe>);
     void set_Project(Project* p) { project = p;}
@@ -50,6 +52,7 @@ public slots:
     void slot_Create();
     void slot_ShowPix();
     void slot_Export();
+    void slot_ExportTouchprobe();
     //void slot_NewTextCursor(QTextCursor);
 
 signals:

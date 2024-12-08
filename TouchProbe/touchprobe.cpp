@@ -47,7 +47,7 @@ void TouchProbe::set_Logging(Logging *l)
 
 void TouchProbe::slot_Create()
 {
-    //qDebug() << Q_FUNC_INFO;
+    qDebug() << Q_FUNC_INFO << sender();
 
     // Wenn der ToolButton_Edit geklickt wurde und somit der Editor sichtbar
     // wird, setze bool_Create auf TRUE und erstelle das Antastprogramm neu.
@@ -59,6 +59,11 @@ void TouchProbe::slot_Create()
     if(!bool_Create)
         return;
 
+    createTouchprobe();
+}
+
+void TouchProbe::createTouchprobe()
+{
     int_CounterEbenheit = 0;
     int pos = 1;
     //Loesche alles im Editor und schalte auf den Editor um
@@ -164,13 +169,22 @@ void TouchProbe::insert_Content(TP_Item* tp_Item)
 
 void TouchProbe::slot_Export()
 {
-    qDebug() << Q_FUNC_INFO;
-    QString str;
-    QDir dir;
-
     //Allei Einstellungen übernehmen und das Programm im Editor neu erstellen
     slot_Create();
 
+    exportTouchprobe();
+}
+
+void TouchProbe::slot_ExportTouchprobe()
+{
+    createTouchprobe();
+    exportTouchprobe();
+}
+
+void TouchProbe::exportTouchprobe()
+{
+    QString str;
+    QDir dir;
     // Wenn es ProjecName oder ProjectFullName leer sind wird nur in das Programmverzeichnis geschrieben
     // Programme\_Antasten.SPF
     if(project->get_ProjectName().isEmpty() || project->get_ProjectFullName().isEmpty())

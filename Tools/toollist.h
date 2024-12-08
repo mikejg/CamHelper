@@ -17,6 +17,7 @@ public:
 
     void         clear() {list.clear();}
     bool         contains(Tool*);
+    void         delete_Tool(int);
     QList<Tool*> get_List() {return list;}
     int          get_Size() {return list.size();}
     void         insert_Tool(Tool*, bool check=true);

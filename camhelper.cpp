@@ -211,6 +211,7 @@ return true;
 
 void CamHelper::showTable_Rustplan(bool bool_Print)
 {
+    //qDebug() << Q_FUNC_INFO;
     /* Vorbereitung für den Rüstplan */
     toolList_IN->clear();
     toolList_OUT->clear();
@@ -303,6 +304,9 @@ void CamHelper::showTable_Rustplan(bool bool_Print)
     {
         //erzeuge eine Zeile: 10 Werkzeuge EINLAGERN - 15 Freie Plätze im Magazin"
         int_Free_Size = settings->get_WerkzeugPlatze() - magazin->get_Size();
+        //qDebug() << Q_FUNC_INFO << settings->get_WerkzeugPlatze();
+        //qDebug() << Q_FUNC_INFO << magazin->get_Size();
+
         list_ToolDescription.append(QString("  %1 Werkzeuge EINLAGERN  -  %2 Frei Plätze im Magazin").arg(int_In_Size).arg(int_Free_Size));
             list_ToolID.append(" ");
         list_GageLength.append(" ");
@@ -393,37 +397,99 @@ void CamHelper::showTable_Rustplan(bool bool_Print)
 
 void CamHelper::slot_CheckFiles()
 {
+    qDebug() << Q_FUNC_INFO;
     QStringList stringList_Programme;
     Item_Programm item_Programm;
     QStringList stringList_Project;
     QString string_Project;
+    QString string_ProjectFullName;
     QString string_Clamping;
     QString string_ProjectID;
+    ToolList* toolList;
+    ToolList* toolList_Project;
+    int int_Before;
+    int int_After;
 
+    toolList = new ToolList(this);
+
+    //Wenn sich die Bruchkontrolle nicht laden lässt wird abgebrochen
     if(!parser_Programm->loadBruch())
         return;
 
+    //Lese die Programme aus dem Verzeichnis ein
     if(!load_Programme(stringList_Programme))
         return;
 
+    //Schalte auf den Tab Log um
     ui->tabWidget->setCurrentWidget(ui->tab_Log);
+
+
     foreach (QString string_Programm, stringList_Programme)
     {
         item_Programm.Programm = string_Programm;
-        string_Project = parser_Programm->parse_ProjectName(settings->get_ProgrammDir()+ "/" + string_Programm);
-        string_Project = string_Project.remove(" ||");
-        qDebug() << string_Project;
-        stringList_Project = string_Project.split("_");
+
+        //zieh aus dem Programm den ProjectNamen und entferne am Ende ||
+        //es bleibt der string E28994006_E0_Sp1 übrig
+        string_ProjectFullName = parser_Programm->parse_ProjectName(settings->get_ProgrammDir()+ "/" + string_Programm);
+        string_ProjectFullName = string_ProjectFullName.remove(" ||");
+
+        //splitte E28994006_E0_Sp1 nach '_'
+        stringList_Project = string_ProjectFullName.split("_");
+
         if(stringList_Project.size() > 2)
         {
+            //string_Project wird E28994006
             string_Project = stringList_Project.at(0);
-            string_Clamping = stringList_Project.at(2);
-            string_ProjectID = dataBase->get_ProjectID(string_Project, string_Clamping);
-            item_Programm = dataBase->get_ItemProgramm(string_ProjectID, string_Programm);
-        }
-        parser_Programm->finish(settings->get_ProgrammDir()+ "/" + string_Programm, item_Programm);
-    }
 
+            //string_Clamping wird Sp1
+            string_Clamping = stringList_Project.at(2);
+
+            //hol mir die ProjectID aus der Datenbank
+            string_ProjectID = dataBase->get_ProjectID(string_Project, string_Clamping);
+
+            //hole mir die Daten für Item_Programm aus der Datenbank
+            item_Programm = dataBase->get_ItemProgramm(string_ProjectID, string_Programm);
+
+            //Hole alle Werkzeuge für das Projekt aus der Datenbank
+            toolList_Project = new ToolList(this);
+            dataBase->fill_ToolList(string_Project, string_Clamping, toolList_Project);
+
+            int_Before = toolList_Project->get_Size();
+
+            //Suche alle Werkzeuge aus dem Programm
+            parser_Programm->parse_Tool(settings->get_ProgrammDir()+ "/" + string_Programm, toolList);
+
+            //Schreibe alle Werkzeuge aus toolList in toolList_Project, vorhandene werden
+            //ignoriert, neue werden hinzugefugt
+            foreach (Tool* tool, toolList->get_List())
+            {
+                toolList_Project->insert_Tool(tool);
+            }
+
+            int_After = toolList_Project->get_Size();
+            //qDebug() << Q_FUNC_INFO << " Werkzeuge: " << int_After;
+
+            //Wenn es Anderung an der Werkzeugliste gab wird sie neu abgespeichert
+            if(int_Before != int_After)
+            {
+                dataBase->deleteFrom_NCToolsProject(string_ProjectID);
+                foreach (Tool* tool, toolList_Project->get_List())
+                {
+                    dataBase->insert_Tool(tool, string_ProjectID, string_Project+"_"+string_Clamping);
+                }
+            }
+        }
+
+        parser_Programm->finish(settings->get_ProgrammDir()+ "/" + string_Programm, item_Programm);
+
+        //Wenn es das gleiche Projekt ist wie das aktuelle Projekt werde die die Listen aktualisiert
+        if(project->get_ProjectFullName() == string_ProjectFullName)
+        {
+            project->set_NCTools();
+            showTable_Rustplan(false);
+            ui->tab_Project->slot_RefreshTools();
+        }
+    }
 }
 
 void CamHelper::slot_CheckFiles(bool b)
@@ -480,12 +546,12 @@ void CamHelper::slot_Export(bool b)
 
     project->set_ContentMainProgramm(ui->textEdit);
     project->set_TPItemList(touchProbe->get_ItemList());
+    project->set_PictureList(tab_Project->get_PictureList());
 
     // Versuche die ProjectID des Projects aus der Datenbank zu holen
     string_ProjectID = dataBase->get_ProjectID(project->get_ProjectName(),
                                                project->get_ProjectClamping());
 
-    //qDebug() << string_ProjectID;
     // wenn es keine ProjectID gibt, gibt es das Project noch nicht
     // speicher das Project und exportiere das Project
     if(string_ProjectID.isEmpty())
@@ -545,6 +611,10 @@ void CamHelper::slot_LoadProject(QString string_Project, QString string_Clamping
     project->set_YPlus_Max_DB(item_Project.YPlus_Max);
     project->set_YMinus_Max_DB(item_Project.YMinus_Max);
     project->set_ZPlus_Max_DB(item_Project.ZPlus_Max);
+
+    project->set_NPx(item_Project.NPx);
+    project->set_NPy(item_Project.NPy);
+    project->set_NPz(item_Project.NPz);
 
     //setze QList<Item_ProgrammProject>
     project->set_Programms(item_Project.list_Programme);
@@ -608,11 +678,13 @@ void CamHelper::slot_LoadProject(QString string_Project, QString string_Clamping
 
 void CamHelper::slot_NewMagazin()
 {
+    qDebug() << Q_FUNC_INFO;
     showTable_Rustplan(false);
 }
 
 void CamHelper::slot_NewProject()
 {
+    qDebug() << Q_FUNC_INFO;
     QString string_Comment;
     //erzeuge einen neuen Zeiger für das Project und übergib ihn den nötigen Klassen
     new_Project();
@@ -663,20 +735,7 @@ void CamHelper::slot_NewProject()
 
     //lade vorhandene daten aus der Datenbank
     tab_Project->load_ProjectData();
-
-
-    /*
-    //erzeuge ein neues ProgrammModel
-    programmModel = new ProgrammModel();
-    //Überge dem ProgrammModel die Item_Programm Liste
-    programmModel->populateData(project->get_ListProgramm());
-    //setze das ProgrammModel in tableView_Programme
-    ui->tableView_Programme->setModel(programmModel);
-    //Verbinde sig / slot NewProgrammList(QList<Item_ProgrammProject>)
-    connect(programmModel, SIGNAL(sig_NewProgrammList(QList<Item_Programm>)),
-            project, SLOT(slot_NewProgrammList(QList<Item_Programm>)));
-
-    */
+    //qDebug() << Q_FUNC_INFO << project->get_RawPartInspection();
 
     /* setze mfile den Pfad für das Hauptprogramm
      * lese das Hauptprogramm ein
@@ -686,6 +745,7 @@ void CamHelper::slot_NewProject()
 
     /* ersetze im Hauptprogramm die Platzhalter */
     QStringList stringList_Content = parser_PlaceHolder->set_PlaceHolder_MainProgramm(mfile->get_Content());
+
     // schreibe alles in textEdit
     foreach(QString str, stringList_Content)
     {
@@ -709,11 +769,18 @@ void CamHelper::slot_NewProject()
     action_New->setEnabled(true);
 }
 
+void CamHelper::slot_NewToolList()
+{
+    showTable_Rustplan();
+}
+
 void CamHelper::slot_Print(bool b)
 {
     Q_UNUSED(b);
 
     QPrintPreviewDialog dialogPrint;
+    dialogPrint.setWindowTitle("Drucken");
+    dialogPrint.setWindowIcon(QIcon(":/Icons/print.png"));
     connect(&dialogPrint, SIGNAL(paintRequested(QPrinter*)), this, SLOT(slot_PrintPage(QPrinter*)));
     connect(&dialogPrint, SIGNAL(finished(int)), this, SLOT(slot_DialogPrintFinished(int)));
     dialogPrint.exec();
@@ -843,6 +910,7 @@ void CamHelper::slot_startApplication()
                           dataBase,
                           toolList_IN);
 
+    connect(project, SIGNAL(sig_NewToolList()), this, SLOT(slot_NewToolList()));
     //parser_PlaceHolder initialisieren
     parser_PlaceHolder = new Parser_PlaceHolder(this,
                                                 logging,
@@ -885,6 +953,9 @@ void CamHelper::slot_startApplication()
                                        project,        //<-- Project erledigt
                                        dialog_Progress,
                                        dataBase);
+
+
+   connect(project_Export, SIGNAL(sig_ExportTouchProbe()), touchProbe, SLOT(slot_ExportTouchprobe()));
 
    if(!dialog_Settings->checkSettings())
    {
@@ -1016,4 +1087,6 @@ void CamHelper::new_Project()
    tab_Project->clear();
 
    ui->textEdit->clear();
+
+   connect(project, SIGNAL(sig_NewToolList()), this, SLOT(slot_NewToolList()));
 }

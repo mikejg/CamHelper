@@ -18,7 +18,7 @@ Project::Project(QObject*  parent,
     toolList = new ToolList(this);
 
     string_ProjectZeroPoint = "G___";
-    string_RawPartInspection = "Rohteilkontrolle00";
+    string_RawPartInspection = "Rohteilkontrolle";
 
     string_ProgrammDir = settings->get_ProgrammDir();
     bool_MaxOverSize   = settings->get_MaxOverSize();
@@ -34,6 +34,10 @@ QMap<QString, QString> Project::get_Data()
 {
     //schreibe alle Parameter in eine Map und gib sie zurück
     QMap<QString, QString> map_Data;
+
+    qDebug() << Q_FUNC_INFO << string_NPx;
+    qDebug() << Q_FUNC_INFO << string_NPy;
+    qDebug() << Q_FUNC_INFO << string_NPz;
 
     map_Data.insert("Name", string_ProjectName);
     map_Data.insert("Status", string_ProjectStatus);
@@ -60,6 +64,10 @@ QMap<QString, QString> Project::get_Data()
     map_Data.insert("YPlus_Max", string_YPlus_Max_DB);
     map_Data.insert("YMinus_Max", string_YMinus_Max_DB);
     map_Data.insert("ZPlus_Max", string_ZPlus_Max_DB);
+
+    map_Data.insert("NPx", string_NPx);
+    map_Data.insert("NPy", string_NPy);
+    map_Data.insert("NPz", string_NPz);
 
     //qDebug() << map_Data;
     return map_Data;
@@ -275,8 +283,19 @@ void Project::set_ContentMainProgramm(QTextEdit* textEdit)
     stringList_ContentMainProgramm = textEdit->toPlainText().split("\n");
 }
 
+void Project::set_Comment(QString c)
+{
+    string_Comment = c;
+    if(string_Comment.contains("$NPx"))
+        string_Comment = string_Comment.replace("$NPx$", string_NPx);
+    if(string_Comment.contains("$NPy"))
+        string_Comment = string_Comment.replace("$NPy$", string_NPy);
+    if(string_Comment.contains("$NPz"))
+        string_Comment = string_Comment.replace("$NPz$", string_NPz);
+}
 void Project::set_NCTools()
 {
+    qDebug() << Q_FUNC_INFO;
     database->fill_ToolList(string_ProjectName, string_ProjectClamping, toolList);
 }
 
@@ -434,49 +453,6 @@ void Project::save_NCTools(QString string_ProjectID)
             break;
         }
     }
-
-    /*
-    bool bool_InsertTool;
-    QList<Item_NCToolProject> list;
-    Item_NCToolProject item_NCToolProject;
-
-    // Hole mir alle Werkzeug-Verbindungen zu diesem Project
-    //list = database->get_ConnectionNCToolsProject(string_ProjectID);
-
-    // Lösche aus der Liste alle Verbindungen deren Werkzeug in der Werkzeugliste vorhanden
-    // sind. Es bleiben die verwaisten Verbindung in der Liste
-    foreach(Tool* tool, toolList->get_List())
-    {
-        item_NCToolProject = Item_NCToolProject(tool->get_Number(), string_ProjectID);
-        if(list.contains(item_NCToolProject))
-        {
-            list.removeOne(item_NCToolProject);
-        }
-    }
-
-    // Lösche alle verwaisten Verbindungen aus der Datenbank
-    stringList_Message.clear();
-    foreach(Item_NCToolProject item, list)
-    {
-        if(database->deleteFrom_NCToolsProject(item))
-        {
-            // Wenn in der stringList_Message noch keinen Eintrag hat
-            // erstelle eine Kopfzeile und füge eine Meldung ein
-            if(stringList_Message.isEmpty())
-            {
-                stringList_Message.append("gelöschte Verbindungen");
-                stringList_Message.append(item.T_Number + " gelöscht");
-            }
-            else
-                stringList_Message.append(item.T_Number + " gelöscht");
-        }
-    }
-
-    // gib die Meldung nur aus wenn die stringList_Message Einträge hat
-    if(!stringList_Message.isEmpty())
-        log->frame_Message(stringList_Message);
-
-   */
 }
 
 void Project::save_Programm(QString string_ProjectID)
@@ -569,10 +545,12 @@ void Project::save_TPItems(QString string_ProjectID)
 
 void Project::save_Pictures(QString string_ProjectID)
 {
+    qDebug() << Q_FUNC_INFO << "Start";
     //loesche alle Bilder aus der Datenbank
     database->delete_Pictures(string_ProjectID);
     foreach(MLabel* label, pictureList)
     {
+        qDebug() << Q_FUNC_INFO << "foreach";
         database->insert_Picture(label, string_ProjectID);
     }
 }

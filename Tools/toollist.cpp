@@ -22,6 +22,10 @@ bool ToolList::contains(Tool* t)
     return false;
 }
 
+void ToolList::delete_Tool(int int_Row)
+{
+    list.removeAt(int_Row);
+}
 void ToolList::insert_Tool(Tool* tool, bool check)
 {
     bool match = false;
@@ -54,6 +58,8 @@ void ToolList::insert_Tool(Tool* tool, bool check)
        t->set_Counter(tool->get_Counter());
        t->set_State(tool->get_State());
        t->set_CutLength(tool->get_CutLength());
+       t->set_ToolLife(tool->get_ToolLife());
+       t->set_Parts(tool->get_Parts());
        list.append(t);
     }
 

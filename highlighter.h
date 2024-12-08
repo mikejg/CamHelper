@@ -11,9 +11,13 @@ private:
     QColor color_Call;
     QColor color_Programm;
     QColor color_MFunction;
+    QColor color_N;
 
     QStringList stringList_MFunction;
+    QStringList stringList_N;
+
     QStringList scann_MFunction(QString);
+    QStringList scann_N(QString);
 
 public:
     HighLighter(QTextDocument *parent);

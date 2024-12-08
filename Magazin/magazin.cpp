@@ -17,7 +17,6 @@ Magazin::Magazin(QWidget *parent) :
 
     toolList = new ToolList(this);
     searchList = new ToolList(this);
-    sizeIn = 0;
 
     QPalette palette;
     palette.setColor(QPalette::Highlight, ui->tableView->palette().color(QPalette::Base));
@@ -62,7 +61,10 @@ void Magazin::contains(QString str, ToolList* list)
 
 bool Magazin::create_ToolList()
 {
+    qDebug() << Q_FUNC_INFO;
+
     QStringList stringList_ToolData;
+    sizeIn = 0;
 
     if(!mfile->read_Content())
         return false;
@@ -169,12 +171,7 @@ bool Magazin::create_ToolList()
         tool->set_Counter(dataBase->get_Counter(tool->get_Number()));
     }
 
-    /*
-    foreach (tool, toolList->getList())
-    {
-        qDebug() << tool->get_Number() << ": " << tool->get_counter();
-    }
-    */
+    qDebug() << "sizeIn:" << sizeIn;
     showToolList(toolList);
     return true;
 }
@@ -290,5 +287,6 @@ void Magazin::slot_MagazinChanged(QString str)
     log->message("add " + str + " to QSytemFileWatcher");
     fileSystemWatcher.addPath(str);
     connect(&fileSystemWatcher, SIGNAL(fileChanged(QString)), this, SLOT(slot_MagazinChanged(QString)));
+    qDebug() << Q_FUNC_INFO << "emit sig_NewMagazin()";
     emit sig_NewMagazin();
 }

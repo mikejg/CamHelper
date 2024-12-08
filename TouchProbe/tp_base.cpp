@@ -20,18 +20,18 @@ TP_Base::~TP_Base()
 
 void TP_Base::check_Clipboard(QString string_Text)
 {
-    //qDebug() << Q_FUNC_INFO;
-    //qDebug() << string_Text;
-
     string_X = "";
     string_Y = "";
     string_Z = "";
 
+    // zerlege den String in Zeilen
     QStringList stringList = string_Text.split("\n");
 
+    //geh durch alle Zeilen
     for(int i = 0; i<stringList.size(); i++)
     {
-        //Wenn in der Zeile das Schlüsselwort Endpunkt vorkommt lies 3 Zeilen vor
+        // Wenn in der Zeile das Schlüsselwort Endpunkt vorkommt lies
+        // die nächsten 3 Zeilen ein
         if(stringList.at(i).contains("Endpunkt") && i+3 < stringList.size())
         {
             string_X = stringList.at(i+1);
@@ -47,7 +47,7 @@ void TP_Base::check_Clipboard(QString string_Text)
     if(!string_Z.isEmpty())
         string_Z = filter_Value(string_Z);
 
-    qDebug() << string_X << string_Y << string_Z;
+    //qDebug() << string_X << string_Y << string_Z;
 
 }
 
@@ -87,6 +87,7 @@ QString TP_Base::filter_Value(QString string)
     bool bool_OK;
     QStringList stringList_Parts;
     QString string_Return;
+
     stringList_Parts = string.split(" ");
     foreach(QString str, stringList_Parts)
     {
@@ -97,6 +98,8 @@ QString TP_Base::filter_Value(QString string)
             break;
         }
     }
+
+    // runde auf 3 stellen nach dem komma ab
     if(bool_OK)
         string_Return = QString::number(double_Value, 'f', 3);
     return string_Return;

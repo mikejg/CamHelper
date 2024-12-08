@@ -67,5 +67,7 @@
         <file>Icons/programm.png</file>
         <file>Icons/paste.png</file>
         <file>Icons/camhelper.png</file>
+        <file>Icons/RawPartInspection/RawPartInspection03_192.PNG</file>
+        <file>Icons/tools.png</file>
     </qresource>
 </RCC>

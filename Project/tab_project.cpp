@@ -7,6 +7,8 @@ Tab_Project::Tab_Project(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    clipboard = QApplication::clipboard();
+
     ui->scrollArea->set_Layout(ui->verticalLayout_Pictures);
     ui->scrollArea->set_Spacer(ui->verticalSpacer_Pictures);
 
@@ -16,33 +18,37 @@ Tab_Project::Tab_Project(QWidget *parent) :
     ui->lineEdit_BTx->installEventFilter(this);
     ui->lineEdit_BTy->installEventFilter(this);
     ui->lineEdit_BTz->installEventFilter(this);
+    ui->lineEdit_NPx->installEventFilter(this);
+    ui->lineEdit_NPy->installEventFilter(this);
+    ui->lineEdit_NPz->installEventFilter(this);
+
     // Erzeuge den Zeiger auf MFile
     mfile = new MFile(this);
 
     fileDialog = new QFileDialog(this);
     fileDialog->setFilter(QDir::Files);
 
-
-    // Erstelle Paletten für gültige und ungültige Eingaben
-    //palette_InValid = new QPalette();
-    //palette_InValid->setColor(QPalette::Text,Qt::red);
-
-    //palette_Valid = new QPalette();
-    //*palette_Valid = palette();
-
     palette = ui->lineEdit_BTx->palette();
     backroundColor = palette.color(QPalette::Base);
     palette.setColor(QPalette::Base, Qt::darkRed);
+
+    palette_Label = ui->label_RohteilKontrolle->palette();
+    forgroundColor = palette_Label.color(ui->label_RohteilKontrolle->foregroundRole());
+
     ui->lineEdit_BTx->setPalette(palette);
     ui->lineEdit_BTy->setPalette(palette);
     ui->lineEdit_BTz->setPalette(palette);
     ui->lineEdit_RTx->setPalette(palette);
     ui->lineEdit_RTy->setPalette(palette);
     ui->lineEdit_RTz->setPalette(palette);
+    ui->lineEdit_NPx->setPalette(palette);
+    ui->lineEdit_NPy->setPalette(palette);
+    ui->lineEdit_NPz->setPalette(palette);
 
     // Wird die Spannung geändert, wird auch der Nullpunkt gändert werden
     connect(ui->comboBox_Clamping, SIGNAL(currentIndexChanged(int)), this, SLOT(slot_ClampingChanged(int)));
     connect(ui->toolButton_Programme, SIGNAL(released()), this, SLOT(slot_ShowProgramme()));
+    connect(ui->toolButton_Tools, SIGNAL(released()), this, SLOT(slot_ShowTools()));
     // Wird der Button Rohteilkontrolle geklickt erscheint eine Auswahl für die Rohteilkontrolle
     connect(ui->toolButton_RawPartInspection, SIGNAL(released()), this, SLOT(slot_ShowRawPartInspection()));
     connect(ui->toolButton_Tag, SIGNAL(released()), this, SLOT(slot_ShowTags()));
@@ -52,6 +58,7 @@ Tab_Project::Tab_Project(QWidget *parent) :
     connect(ui->toolButton_ExecFile, SIGNAL(released()), this, SLOT(slot_ExecFile()));
     connect(ui->checkBox_RT_EinzelAufmass,SIGNAL(stateChanged(int)), this, SLOT(slot_checkBox_RT_AufmassEinzel_stateChanged(int)));
     connect(ui->checkBox_FT_EinzelAufmass,SIGNAL(stateChanged(int)), this, SLOT(slot_checkBox_FT_AufmassEinzel_stateChanged(int)));
+    connect(ui->toolButton_Paste,SIGNAL(released()), this, SLOT(slot_NPPaste()));
 }
 
 Tab_Project::~Tab_Project()
@@ -76,16 +83,30 @@ void Tab_Project::clear()
 
     ui->doubleSpinBox_ZRohTeil->setValue(1);
     ui->scrollArea->clear();
-
 }
 
 bool Tab_Project::check_Project()
 {
     bool bool_valid = true;
-    //bool bool_OK;
-    //QString string_Komma;
     QString string_ProjectName;
     QString string_ProjectStatus;
+
+    // Wenn Spannung0 gewaehlt wurde dann
+    // überprüfe die Eingabenfelder für Rohteil und Bauteil
+    if(ui->comboBox_Clamping->currentIndex() == 0)
+    {
+        check_LineEdit(ui->lineEdit_RTx, true);
+        if(ui->lineEdit_RTx->palette().color(QPalette::Base) == Qt::darkRed)
+            bool_valid = false;
+
+        check_LineEdit(ui->lineEdit_RTy, true);
+        if(ui->lineEdit_RTx->palette().color(QPalette::Base) == Qt::darkRed)
+            bool_valid = false;
+
+        check_LineEdit(ui->lineEdit_RTz, true);
+        if(ui->lineEdit_RTz->palette().color(QPalette::Base) == Qt::darkRed)
+            bool_valid = false;
+    }
 
     // Wenn Spannung1 gewaehlt wurde dann
     // überprüfe die Eingabenfelder für Rohteil und Bauteil
@@ -104,17 +125,35 @@ bool Tab_Project::check_Project()
             bool_valid = false;
 
         check_LineEdit(ui->lineEdit_BTx, true);
-        if(ui->lineEdit_RTx->palette().color(QPalette::Base) == Qt::darkRed)
+        if(ui->lineEdit_BTx->palette().color(QPalette::Base) == Qt::darkRed)
             bool_valid = false;
 
         check_LineEdit(ui->lineEdit_BTy, true);
-        if(ui->lineEdit_RTx->palette().color(QPalette::Base) == Qt::darkRed)
+        if(ui->lineEdit_BTy->palette().color(QPalette::Base) == Qt::darkRed)
             bool_valid = false;
 
         check_LineEdit(ui->lineEdit_BTz, true);
-        if(ui->lineEdit_RTz->palette().color(QPalette::Base) == Qt::darkRed)
+        if(ui->lineEdit_BTz->palette().color(QPalette::Base) == Qt::darkRed)
             bool_valid = false;
+
+        if(ui->label_RohteilKontrolle->text() == QString("Rohteilkontrolle"))
+        {
+            qDebug() << Q_FUNC_INFO << ui->label_RohteilKontrolle->text();
+            palette_Label.setColor(ui->label_RohteilKontrolle->foregroundRole(), Qt::darkRed);
+            ui->label_RohteilKontrolle->setPalette(palette_Label);
+            bool_valid = false;
+        }
     }
+
+    check_LineEdit(ui->lineEdit_NPx, true);
+    if(ui->lineEdit_NPx->palette().color(QPalette::Base) == Qt::darkRed)
+        bool_valid = false;
+    check_LineEdit(ui->lineEdit_NPy, true);
+    if(ui->lineEdit_NPy->palette().color(QPalette::Base) == Qt::darkRed)
+        bool_valid = false;
+    check_LineEdit(ui->lineEdit_NPz, true);
+    if(ui->lineEdit_NPz->palette().color(QPalette::Base) == Qt::darkRed)
+        bool_valid = false;
 
     // Wenn bis hier ein Fehler aufgetreten brich die Funktion mit
     // false ab
@@ -137,7 +176,6 @@ bool Tab_Project::check_Project()
     project->set_ProjectName(ui->lineEdit_ProjectName->text());
     project->set_ProjectStatus(ui->lineEdit_ProjectStatus->text());
     project->set_CamFile(ui->lineEdit_CamFile->text());
-    project->set_Comment(ui->textEdit_Comment->toPlainText());
 
     // Abmasse für das Bauteil
     project->set_ComponentPartX(ui->lineEdit_BTx->text());
@@ -151,6 +189,9 @@ bool Tab_Project::check_Project()
 
     // Nullpunkt
     project->set_ProjectZeroPoint(ui->lineEdit_NP->text());
+    project->set_NPx(ui->lineEdit_NPx->text());
+    project->set_NPy(ui->lineEdit_NPy->text());
+    project->set_NPz(ui->lineEdit_NPz->text());
 
     // Z Rohteil
     project->set_ZRawPart(QString("%1").arg(ui->doubleSpinBox_ZRohTeil->value()));
@@ -225,14 +266,28 @@ bool Tab_Project::check_Project()
 
     project->set_Material(ui->comboBox_Material->currentText());
 
+    project->set_Comment(ui->textEdit_Comment->toPlainText());
     //Schreibe die neuen Projectdaten in Tab Log
-    project->log_ProjectData();
+    //project->log_ProjectData();
 
     return true;
 }
 
 bool Tab_Project::eventFilter(QObject *object, QEvent *event)
 {
+    double double_NPz;
+    if(ui->comboBox_Clamping->currentIndex() == 0)
+    {
+        if(object == ui->lineEdit_RTx)
+            check_LineEdit(ui->lineEdit_RTx, true);
+
+        if(object == ui->lineEdit_RTy)
+            check_LineEdit(ui->lineEdit_RTy, true);
+
+        if(object == ui->lineEdit_RTz)
+            check_LineEdit(ui->lineEdit_RTz, true);
+    }
+
     if(ui->comboBox_Clamping->currentIndex() == 1)
     {
         if(object == ui->lineEdit_BTx)
@@ -251,9 +306,47 @@ bool Tab_Project::eventFilter(QObject *object, QEvent *event)
             check_LineEdit(ui->lineEdit_RTy, true);
 
         if(object == ui->lineEdit_RTz)
+        {
             check_LineEdit(ui->lineEdit_RTz, true);
+        }
+    }
+
+    if(ui->comboBox_Clamping->currentIndex() > 0 )
+    {
+        if(object == ui->lineEdit_NPx)
+            check_LineEdit(ui->lineEdit_NPx, true);
+
+        if(object == ui->lineEdit_NPy)
+            check_LineEdit(ui->lineEdit_NPy, true);
+
+        if(object == ui->lineEdit_NPz)
+            check_LineEdit(ui->lineEdit_NPz, true);
     }
     return false;
+}
+
+float Tab_Project::filter_Value(QString string)
+{
+    float float_Value;
+    bool bool_OK;
+    QStringList stringList_Parts;
+    //QString string_Return;
+
+    stringList_Parts = string.split(" ");
+    foreach(QString str, stringList_Parts)
+    {
+        str.toFloat(&bool_OK);
+        if(bool_OK)
+        {
+            float_Value = str.toFloat(&bool_OK);
+            break;
+        }
+    }
+
+    // runde auf 3 stellen nach dem komma ab
+    //if(bool_OK)
+    //    string_Return = QString::number(float_Value, 'f', 3);
+    return float_Value;
 }
 
 bool Tab_Project::load_Material()
@@ -295,6 +388,9 @@ void Tab_Project::load_ProjectData()
     project->set_YPlus_Max_DB(item_Project.YPlus_Max);
     project->set_YMinus_Max_DB(item_Project.YMinus_Max);
     project->set_ZPlus_Max_DB(item_Project.ZPlus_Max);
+    project->set_NPx(item_Project.NPx);
+    project->set_NPy(item_Project.NPy);
+    project->set_NPz(item_Project.NPz);
 
     //Wenn in der Datenbank ein Comment war dann übernehme den Comment
     //ansonsten wird der Voreingestellte Comment beibehalten
@@ -411,6 +507,8 @@ void Tab_Project::set_ProjectData()
 
     dialog_Programm = new Dialog_Programm(this, project);
 
+    dialog_Tools = new Dialog_Tools(this, project);
+
     // Befülle Eingabefelder mit den Werten aus dem Project
     ui->lineEdit_ProjectName->setText(project->get_ProjectName());
     ui->lineEdit_ProjectStatus->setText(project->get_ProjectStatus());
@@ -425,6 +523,19 @@ void Tab_Project::set_ProjectData()
     ui->lineEdit_BTy->setText(project->get_ComponentPartY());
     ui->lineEdit_BTz->setText(project->get_ComponentPartZ());
 
+    if(project->get_NPx() != "-999")
+        ui->lineEdit_NPx->setText(project->get_NPx());
+    else
+        ui->lineEdit_NPx->setText("");
+    if(project->get_NPy() != "-999")
+        ui->lineEdit_NPy->setText(project->get_NPy());
+    else
+        ui->lineEdit_NPy->setText("");
+    if(project->get_NPz() != "-999")
+        ui->lineEdit_NPz->setText(project->get_NPz());
+    else
+        ui->lineEdit_NPz->setText("");
+
     ui->label_RohteilKontrolle->setText(project->get_RawPartInspection());
     ui->doubleSpinBox_ZRohTeil->setValue(project->get_ZRawPart().toDouble());
     ui->comboBox_Material->setCurrentText(project->get_Material());
@@ -434,12 +545,21 @@ void Tab_Project::set_ProjectData()
     {
         ui->comboBox_Clamping->setCurrentText(list_Keys[0]);
         ui->lineEdit_NP->setText(map_NP[list_Keys[0]]);
+        palette.setColor(QPalette::Base, backroundColor);
+        ui->lineEdit_BTx->setPalette(palette);
+        ui->lineEdit_BTy->setPalette(palette);
+        ui->lineEdit_BTz->setPalette(palette);
     }
 
     if(string_Clamping == "SP1" || string_Clamping == "Sp1" || string_Clamping == "sp1")
     {
         ui->comboBox_Clamping->setCurrentText(list_Keys[1]);
         ui->lineEdit_NP->setText(map_NP[list_Keys[1]]);
+        if(ui->label_RohteilKontrolle->text() == QString("Rohteilkontrolle"))
+        {
+            palette_Label.setColor(ui->label_RohteilKontrolle->foregroundRole(), Qt::darkRed);
+            ui->label_RohteilKontrolle->setPalette(palette_Label);
+        }
     }
 
     if(string_Clamping == "SP2" || string_Clamping == "Sp2" || string_Clamping == "sp2")
@@ -536,9 +656,19 @@ void Tab_Project::slot_ShowTags()
     dialog_Tag->show();
 }
 
+void Tab_Project::slot_ShowTools()
+{
+    dialog_Tools->show();
+}
+
 void Tab_Project::slot_NewInspection(QString str)
 {
     ui->label_RohteilKontrolle->setText(str);
+    if(ui->label_RohteilKontrolle->text() != QString("Rohteilkontrolle"))
+    {
+        palette_Label.setColor(ui->label_RohteilKontrolle->foregroundRole(), forgroundColor);
+        ui->label_RohteilKontrolle->setPalette(palette_Label);
+    }
 }
 
 void Tab_Project::slot_OpenPicture()
@@ -556,6 +686,50 @@ void Tab_Project::slot_NewHyperMILLFile()
 {
    fileDialog->setNameFilter(tr("HyperMILL (*.hmc)"));
     ui->lineEdit_CamFile->setText(fileDialog->getOpenFileName());
+}
+
+void Tab_Project::slot_NPPaste()
+{
+    Settings* settings = project->get_Settings();
+
+    float float_OffsetX = settings->get_OffsetX();
+    float float_OffsetY = settings->get_OffsetY();
+    float float_OffsetZ = settings->get_OffsetZ();
+    float float_NPx, float_NPy, float_NPz;
+
+    QString string_Text = clipboard->text();
+    QString string_X = "";
+    QString string_Y = "";
+    QString string_Z = "";
+
+    // zerlege den String in Zeilen
+    QStringList stringList = string_Text.split("\n");
+
+    //geh durch alle Zeilen
+    for(int i = 0; i<stringList.size(); i++)
+    {
+        // Wenn in der Zeile das Schlüsselwort Endpunkt vorkommt lies
+        // die nächsten 3 Zeilen ein
+        if(stringList.at(i).contains("Delta-Koordinaten") && i+3 < stringList.size())
+        {
+            string_X = stringList.at(i+1);
+            string_Y = stringList.at(i+2);
+            string_Z = stringList.at(i+3);
+        }
+    }
+
+    if(!string_X.isEmpty())
+        float_NPx = float_OffsetX + filter_Value(string_X);
+    if(!string_Y.isEmpty())
+        float_NPy = float_OffsetY + filter_Value(string_Y);
+    if(!string_Z.isEmpty())
+        float_NPz = float_OffsetZ + filter_Value(string_Z);
+
+    ui->lineEdit_NPx->setText(QString::number(float_NPx, 'f', 2));
+    ui->lineEdit_NPy->setText(QString::number(float_NPy, 'f', 2));
+    ui->lineEdit_NPz->setText(QString::number(float_NPz, 'f', 2));
+
+    //qDebug() << Q_FUNC_INFO << float_NPx << float_NPy << float_NPz;
 }
 
 void Tab_Project::slot_ExecFile()
@@ -579,6 +753,15 @@ void Tab_Project::slot_NewPixmap(QPixmap pixmap)
     ui->scrollArea->insert_Pixmap(pixmap);
 }
 
+void Tab_Project::slot_RefreshTools()
+{
+    qDebug() << Q_FUNC_INFO;
+
+    if(dialog_Tools != nullptr)
+    {
+        dialog_Tools->refresh();
+    }
+}
 QList<MLabel*> Tab_Project::get_PictureList()
 {
     return ui->scrollArea->get_PictureList();

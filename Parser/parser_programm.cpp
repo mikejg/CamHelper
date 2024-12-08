@@ -1,4 +1,5 @@
 #include "parser_programm.h"
+#include <QRegularExpression>
 
 Parser_Programm::Parser_Programm(QObject *parent,
                                  Logging* l,
@@ -69,14 +70,31 @@ void Parser_Programm::finish(QString stringFile, Item_Programm item)
     for(int i = 0; i < stringList_Content.size(); i++)
     {
         str = stringList_Content.at(i);
+        //Wenn str die Zeichfolge T=" beinhaltet
         if(str.contains("T=\""))
         {
+            //Kopiere str nach string_ToolID
             string_ToolID = str;
+
+            /*
+            QRegularExpression re("\"(.*)\"");
+            QRegularExpressionMatch match = re.match(str);
+            if (match.hasMatch()) {
+                QString matched = match.captured(0); // matched == "23 def"
+                // ...
+                matched = matched.remove("\"");
+                qDebug() << Q_FUNC_INFO << matched;
+            }
+            */
+
+            //schneide solange das erste Zeichen von string_ToolID ab bis
+            //string_ToolID mit " beginnt
             while(!string_ToolID.startsWith("\"") && string_ToolID.length()>0)
             {
                 string_ToolID = string_ToolID.right(string_ToolID.length()-1);
             }
-
+            //schneide solange das letzte Zeichen von string_ToolID ab bis
+            //string_ToolID mit " endet
             while(!string_ToolID.endsWith("\"") && string_ToolID.length()>0)
             {
                 string_ToolID = string_ToolID.left(string_ToolID.length()-1);
@@ -116,70 +134,72 @@ void Parser_Programm::finish(QString stringFile, Item_Programm item)
         }
     }
 
+    //Wenn für das Programm NoXY gesetzt ist
     if(item.NoXY)
     {
         log->message(item.Programm + " NoXY " + " ☑");
-    for(int i = 0; i < stringList_Content.size(); i++)
-    {
-        str = stringList_Content.at(i);
-        if(str.contains("T=\""))
+
+        for(int i = 0; i < stringList_Content.size(); i++)
         {
-            string_ToolID = str;
-            while(!string_ToolID.startsWith("\"") && string_ToolID.length()>0)
+            str = stringList_Content.at(i);
+            if(str.contains("T=\""))
             {
-                string_ToolID = string_ToolID.right(string_ToolID.length()-1);
-            }
-
-            while(!string_ToolID.endsWith("\"") && string_ToolID.length()>0)
-            {
-                string_ToolID = string_ToolID.left(string_ToolID.length()-1);
-            }
-
-            string_ToolID = string_ToolID.remove("\"");
-            string_GageLength = database->get_GageLength(string_ToolID);
-
-
-            if(!string_GageLength.isEmpty())
-            {
-                int_GageLength = string_GageLength.toInt();
-            }
-            else
-            {
-                int_GageLength = 9999;
-            }
-
-        }
-
-        if(str.contains("Reset - Cycle800") && int_GageLength <= 150)
-        {
-            //Ich möchte 6 Zeilen vorlesen
-            if(i+6 < stringList_Content.size())
-            {
-               //Folgende Zeilen müssen so nach dem "Reset - Cycle800" kommen
-               //N89 CYCLE800()
-               //N90 D0
-               //N91 G0 G153 Z499.9
-               //N92 G0 G153 X325. Y640.
-               //N93 D1
-               //N94 CYCLE800 (0,"HERMLE",100000,57,0.,42.5,-30.265,-90.,0.,180.,0,0,0,-1,0,0)
-
-                if(stringList_Content.at(i+1).contains("CYCLE800()") &&
-                   stringList_Content.at(i+2).contains("D0") &&
-                   stringList_Content.at(i+3).contains("G0 G153 Z499.9") &&
-                   stringList_Content.at(i+4).contains("G0 G153 X325. Y640.") &&
-                   stringList_Content.at(i+5).contains("D1") &&
-                   stringList_Content.at(i+6).contains("CYCLE800 (0,\"HERMLE\""))
+                string_ToolID = str;
+                while(!string_ToolID.startsWith("\"") && string_ToolID.length()>0)
                 {
-                    log->message(string_ToolID + " : GageLength = " + QString("%1").arg(int_GageLength) +
+                    string_ToolID = string_ToolID.right(string_ToolID.length()-1);
+                }
+
+                while(!string_ToolID.endsWith("\"") && string_ToolID.length()>0)
+                {
+                    string_ToolID = string_ToolID.left(string_ToolID.length()-1);
+                }
+
+                string_ToolID = string_ToolID.remove("\"");
+                string_GageLength = database->get_GageLength(string_ToolID);
+
+
+                if(!string_GageLength.isEmpty())
+                {
+                    int_GageLength = string_GageLength.toInt();
+                }
+                else
+                {
+                    int_GageLength = 9999;
+                }
+
+            }
+
+            if(str.contains("Reset - Cycle800") && int_GageLength <= 150)
+            {
+                //Ich möchte 6 Zeilen vorlesen
+                if(i+6 < stringList_Content.size())
+                {
+                    //Folgende Zeilen müssen so nach dem "Reset - Cycle800" kommen
+                    //N89 CYCLE800()
+                    //N90 D0
+                    //N91 G0 G153 Z499.9
+                    //N92 G0 G153 X325. Y640.
+                    //N93 D1
+                    //N94 CYCLE800 (0,"HERMLE",100000,57,0.,42.5,-30.265,-90.,0.,180.,0,0,0,-1,0,0)
+
+                    if(stringList_Content.at(i+1).contains("CYCLE800()") &&
+                       stringList_Content.at(i+2).contains("D0") &&
+                       stringList_Content.at(i+3).contains("G0 G153 Z499.9") &&
+                       stringList_Content.at(i+4).contains("G0 G153 X325. Y640.") &&
+                       stringList_Content.at(i+5).contains("D1") &&
+                       stringList_Content.at(i+6).contains("CYCLE800 (0,\"HERMLE\""))
+                    {
+                        log->message(string_ToolID + " : GageLength = " + QString("%1").arg(int_GageLength) +
                                                  " : setze NoXY");
-                   string_Temp = stringList_Content.at(i+4);
-                   string_Temp = string_Temp.replace("G0", ";G0");
-                   stringList_Content.removeAt(i+4);
-                   stringList_Content.insert(i+4,string_Temp);
+                        string_Temp = stringList_Content.at(i+4);
+                        string_Temp = string_Temp.replace("G0", ";G0");
+                        stringList_Content.removeAt(i+4);
+                        stringList_Content.insert(i+4,string_Temp);
+                    }
                 }
             }
         }
-    }
     }
     compare(mfile->get_Content(), stringList_Content);
     mfile->save(stringList_Content);

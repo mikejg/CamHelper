@@ -68,6 +68,8 @@ private:
     QString string_ZRawPart;
     QStringList stringList_Tags;
 
+    QString string_NPx, string_NPy, string_NPz;
+
     bool sort_Programms();
 
 public:
@@ -93,6 +95,9 @@ public:
     QString     get_Material()            {return string_Material;}
     bool        get_MaxOverSize()         {return bool_MaxOverSize;}
     bool        get_Numbering()           {return bool_Numbering;}
+    QString     get_NPx()                 {return string_NPx;}
+    QString     get_NPy()                 {return string_NPy;}
+    QString     get_NPz()                 {return string_NPz;}
     QString     get_ProgrammDir()         {return string_ProgrammDir;}
     QStringList get_ProgrammList();
     QList<Item_Programm> get_ListProgramm() {return list_Programm;}
@@ -123,7 +128,7 @@ public:
     QString     get_ZPlus_Max()           {return string_ZPlus_Max;}
     QString     get_ZPlus_Max_DB()        {return string_ZPlus_Max_DB;}
     QString     get_ZRawPart()            {return string_ZRawPart;}
-
+    Settings*   get_Settings()            {return settings;}
     void log_ProjectData();
 
     void remove_Tag(QString str) {stringList_Tags.removeOne(str);}
@@ -135,7 +140,7 @@ public:
     bool scann_ForTools();
 
     void set_CamFile(QString c)              {string_CamFile = c;}
-    void set_Comment(QString c)              {string_Comment = c;}
+    void set_Comment(QString c);
     void set_ComponentPartX(QString d)       {string_ComponentPartX = d;}
     void set_ComponentPartY(QString d)       {string_ComponentPartY = d;}
     void set_ComponentPartZ(QString d)       {string_ComponentPartZ = d;}
@@ -145,6 +150,9 @@ public:
     void set_MainProgramm(QString str)       {string_MainProgramm = str;}
     void set_Material(QString str)           {string_Material = str;}
     void set_NCTools();
+    void set_NPx(QString str)                {string_NPx = str;}
+    void set_NPy(QString str)                {string_NPy = str;}
+    void set_NPz(QString str)                {string_NPz = str;}
     void set_PictureList(QList<MLabel*> p)   {pictureList = p;}
     void set_Programms(QList<Item_Programm> list) {list_Programm = list;}
     void set_ProjectClamping(QString str)    {string_ProjectClamping = str;}
@@ -183,7 +191,7 @@ public slots:
     void slot_NewProgrammList(QList<Item_Programm>);
 
 signals:
-
+    void sig_NewToolList();
 };
 
 #endif // PROJECT_H

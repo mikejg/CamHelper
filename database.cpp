@@ -182,6 +182,7 @@ bool DataBase::deleteFrom_ProgrammProject(Item_ProgrammProject item)
 
 void DataBase::fill_ToolList(QString string_Project, QString string_Clamping, ToolList* toolList)
 {
+    qDebug() << Q_FUNC_INFO;
     QSqlQuery query (main_DataBase);
     QString string_FullName = string_Project + "_" + string_Clamping;
     Tool* tool;
@@ -207,6 +208,8 @@ void DataBase::fill_ToolList(QString string_Project, QString string_Clamping, To
         tool->set_TipLength(query.value("TipLength").toString());
         tool->set_Counter(query.value("counter").toInt());
         tool->set_Description(query.value("Description").toString());
+        tool->set_ToolLife(query.value("ToolLife").toBool());
+        tool->set_Parts(query.value("Parts").toInt());
         toolList->insert_Tool(tool);
     }
 }
@@ -452,6 +455,9 @@ Item_Project DataBase::get_Project(QString string_Name, QString string_Clamping)
         item_Project.YPlus_Max = query.value("YPlus_Max").toString();
         item_Project.YMinus_Max = query.value("YMinus_Max").toString();
         item_Project.ZPlus_Max = query.value("ZPlus_Max").toString();
+        item_Project.NPx = query.value("NPx").toString();
+        item_Project.NPy = query.value("NPy").toString();
+        item_Project.NPz = query.value("NPz").toString();
     }
 
     query.exec("SELECT * from Programm_Project "
@@ -1187,6 +1193,7 @@ bool DataBase::insert_Tool(Tool* tool, QString string_ProjectID, QString string_
 {
     QString string_ToolID;
     QString string_NCToolsProjectID;
+    int int_ToolLife  = int(tool->get_ToolLife());
 
     QSqlQuery queryAdd (main_DataBase);
 
@@ -1206,16 +1213,20 @@ bool DataBase::insert_Tool(Tool* tool, QString string_ProjectID, QString string_
         return true;
     }
 
-    queryAdd.prepare("INSERT INTO NCTools_Project (nctool_id, T_Number, project_id, Project) "
+    queryAdd.prepare("INSERT INTO NCTools_Project (nctool_id, T_Number, project_id, "
+                                                  "Project, ToolLife, Parts) "
                      "VALUES (:nctool_id, "
                      ":T_Number, "
                      ":project_id, "
-                     ":Project)");
+                     ":Project, "
+                     ":ToolLife,"
+                     ":Parts)");
     queryAdd.bindValue(":nctool_id", string_ToolID);
     queryAdd.bindValue(":T_Number", tool->get_Number());
     queryAdd.bindValue(":project_id", string_ProjectID);
     queryAdd.bindValue(":Project", string_ProjectFullName);
-
+    queryAdd.bindValue(":ToolLife", int_ToolLife);
+    queryAdd.bindValue(":Parts", tool->get_Parts());
     if(!queryAdd.exec())
     {
         // Wenn es einen Fehler gibt wird die Fehlermeldung an den Kommas
@@ -1656,7 +1667,7 @@ bool DataBase::save_Project(QMap<QString, QString> map_Data)
                          "CamFile, Comment, Last_Production, "
                          "XPlus_Max, XMinus_Max, "
                          "YPlus_Max, YMinus_Max, "
-                         "ZPlus_Max) "
+                         "ZPlus_Max, NPx, NPy, NPz) "
                          "VALUES (:Name, :Status, :Clamping, "
                          ":RawPart_X, :RawPart_Y, :RawPart_Z, "
                          ":Component_X, :Component_Y, :Component_Z, "
@@ -1664,7 +1675,7 @@ bool DataBase::save_Project(QMap<QString, QString> map_Data)
                          ":CamFile, :Comment, :Last_Production, "
                          ":XPlus_Max, :XMinus_Max, "
                          ":YPlus_Max, :YMinus_Max, "
-                         ":ZPlus_Max)");
+                         ":ZPlus_Max, :NPx, :NPy, :NPz)");
 
         queryAdd.bindValue(":Name", map_Data.value("Name"));
         queryAdd.bindValue(":Status", map_Data.value("Status"));
@@ -1693,6 +1704,10 @@ bool DataBase::save_Project(QMap<QString, QString> map_Data)
         queryAdd.bindValue(":YPlus_Max", map_Data.value("YPlus_Max"));
         queryAdd.bindValue(":YMinus_Max", map_Data.value("YMinus_Max"));
         queryAdd.bindValue(":ZPlus_Max", map_Data.value("ZPlus_Max"));
+
+        queryAdd.bindValue(":NPx", map_Data.value("NPx"));
+        queryAdd.bindValue(":NPy", map_Data.value("NPy"));
+        queryAdd.bindValue(":NPz", map_Data.value("NPz"));
 
         qDebug() << map_Data;
         if(!queryAdd.exec())
@@ -1733,7 +1748,10 @@ bool DataBase::save_Project(QMap<QString, QString> map_Data)
                          "YPlus_Max='" + map_Data.value("YPlus_Max") + "', "
                          "YMinus_Max='" + map_Data.value("YMinus_Max") + "', "
                          "ZPlus_Max='" + map_Data.value("ZPlus_Max") + "', "
-                         "Last_Production='" + map_Data.value("Last_Production") + "', "
+                         "NPx='" + map_Data.value("NPx") + "', "
+                         "NPy='" + map_Data.value("NPy") + "', "
+                         "NPz='" + map_Data.value("NPz") + "', "
+                         "Last_Production='" + map_Data.value("Last_Production") + "', "                                                              
                          "Comment='" + map_Data.value("Comment") + "' "
                          "where Name = '" + map_Data.value("Name") + "' "
                          "and Clamping = '" + map_Data.value("Clamping") + "';");
