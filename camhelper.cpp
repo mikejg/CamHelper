@@ -578,48 +578,22 @@ void CamHelper::slot_LicenseFaild()
 
 void CamHelper::slot_LoadProject(QString string_Project, QString string_Clamping)
 {
+    QStringList stringList_Tags;
+
     //erzeuge einen neuen Zeiger für das Project und übergib ihn den nötigen Klassen
     new_Project();
 
+    //erzeuge ein zweites Projekt. Das zum überwachen von änderungen gebraucht wird
+    old_Project = new Project(this,
+                          logging,
+                          settings,
+                          dataBase,
+                          toolList_IN);
+
     Item_Project item_Project = dataBase->get_FullProject(string_Project, string_Clamping);
 
-    project->set_ProjectName(item_Project.Name);
-    project->set_ProjectStatus(item_Project.Status);
-    project->set_ProjectClamping(item_Project.Clamping);
-    project->set_ProjectZeroPoint(item_Project.ZeroPoint);
-    project->set_CamFile(item_Project.CamFile);
-    project->set_Comment(item_Project.Comment);
-
-    project->set_ProjectFullName();
-
-    project->set_RawPartInspection(item_Project.RawPartInspection);
-
-    project->set_RawPartX(item_Project.RawPart_X);
-    project->set_RawPartY(item_Project.RawPart_Y);
-    project->set_RawPartZ(item_Project.RawPart_Z);
-
-    project->set_ComponentPartX(item_Project.Component_X);
-    project->set_ComponentPartY(item_Project.Component_Y);
-    project->set_ComponentPartZ(item_Project.Component_Z);
-
-    project->set_ZRawPart(item_Project.ZRawPart);
-    project->set_Material(item_Project.Material);
-
-    project->set_LastProduction(item_Project.Last_Production);
-    project->set_XPlus_Max_DB(item_Project.XPlus_Max);
-    project->set_XMinus_Max_DB(item_Project.XMinus_Max);
-    project->set_YPlus_Max_DB(item_Project.YPlus_Max);
-    project->set_YMinus_Max_DB(item_Project.YMinus_Max);
-    project->set_ZPlus_Max_DB(item_Project.ZPlus_Max);
-
-    project->set_NPx(item_Project.NPx);
-    project->set_NPy(item_Project.NPy);
-    project->set_NPz(item_Project.NPz);
-
-    //setze QList<Item_ProgrammProject>
-    project->set_Programms(item_Project.list_Programme);
-
-    project->set_NCTools();
+    project->set_Data(item_Project);
+    old_Project->set_Data(item_Project);
 
     //erstelle den Ruestplan
     showTable_Rustplan();
@@ -657,12 +631,20 @@ void CamHelper::slot_LoadProject(QString string_Project, QString string_Clamping
 
     QList<Item_TouchProbe> list = dataBase->get_TouchProbe(item_Project.id);
     project->set_ListTouchProbe(list);
+    old_Project->set_ListTouchProbe(list);
     touchProbe->insert_Item(project->get_ListTouchProbe());
 
     QList<QPixmap> pixmap_List = dataBase->get_Pixmap(item_Project.id);
     foreach(QPixmap pix, pixmap_List)
     {
         ui->tab_Project->slot_NewPixmap(pix);
+    }
+
+    stringList_Tags = dataBase->get_Tags(item_Project.id);
+    foreach(QString string_Tag, stringList_Tags)
+    {
+        project->add_Tag(string_Tag);
+        old_Project->add_Tag(string_Tag);
     }
 
     project->log_ProjectData();

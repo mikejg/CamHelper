@@ -26,7 +26,6 @@ Dialog_Tag::Dialog_Tag(QWidget *parent, DataBase *db) :
     delete ui->buttonBox;
 
     create_TagsForOpenFile();
-
 }
 
 Dialog_Tag::~Dialog_Tag()
@@ -61,7 +60,7 @@ void Dialog_Tag::create_Tags()
         {
             item->setCheckState(Qt::Checked);
             item->setForeground(Qt::darkYellow);
-            project->add_Tag(item->text());
+            //project->add_Tag(item->text());
         }
     }
 

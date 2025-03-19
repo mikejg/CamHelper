@@ -13,7 +13,7 @@ TP_Bohrung::TP_Bohrung(QWidget *parent) :
     ui->lineEdit_Durchmesser->setPalette(palette);
 
     ui->lineEdit_Durchmesser->installEventFilter(this);
-
+     ui->lineEdit_TSA->installEventFilter(this);
 
     clipboard = QApplication::clipboard();
     tp_HighLighter = new TP_HighLighter(ui->textEdit_Anfahren->document());
@@ -35,6 +35,9 @@ void TP_Bohrung::setPixmap()
 
 bool TP_Bohrung::eventFilter(QObject *object, QEvent *ev)
 {
+    if(object == ui->lineEdit_TSA)
+        check_LineEdit(ui->lineEdit_TSA, true);
+
     if(object == ui->lineEdit_Durchmesser)
         eventFilter_Durchmesser(ev);
     return false;

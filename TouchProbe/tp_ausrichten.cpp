@@ -165,14 +165,6 @@ void TP_Ausrichten::slot_currentTextChanged(QString str)
 
 bool TP_Ausrichten::eventFilter(QObject *object, QEvent *event)
 {
-    /*bool bool_ok;
-    ui->lineEdit_L2->text().toDouble(&bool_ok);
-    if(bool_ok)
-        palette_L2.setColor(QPalette::Base, backroundColor_L2);
-    else
-        palette_L2.setColor(QPalette::Base, Qt::darkRed);
-    ui->lineEdit_L2->setPalette(palette_L2);*/
-
     if(object == ui->lineEdit_L2)
         check_LineEdit(ui->lineEdit_L2, true);
     if (event->type() == QEvent::FocusIn)

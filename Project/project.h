@@ -98,6 +98,7 @@ public:
     QString     get_NPx()                 {return string_NPx;}
     QString     get_NPy()                 {return string_NPy;}
     QString     get_NPz()                 {return string_NPz;}
+    QList<MLabel*> get_PictureList()      {return pictureList;}
     QString     get_ProgrammDir()         {return string_ProgrammDir;}
     QStringList get_ProgrammList();
     QList<Item_Programm> get_ListProgramm() {return list_Programm;}
@@ -145,6 +146,7 @@ public:
     void set_ComponentPartY(QString d)       {string_ComponentPartY = d;}
     void set_ComponentPartZ(QString d)       {string_ComponentPartZ = d;}
     void set_ContentMainProgramm(QTextEdit*);
+    void set_Data(Item_Project);
     void set_LastProduction(QString str)     {string_LastProduction = str;}
     void set_ListTouchProbe(QList<Item_TouchProbe> l) {list_TouchProbe = l;}
     void set_MainProgramm(QString str)       {string_MainProgramm = str;}

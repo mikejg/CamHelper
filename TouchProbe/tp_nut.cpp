@@ -9,6 +9,7 @@ TP_Nut::TP_Nut(QWidget *parent) :
 
     ui->lineEdit_W->installEventFilter(this);
     ui->lineEdit_TSA->installEventFilter(this);
+    ui->lineEdit_DFA->installEventFilter(this);
 
     palette = ui->lineEdit_W->palette();
     backroundColor = palette.color(QPalette::Base);
@@ -64,7 +65,12 @@ bool TP_Nut::eventFilter(QObject *object, QEvent *ev)
         palette_W.setColor(QPalette::Base, Qt::darkRed);
     ui->lineEdit_W->setPalette(palette_W);*/
 
-    check_LineEdit(ui->lineEdit_W, true);
+    if(object == ui->lineEdit_W)
+        check_LineEdit(ui->lineEdit_W, true);
+    if(object == ui->lineEdit_DFA)
+        check_LineEdit(ui->lineEdit_DFA, true);
+    if(object == ui->lineEdit_TSA)
+        check_LineEdit(ui->lineEdit_TSA, true);
 
     if(object == ui->lineEdit_W && ev->type() == QEvent::FocusIn)
         emit sig_NewPixmap(QPixmap(":/Icons/TouchProbe/Nut/Nut_W.png"));

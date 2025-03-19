@@ -35,10 +35,6 @@ QMap<QString, QString> Project::get_Data()
     //schreibe alle Parameter in eine Map und gib sie zurück
     QMap<QString, QString> map_Data;
 
-    qDebug() << Q_FUNC_INFO << string_NPx;
-    qDebug() << Q_FUNC_INFO << string_NPy;
-    qDebug() << Q_FUNC_INFO << string_NPz;
-
     map_Data.insert("Name", string_ProjectName);
     map_Data.insert("Status", string_ProjectStatus);
     map_Data.insert("Clamping", string_ProjectClamping);
@@ -140,6 +136,47 @@ void Project::save()
 
     // Wenn wir hier angekommens sind sollte alles nach Plan gelaufen sein
     log->successful("Project: " + string_ProjectFullName + " erfolgreich gespeichert");
+}
+
+void Project::set_Data(Item_Project item_Project)
+{
+    set_ProjectName(item_Project.Name);
+    set_ProjectStatus(item_Project.Status);
+    set_ProjectClamping(item_Project.Clamping);
+    set_ProjectZeroPoint(item_Project.ZeroPoint);
+    set_CamFile(item_Project.CamFile);
+    set_Comment(item_Project.Comment);
+
+    set_ProjectFullName();
+
+    set_RawPartInspection(item_Project.RawPartInspection);
+
+    set_RawPartX(item_Project.RawPart_X);
+    set_RawPartY(item_Project.RawPart_Y);
+    set_RawPartZ(item_Project.RawPart_Z);
+
+    set_ComponentPartX(item_Project.Component_X);
+    set_ComponentPartY(item_Project.Component_Y);
+    set_ComponentPartZ(item_Project.Component_Z);
+
+    set_ZRawPart(item_Project.ZRawPart);
+    set_Material(item_Project.Material);
+
+    set_LastProduction(item_Project.Last_Production);
+    set_XPlus_Max_DB(item_Project.XPlus_Max);
+    set_XMinus_Max_DB(item_Project.XMinus_Max);
+    set_YPlus_Max_DB(item_Project.YPlus_Max);
+    set_YMinus_Max_DB(item_Project.YMinus_Max);
+    set_ZPlus_Max_DB(item_Project.ZPlus_Max);
+
+    set_NPx(item_Project.NPx);
+    set_NPy(item_Project.NPy);
+    set_NPz(item_Project.NPz);
+
+    //setze QList<Item_ProgrammProject>
+    set_Programms(item_Project.list_Programme);
+
+    set_NCTools();
 }
 
 bool Project::scann_ForData()
@@ -293,9 +330,9 @@ void Project::set_Comment(QString c)
     if(string_Comment.contains("$NPz"))
         string_Comment = string_Comment.replace("$NPz$", string_NPz);
 }
+
 void Project::set_NCTools()
 {
-    qDebug() << Q_FUNC_INFO;
     database->fill_ToolList(string_ProjectName, string_ProjectClamping, toolList);
 }
 
@@ -545,12 +582,10 @@ void Project::save_TPItems(QString string_ProjectID)
 
 void Project::save_Pictures(QString string_ProjectID)
 {
-    qDebug() << Q_FUNC_INFO << "Start";
     //loesche alle Bilder aus der Datenbank
     database->delete_Pictures(string_ProjectID);
     foreach(MLabel* label, pictureList)
     {
-        qDebug() << Q_FUNC_INFO << "foreach";
         database->insert_Picture(label, string_ProjectID);
     }
 }

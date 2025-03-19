@@ -84,6 +84,7 @@ private:
     bool                bool_PrintProject;
     ProgrammModel*      programmModel;
     Project*            project;
+    Project*            old_Project;
     Project_Export*     project_Export;
     Settings*           settings;
     Tab_Project*        tab_Project;

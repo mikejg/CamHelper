@@ -8,6 +8,7 @@ TP_Steg::TP_Steg(QWidget *parent) :
     ui->setupUi(this);
     ui->lineEdit_W->installEventFilter(this);
     ui->lineEdit_DFA->installEventFilter(this);
+    ui->lineEdit_TSA->installEventFilter(this);
     ui->lineEdit_DZ->installEventFilter(this);
 
     palette = ui->lineEdit_W->palette();
@@ -93,7 +94,18 @@ bool TP_Steg::eventFilter(QObject *object, QEvent *ev)
 {
     //Überprüfe ob sich der Inhalt von LineEdit_W in ein double konvertieren läss.
     //Wenn das fehlschlägt setze den Hintergrund rot
-    check_LineEdit(ui->lineEdit_W, true);
+
+    if(object == ui->lineEdit_DFA)
+        check_LineEdit(ui->lineEdit_DFA, true);
+
+    if(object == ui->lineEdit_TSA)
+        check_LineEdit(ui->lineEdit_TSA, true);
+
+    if(object == ui->lineEdit_DZ)
+        check_LineEdit(ui->lineEdit_DZ, true);
+
+    if(object == ui->lineEdit_W)
+       check_LineEdit(ui->lineEdit_W, true);
 
     if(object == ui->lineEdit_W)
         eventFilter_Wert(ev);

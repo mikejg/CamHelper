@@ -418,6 +418,7 @@ Item_Programm DataBase::get_ItemProgramm(QString string_ProjectID, QString strin
 
 Item_Project DataBase::get_Project(QString string_Name, QString string_Clamping)
 {
+    qDebug() << Q_FUNC_INFO;
     Item_Project item_Project(string_Name, string_Clamping);
     Item_Programm item_Programm;
 
@@ -484,6 +485,7 @@ Item_Project DataBase::get_Project(QString string_Name, QString string_Clamping)
         item_Project.list_Programme.append(item_Programm);
     }
 
+    qDebug() << Q_FUNC_INFO << "END";
     return item_Project;
 }
 
@@ -948,6 +950,7 @@ QList<Item_TouchProbe> DataBase::get_TouchProbe(QString string_ProjectID)
 
 QList<QPixmap> DataBase::get_Pixmap(QString string_ProjectID)
 {
+    qDebug() << Q_FUNC_INFO << string_ProjectID;
     QSqlQuery query (main_DataBase);
     QList<QPixmap> list;
     QPixmap outPixmap;
@@ -971,6 +974,7 @@ QList<QPixmap> DataBase::get_Pixmap(QString string_ProjectID)
         outPixmap.loadFromData( byteArray );
         list.append(outPixmap);
     }
+    return list;
 }
 
 bool DataBase::inc_ToolCounter(ToolList* toolList)

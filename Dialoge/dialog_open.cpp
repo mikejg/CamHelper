@@ -83,6 +83,7 @@ void Dialog_Open::slot_TextChanged(QString str)
 
 void Dialog_Open::slot_Clicked(QModelIndex index)
 {
+
     QString itemText = index.data(Qt::DisplayRole).toString();
     QStringList stringList;
     Item_Project itemProject;
@@ -92,6 +93,7 @@ void Dialog_Open::slot_Clicked(QModelIndex index)
     stringList = itemText.split("_");
     if(stringList.size() == 2)
     {
+        qDebug() << Q_FUNC_INFO;
         //Lade alle Daten des Projects, uns interessiert nur die DatenBank ID
         itemProject = dataBase->get_Project(stringList.at(0), stringList.at(1));
 
@@ -103,6 +105,8 @@ void Dialog_Open::slot_Clicked(QModelIndex index)
             ui->label->setPixmap(picList.at(0));
         }
     }
+
+    qDebug() << Q_FUNC_INFO << "END";
 }
 
 void Dialog_Open::slot_TagsClicked()

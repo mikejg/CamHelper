@@ -15,6 +15,7 @@ TP_Kante::TP_Kante(QWidget *parent) :
 
     ui->lineEdit_Wert->installEventFilter(this);
     ui->lineEdit_DFA->installEventFilter(this);
+    ui->lineEdit_TSA->installEventFilter(this);
 
     tp_HighLighter = new TP_HighLighter(ui->textEdit_Anfahren->document());
     tp_HighLighter->set_TextEdit(ui->textEdit_Anfahren);
@@ -106,18 +107,15 @@ void TP_Kante::slot_AxesSignsChanged(QString str)
 }
 
 bool TP_Kante::eventFilter(QObject *object, QEvent *ev)
-{
-    //Überprüfe ob sich der Inhalt von LineEdit_Wert in ein double konvertieren läss.
-    //Wenn das fehlschlägt setze den Hintergrund rot
-    /*bool bool_ok;
-    ui->lineEdit_Wert->text().toDouble(&bool_ok);
-    if(bool_ok)
-        palette_Wert.setColor(QPalette::Base, backroundColor_Wert);
-    else
-        palette_Wert.setColor(QPalette::Base, Qt::darkRed);
-    ui->lineEdit_Wert->setPalette(palette_Wert);*/
+{   
+    if(object == ui->lineEdit_DFA)
+        check_LineEdit(ui->lineEdit_DFA, true);
 
-    check_LineEdit(ui->lineEdit_Wert);
+    if(object == ui->lineEdit_Wert)
+       check_LineEdit(ui->lineEdit_Wert);
+
+    if(object == ui->lineEdit_TSA)
+        check_LineEdit(ui->lineEdit_TSA, true);
 
     if(object == ui->lineEdit_Wert)
         eventFilter_Wert(ev);

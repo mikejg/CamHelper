@@ -181,6 +181,15 @@ bool Project_Export::finish_Load()
 
     mfile->setFileName(string_Destination + "/Rusten_" + string_ProjectFullName + ".WPD" + QDir::separator() + "_NP_Setzen.spf");
     mfile->save(stringList_File);
+
+    int i = 1;
+    foreach(MLabel* label, project->get_PictureList())
+    {
+        QFile file(string_Destination + "/Rusten_" + string_ProjectFullName + ".WPD" + QDir::separator() + QString("Bild_%1.png").arg(i));
+        label->get_Pixmap().save(&file, "PNG");
+        i++;
+    }
+
     return true;
 }
 
