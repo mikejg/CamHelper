@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    ui->frame->setStyleSheet("background-color: rgba(125, 125, 125, 255); ");
 }
 
 MainWindow::~MainWindow()
