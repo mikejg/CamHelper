@@ -508,10 +508,10 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
-      <widget class="Tab_Project" name="page"/>
-      <widget class="QWidget" name="page_2"/>
+      <widget class="Tab_Project" name="tab_Project"/>
+      <widget class="QWidget" name="tab_Init"/>
      </widget>
     </item>
    </layout>
