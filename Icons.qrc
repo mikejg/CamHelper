@@ -5,5 +5,14 @@
         <file>Icons/Main/Project.png</file>
         <file>Icons/Main/ToolList.png</file>
         <file>Icons/Main/ToolMagazin.png</file>
+        <file>Icons/Main/Project2.png</file>
+        <file>Icons/Main/Wallpaper.jpg</file>
+        <file>Icons/Project/programm.png</file>
+        <file>Icons/Project/rawpartinspection.png</file>
+        <file>Icons/Project/tag.png</file>
+        <file>Icons/Project/tools.png</file>
+        <file>Icons/Project/camfile.png</file>
+        <file>Icons/Main/File_Open.png</file>
+        <file>Icons/Project/cut.png</file>
     </qresource>
 </RCC>

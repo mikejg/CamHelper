@@ -6,10 +6,14 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QPixmap bkgnd(":/Icons/Main/Wallpaper.jpg");
+    bkgnd = bkgnd.scaled(this->size());
+    QPalette palette;
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
 
-    ui->frame->setStyleSheet("background-color: rgba(125, 125, 125, 255); ");
-
-    dialog_Settings = new Dialog_Settings(this);
+    //dialog_Settings = new Dialog_Settings(this);
+    ui->stackedWidget->setCurrentIndex(0);
 
     QTimer::singleShot(500, this, SLOT(slot_InitApp()));
 }
@@ -21,8 +25,4 @@ MainWindow::~MainWindow()
 
 void MainWindow::slot_InitApp()
 {
-    //Überprüfe die Settings, wenn es einen Fehler gibt
-    //zeige den Dialog
-    if(!dialog_Settings->checkSettings())
-        dialog_Settings->show();
 }

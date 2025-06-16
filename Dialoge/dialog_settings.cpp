@@ -48,7 +48,10 @@ Dialog_Settings::Dialog_Settings(QWidget *parent) :
     connect(ui->toolButton_ToolMagazin, SIGNAL(clicked(bool)), this, SLOT(toolButton_ToolMagazin_clicked(bool)));
     connect(ui->toolButton_ToolDB,      SIGNAL(clicked(bool)), this, SLOT(toolButton_ToolDB_clicked(bool)));
 
+    QPalette palette;
+    palette.setBrush(QPalette::Window, QBrush(QColor(255,255,255,64)));
 
+    this->setPalette(palette);
 }
 
 Dialog_Settings::~Dialog_Settings()

@@ -13,6 +13,28 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget{background-color: rgba(0, 0, 0, 128);}
+
+QToolButton{
+	background-color: rgba(0, 0, 0,0);}
+
+QDoubleSpinBox{background-color: rgba(255, 255, 255,32);
+border-radius:5px;}
+
+QLineEdit{background-color: rgba(255, 255, 255,32);
+border-radius:5px;}
+
+QLabel{background-color: rgba(255, 255, 255,0);}
+
+QGroupBox{border-radius: 5px;}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left; /* position at the top center */
+    padding: 0 3px;
+}</string>
+  </property>
   <layout class="QHBoxLayout" name="horizontalLayout_12">
    <item>
     <widget class="QFrame" name="frame">
@@ -35,7 +57,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normalon>:/Icons/more.png</normalon>
+            <normalon>:/Icons/Project/rawpartinspection.png</normalon>
            </iconset>
           </property>
          </widget>
@@ -50,7 +72,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normalon>:/Icons/tag.png</normalon>
+            <normalon>:/Icons/Project/tag.png</normalon>
            </iconset>
           </property>
          </widget>
@@ -65,7 +87,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normalon>:/Icons/programm.png</normalon>
+            <normalon>:/Icons/Project/programm.png</normalon>
            </iconset>
           </property>
          </widget>
@@ -77,7 +99,7 @@
           </property>
           <property name="icon">
            <iconset>
-            <normalon>:/Icons/tools.png</normalon>
+            <normalon>:/Icons/Project/tools.png</normalon>
            </iconset>
           </property>
          </widget>
@@ -98,9 +120,22 @@
        </layout>
       </item>
       <item>
+       <widget class="QLabel" name="label_Project">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgba(255, 255, 255,0);</string>
+        </property>
+        <property name="text">
+         <string>Projekt</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QGroupBox" name="groupBox">
+        <property name="styleSheet">
+         <string notr="true">border-radius: 5px;</string>
+        </property>
         <property name="title">
-         <string>Projektname</string>
+         <string/>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_6">
          <item>
@@ -145,7 +180,99 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_File">
            <item>
-            <widget class="QLineEdit" name="lineEdit_CamFile"/>
+            <widget class="QLineEdit" name="lineEdit_CamFile">
+             <property name="palette">
+              <palette>
+               <active>
+                <colorrole role="Button">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="32">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Base">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="32">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Window">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="32">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </active>
+               <inactive>
+                <colorrole role="Button">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="32">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Base">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="32">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Window">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="32">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </inactive>
+               <disabled>
+                <colorrole role="Button">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="32">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Base">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="32">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Window">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="32">
+                   <red>255</red>
+                   <green>255</green>
+                   <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </disabled>
+              </palette>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QToolButton" name="toolButton_ExecFile">
@@ -154,7 +281,7 @@
              </property>
              <property name="icon">
               <iconset>
-               <normalon>:/Icons/camfile.png</normalon>
+               <normalon>:/Icons/Project/camfile.png</normalon>
               </iconset>
              </property>
              <property name="iconSize">
@@ -172,7 +299,7 @@
              </property>
              <property name="icon">
               <iconset>
-               <normalon>:/Icons/File_Open.png</normalon>
+               <normalon>:/Icons/Main/File_Open.png</normalon>
               </iconset>
              </property>
              <property name="iconSize">
@@ -189,9 +316,19 @@
        </widget>
       </item>
       <item>
+       <widget class="QLabel" name="label_RawPart">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgba(255, 255, 255,0);</string>
+        </property>
+        <property name="text">
+         <string>Rohteil</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QGroupBox" name="groupBox_Rohteil">
         <property name="title">
-         <string>Rohteil</string>
+         <string/>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
@@ -210,6 +347,10 @@
                <width>40</width>
                <height>16777215</height>
               </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgba(255, 255, 255,32);
+border-radius:5px;</string>
              </property>
              <property name="text">
               <string/>
@@ -271,6 +412,9 @@
            </item>
            <item>
             <widget class="QLabel" name="label_RohteilKontrolle">
+             <property name="styleSheet">
+              <string notr="true">background-color: rgba(255, 255, 255,0);</string>
+             </property>
              <property name="text">
               <string>Rohteilkontrolle</string>
              </property>
@@ -619,6 +763,12 @@
             </item>
             <item>
              <widget class="QDoubleSpinBox" name="doubleSpinBox_Xplus_Max">
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="prefix">
+               <string/>
+              </property>
               <property name="decimals">
                <number>1</number>
               </property>
@@ -629,6 +779,19 @@
                <double>2.000000000000000</double>
               </property>
              </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_8">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
             <item>
              <widget class="QLabel" name="label_RT_Xminus">
@@ -651,6 +814,19 @@
              </widget>
             </item>
             <item>
+             <spacer name="horizontalSpacer_9">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
              <widget class="QLabel" name="label_RT_Yplus">
               <property name="text">
                <string>Y+</string>
@@ -671,6 +847,19 @@
              </widget>
             </item>
             <item>
+             <spacer name="horizontalSpacer_10">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
              <widget class="QLabel" name="label_RT_Yminus">
               <property name="text">
                <string>Y-</string>
@@ -689,6 +878,19 @@
                <double>2.000000000000000</double>
               </property>
              </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_11">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
             <item>
              <widget class="QLabel" name="label_RT_Zplus">
@@ -942,7 +1144,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normalon>:/Icons/cut.png</normalon>
+           <normalon>:/Icons/Project/cut.png</normalon>
           </iconset>
          </property>
          <property name="iconSize">
@@ -960,7 +1162,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normalon>:/Icons/File_Open.png</normalon>
+           <normalon>:/Icons/Main/File_Open.png</normalon>
           </iconset>
          </property>
          <property name="iconSize">
@@ -998,8 +1200,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>531</width>
-          <height>892</height>
+          <width>433</width>
+          <height>884</height>
          </rect>
         </property>
         <property name="minimumSize">
