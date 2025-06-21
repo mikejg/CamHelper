@@ -8,4 +8,6 @@ Settings::Settings(QObject *parent)
     string_MagazinDir  = settings->value("MagazinDir", "").toString();
     string_ToolDB      = settings->value("ToolDB", "").toString();
     int_ToolPlaces     = settings->value("ToolPlaces").toInt();
+
+    qDebug() << Q_FUNC_INFO << string_ProgrammDir;
 }

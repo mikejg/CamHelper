@@ -3,8 +3,12 @@
 
 #include <QMainWindow>
 #include <QTimer>
+#include <QTableWidgetItem>
 
+#include "Classes/database.h"
 #include "Dialoge/dialog_settings.h"
+#include "Dialoge/dialog_init.h"
+#include "Logging/logging.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -18,14 +22,21 @@ class MainWindow : public QMainWindow
 
 private:
     Ui::MainWindow *ui;
-    Dialog_Settings *dialog_Settings;
+    DataBase* database;
+    Dialog_Settings* dialog_Settings;
+    Dialog_Init* dialog_Init;
+    Logging* logging;
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+    void sig_OpenProject(QString);
+
 public slots:
     void slot_InitApp();
+    void slot_ToolButtonClicked();
 
 };
 #endif // MAINWINDOW_H

@@ -19,6 +19,13 @@
   <property name="windowTitle">
    <string>Einstellungen</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QLineEdit{background-color: rgba(255, 255, 255,32);
+                  border-radius:3px;}
+QLineEdit:focus{border: 1px solid;
+                             border-color: rgb(0, 128, 0);
+                            selection-background-color: rgb(40, 76, 117);}</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QLabel" name="label_ProgrammDir">
@@ -208,7 +215,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_X"/>
+       <widget class="MLineEdit" name="lineEdit_X"/>
       </item>
       <item>
        <widget class="QLabel" name="label_2">
@@ -218,7 +225,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_Y"/>
+       <widget class="MLineEdit" name="lineEdit_Y"/>
       </item>
       <item>
        <widget class="QLabel" name="label">
@@ -228,7 +235,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="lineEdit_Z"/>
+       <widget class="MLineEdit" name="lineEdit_Z"/>
       </item>
      </layout>
     </widget>

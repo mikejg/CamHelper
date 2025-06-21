@@ -14,5 +14,11 @@
         <file>Icons/Project/camfile.png</file>
         <file>Icons/Main/File_Open.png</file>
         <file>Icons/Project/cut.png</file>
+        <file>Icons/Main/MainProgramm2.png</file>
+        <file>Icons/Main/ToolList2.png</file>
+        <file>Icons/Main/Logfile2.png</file>
+        <file>Icons/Main/ToolMagazin2.png</file>
+        <file>Icons/Main/paste.png</file>
+        <file>Icons/Main/Wallpaper2.jpg</file>
     </qresource>
 </RCC>
