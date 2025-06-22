@@ -20,5 +20,8 @@
         <file>Icons/Main/ToolMagazin2.png</file>
         <file>Icons/Main/paste.png</file>
         <file>Icons/Main/Wallpaper2.jpg</file>
+        <file>Icons/Main/File_Open2.png</file>
+        <file>Icons/Main/Wallpaper3.png</file>
+        <file>Icons/Main/check.png</file>
     </qresource>
 </RCC>

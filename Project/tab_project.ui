@@ -16,27 +16,37 @@
   <property name="styleSheet">
    <string notr="true">QWidget{background-color: rgba(0, 0, 0, 128);}
 
-QLabel{color:rgb(160,160,160);}
+QLabel{color:rgb(160,160,160);
+             background-color: rgba(255, 255, 255,0);
+             border-radius:3px;}
 
 QCheckBox{color:rgb(160,160,160);
-background-color: rgba(255, 255, 255,32);}
+                      background-color: rgba(255, 255, 255,0);}
+
+QCheckBox::indicator {border: 1px  solid;
+                                        border-radius: 4px;
+                                        border-color: rgb(128, 128, 128);}
+
+QCheckBox::indicator:checked {image: url(:/Icons/Main/check.png);
+                                                        border-color: rgba(128, 128, 128,0);}
 
 QToolButton{background-color: rgba(0, 0, 0,0);}
 
-QDoubleSpinBox{background-color: rgba(255, 255, 255,32);
+QDoubleSpinBox{color:rgb(160,160,160);
+                               background-color: rgba(255, 255, 255,32);
                                border-radius:3px;}
-QDoubleSpinBox:focus{border: 1px solid;
+QDoubleSpinBox:focus{color:rgb(192,192,192);
+                                          border: 1px solid;
                                           border-color: rgb(0, 128, 0);
                                           selection-background-color: rgb(40, 76, 117);}
 
-QLineEdit{background-color: rgba(255, 255, 255,32);
+QLineEdit{color:rgb(160,160,160);
+                  background-color: rgba(255, 255, 255,32);
                   border-radius:3px;}
-QLineEdit:focus{border: 1px solid;
+QLineEdit:focus{color:rgb(192,192,192);
+                             border: 1px solid;
                              border-color: rgb(0, 128, 0);
-                            selection-background-color: rgb(40, 76, 117);}
-
-QLabel{background-color: rgba(255, 255, 255,0);
-             color:rgb(160,160,160);}
+                             selection-background-color: rgb(40, 76, 117);}
 
 QGroupBox {
     border: 1px  solid;
@@ -51,9 +61,18 @@ QGroupBox::title {
     subcontrol-origin: margin;
     left: 7px;
     padding: 0px 5px 0px 5px;
-}</string>
+}
+
+QTextEdit{color:rgb(160,160,160);
+                  background-color: rgba(255, 255, 255,32);
+                  border-radius:6px;}
+
+QTextEdit:focus{color:rgb(192,192,192);
+							border: 1px solid;
+                             border-color: rgb(0, 128, 0);
+                            selection-background-color: rgb(40, 76, 117);}</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_12">
+  <layout class="QHBoxLayout" name="horizontalLayout_7">
    <item>
     <widget class="QFrame" name="frame">
      <property name="frameShape">
@@ -150,35 +169,45 @@ QGroupBox::title {
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
             <widget class="QLineEdit" name="lineEdit_ProjectName">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>30</height>
-              </size>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>16777215</width>
-               <height>30</height>
+               <height>24</height>
               </size>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_ProjectStatus">
+            <widget class="QLineEdit" name="lineEdit_ProjectState">
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>30</height>
+               <height>24</height>
               </size>
              </property>
              <property name="maximumSize">
               <size>
                <width>45</width>
-               <height>30</height>
+               <height>24</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit_Tension">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>24</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>75</width>
+               <height>24</height>
               </size>
              </property>
             </widget>
@@ -188,16 +217,43 @@ QGroupBox::title {
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_File">
            <item>
-            <widget class="QLineEdit" name="lineEdit_CamFile">
+            <widget class="QLineEdit" name="lineEdit_hyperMILL_File">
              <property name="palette">
               <palette>
                <active>
+                <colorrole role="WindowText">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>160</red>
+                   <green>160</green>
+                   <blue>160</blue>
+                  </color>
+                 </brush>
+                </colorrole>
                 <colorrole role="Button">
                  <brush brushstyle="SolidPattern">
                   <color alpha="32">
                    <red>255</red>
                    <green>255</green>
                    <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Text">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>160</red>
+                   <green>160</green>
+                   <blue>160</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="ButtonText">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>160</red>
+                   <green>160</green>
+                   <blue>160</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -216,17 +272,53 @@ QGroupBox::title {
                    <red>255</red>
                    <green>255</green>
                    <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="PlaceholderText">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="128">
+                   <red>160</red>
+                   <green>160</green>
+                   <blue>160</blue>
                   </color>
                  </brush>
                 </colorrole>
                </active>
                <inactive>
+                <colorrole role="WindowText">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>160</red>
+                   <green>160</green>
+                   <blue>160</blue>
+                  </color>
+                 </brush>
+                </colorrole>
                 <colorrole role="Button">
                  <brush brushstyle="SolidPattern">
                   <color alpha="32">
                    <red>255</red>
                    <green>255</green>
                    <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Text">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>160</red>
+                   <green>160</green>
+                   <blue>160</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="ButtonText">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>160</red>
+                   <green>160</green>
+                   <blue>160</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -245,17 +337,53 @@ QGroupBox::title {
                    <red>255</red>
                    <green>255</green>
                    <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="PlaceholderText">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="128">
+                   <red>160</red>
+                   <green>160</green>
+                   <blue>160</blue>
                   </color>
                  </brush>
                 </colorrole>
                </inactive>
                <disabled>
+                <colorrole role="WindowText">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>160</red>
+                   <green>160</green>
+                   <blue>160</blue>
+                  </color>
+                 </brush>
+                </colorrole>
                 <colorrole role="Button">
                  <brush brushstyle="SolidPattern">
                   <color alpha="32">
                    <red>255</red>
                    <green>255</green>
                    <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="Text">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>160</red>
+                   <green>160</green>
+                   <blue>160</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="ButtonText">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>160</red>
+                   <green>160</green>
+                   <blue>160</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -274,6 +402,15 @@ QGroupBox::title {
                    <red>255</red>
                    <green>255</green>
                    <blue>255</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+                <colorrole role="PlaceholderText">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="128">
+                   <red>160</red>
+                   <green>160</green>
+                   <blue>160</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -314,43 +451,6 @@ QGroupBox::title {
               <size>
                <width>24</width>
                <height>24</height>
-              </size>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_Spannung">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Spannung</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_5">
-           <item>
-            <widget class="QComboBox" name="comboBox_Clamping">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="lineEdit_NP">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="maximumSize">
-              <size>
-               <width>75</width>
-               <height>16777215</height>
               </size>
              </property>
             </widget>
@@ -399,7 +499,7 @@ QGroupBox::title {
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_RTx">
+            <widget class="QLineEdit" name="lineEdit_RawPartX">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -423,7 +523,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_RTy">
+            <widget class="QLineEdit" name="lineEdit_RawPartY">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -443,7 +543,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_RTz">
+            <widget class="QLineEdit" name="lineEdit_RawPartZ">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -476,7 +576,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_ZRohTeil">
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_ZRawPart">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -541,7 +641,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_BTx">
+            <widget class="QLineEdit" name="lineEdit_FinishPartX">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -561,7 +661,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_BTy">
+            <widget class="QLineEdit" name="lineEdit_FinishPartY">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -581,7 +681,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_BTz">
+            <widget class="QLineEdit" name="lineEdit_FinishPartZ">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -961,174 +1061,172 @@ border-radius:5px;</string>
           </layout>
          </item>
          <item>
-          <widget class="QWidget" name="widget_FT_AufmassEinzel" native="true">
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>40</height>
-            </size>
-           </property>
-           <layout class="QHBoxLayout" name="horizontalLayout_10">
-            <item>
-             <widget class="QLabel" name="label_FT_Xplus">
-              <property name="text">
-               <string>X+</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_Xplus_Min">
-              <property name="decimals">
-               <number>1</number>
-              </property>
-              <property name="singleStep">
-               <double>0.500000000000000</double>
-              </property>
-              <property name="value">
-               <double>1.500000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_FT_Xminus">
-              <property name="text">
-               <string>X-</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_Xminus_Min">
-              <property name="decimals">
-               <number>1</number>
-              </property>
-              <property name="singleStep">
-               <double>0.500000000000000</double>
-              </property>
-              <property name="value">
-               <double>1.500000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_13">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_FT_Yplus">
-              <property name="text">
-               <string>Y+</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_Yplus_Min">
-              <property name="decimals">
-               <number>1</number>
-              </property>
-              <property name="singleStep">
-               <double>0.500000000000000</double>
-              </property>
-              <property name="value">
-               <double>1.500000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_14">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_FT_Yminus">
-              <property name="text">
-               <string>Y-</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_Yminus_Min">
-              <property name="decimals">
-               <number>1</number>
-              </property>
-              <property name="singleStep">
-               <double>0.500000000000000</double>
-              </property>
-              <property name="value">
-               <double>1.500000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_15">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_FT_Zplus">
-              <property name="text">
-               <string>Z+</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QDoubleSpinBox" name="doubleSpinBox_Zplus_Min">
-              <property name="decimals">
-               <number>1</number>
-              </property>
-              <property name="singleStep">
-               <double>0.500000000000000</double>
-              </property>
-              <property name="value">
-               <double>0.500000000000000</double>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QLabel" name="label_FT_Xplus">
+             <property name="text">
+              <string>X+</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_Xplus_Min">
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.500000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_FT_Xminus">
+             <property name="text">
+              <string>X-</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_Xminus_Min">
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.500000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_13">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_FT_Yplus">
+             <property name="text">
+              <string>Y+</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_Yplus_Min">
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.500000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_14">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_FT_Yminus">
+             <property name="text">
+              <string>Y-</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_Yminus_Min">
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
+             </property>
+             <property name="value">
+              <double>1.500000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_15">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_FT_Zplus">
+             <property name="text">
+              <string>Z+</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="doubleSpinBox_Zplus_Min">
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="singleStep">
+              <double>0.500000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.500000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </widget>
       </item>
       <item>
-       <widget class="QTextEdit" name="textEdit_Comment">
+       <widget class="QTextEdit" name="textEdit_Header">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>250</height>
+         </size>
+        </property>
         <property name="maximumSize">
          <size>
           <width>16777215</width>
@@ -1238,7 +1336,7 @@ border-radius:5px;</string>
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>431</width>
+          <width>447</width>
           <height>884</height>
          </rect>
         </property>

@@ -4,6 +4,23 @@
 #include <QPixmap>
 #include <QList>
 
+struct RawPart
+{
+    QString id;                     //DatenBank ID
+    QString x_Length;
+    QString y_Width;
+    QString z_Height;
+    QString z_RawPart;              //Z-Wert für Rohteil Oberkante
+};
+
+struct FinishPart
+{
+    QString id;                     //DatenBank ID
+    QString x_Length;
+    QString y_Width;
+    QString z_Height;
+};
+
 struct ProjectData
 {
     QString id;                     //DatenBank ID
@@ -17,6 +34,8 @@ struct ProjectData
     QString lastOpen;               //Zeitpunt des letzen Öffnens
     QString lastProduction;          //Wann war das Project das letzte mal auf der Maschine
     QList<QPixmap> listPictures;    //Liste der Bilder;
+    RawPart rawPart;                //Struktur für Rohteilmasse
+    FinishPart finishPart;          //Struktur für Fertigteilmasse
 };
 
 #endif // STRUCT_H

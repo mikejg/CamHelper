@@ -6,6 +6,13 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QPixmap bkgnd(":/Icons/Main/Wallpaper3.png"); //Add commentMore actions
+    bkgnd = bkgnd.scaled(this->size());
+    QPalette palette;
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
+
     ui->stackedWidget->setCurrentWidget(ui->tab_Init);
 
     //übergebe den Zeiger für das Logging
@@ -13,6 +20,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     //Erstelle die Datenbank
     database = new DataBase(this, logging);
+
+    //Übergebe die DatenBank, Logging
+    ui->tab_Project->set_DataBase(database);
+    ui->tab_Project->set_Logging(logging);
 
     //übergebe den Zeiger für Dialog_Init
     dialog_Init = ui->tab_Init;
@@ -29,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->toolButton_Open, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
 
     //Wenn im tab_Init auf ein Bild gecklict wird, soll das Projekt geöffnet werden
-    connect(ui->tab_Init, SIGNAL(sig_Clicked(QString)), this, SIGNAL(sig_OpenProject(QString)));
+    connect(ui->tab_Init, SIGNAL(sig_Clicked(QString)), ui->tab_Project, SLOT(slot_OpenProject(QString)));
 
 
     QTimer::singleShot(500, this, SLOT(slot_InitApp()));
@@ -57,14 +68,19 @@ void MainWindow::slot_InitApp()
         return;
     }
 
+    //Öffne die Datenbanken
     if(!database->open())
+        return;
+
+    //Lade die Materialliste
+    if(!ui->tab_Project->load_Material())
         return;
 
     QList<ProjectData> list = database->get_LastOpen();
     dialog_Init->set_Pictures(list);
 
 
-    //ui->toolButton_Project->setEnabled(true);
+    ui->toolButton_Project->setEnabled(true);
     //ui->toolButton_MainProgramm->setEnabled(true);
     //ui->toolButton_ToolList->setEnabled(true);
     //ui->toolButton_ToolMagazin->setEnabled(true);

@@ -32,7 +32,9 @@ public:
     QList<ProjectData>  get_LastOpen();         //Hole mir die letzten 10 Projekt aus der Datenbank
     ProjectData         get_Project(QString);   //Hole mir ein Project mit der ProjctId aus der Datenbank
 
-    void insertPicutres(ProjectData &);         //Schreibt die Bilder in ein Projekt
+    void insert_FinishPart(ProjectData &);      //Schreibt die FertigteilDaten in ein Projekt
+    void insert_Picutres(ProjectData &);        //Schreibt die Bilder in ein Projekt
+    void insert_RawPart(ProjectData &);         //Schreibt die RohteilDaten in ein Projekt
 };
 
 #endif // DATABASE_H

@@ -14,7 +14,7 @@ private:
 
 public:
     explicit Project(QObject *parent = nullptr);
-    void openProject(QString);
+    void set_ProjectData(ProjectData pd) {projectData = pd;}
 };
 
 #endif // PROJECT_H

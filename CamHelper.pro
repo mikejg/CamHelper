@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     Classes/database.cpp \
     Classes/mcellwidget.cpp \
+    Classes/mfile.cpp \
     Classes/mlineedit.cpp \
     Classes/roundedlabel.cpp \
     Dialoge/dialog_init.cpp \
@@ -30,6 +31,7 @@ SOURCES += \
 HEADERS += \
     Classes/database.h \
     Classes/mcellwidget.h \
+    Classes/mfile.h \
     Classes/mlineedit.h \
     Classes/roundedlabel.h \
     Classes/struct.h \

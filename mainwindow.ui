@@ -82,7 +82,7 @@ QFrame{border-radius:10px;
          </property>
          <property name="icon">
           <iconset>
-           <normalon>:/Icons/Main/File_Open.png</normalon>
+           <normalon>:/Icons/Main/File_Open2.png</normalon>
           </iconset>
          </property>
          <property name="iconSize">
