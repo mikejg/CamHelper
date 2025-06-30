@@ -14,6 +14,7 @@ Tab_Project::~Tab_Project()
 {
     delete ui;
 }
+
 void Tab_Project::insert_Pixmap(QPixmap p)
 {
     ui->scrollArea->insert_Pixmap(p);
@@ -43,34 +44,39 @@ void Tab_Project::set_Logging(Logging *l)
     mfile = new MFile(this, log);
 }
 
-void Tab_Project::slot_OpenProject(QString string_ProjectId)
+void Tab_Project::set_ProjectData(ProjectData pd)
 {
-    ProjectData projectData;
+    projectData = pd;
 
     ui->scrollArea->clear();                                //Lösche die Bilder
     ui->textEdit_Header->clear();                           //Lösche den Header
 
-    project = new Project(this);                            //erstelle ein neues Project
-
-    projectData = dataBase->get_Project(string_ProjectId);  //Lade die Projekdaten aus der DatenBank
-    project->set_ProjectData(projectData);                  //Übergebe die ProjektDaten dem neuen Projekt
-
     //Befülle die Felder mit Daten
-    ui->lineEdit_ProjectName->setText(projectData.name);
-    ui->lineEdit_ProjectState->setText(projectData.state);
-    ui->lineEdit_Tension->setText(projectData.tension);
-    ui->lineEdit_hyperMILL_File->setText(projectData.hyperMILL_File);
-    ui->textEdit_Header->append(projectData.header);
+    ui->lineEdit_ProjectName->setText(projectData.name);                            //Name des Projects
+    ui->lineEdit_ProjectState->setText(projectData.state);                          //Der Modellstand des Projekts
+    ui->lineEdit_Tension->setText(projectData.tension);                             //Die Spannung des Projekts
+    ui->lineEdit_hyperMILL_File->setText(projectData.hyperMILL_File);               //Das hyperMIll File für das Projekt
+    ui->textEdit_Header->append(projectData.header);                                //Infotext am Anfanger des Hauptprogramms
 
-    ui->lineEdit_RawPartX->setText(projectData.rawPart.x_Length);
-    ui->lineEdit_RawPartY->setText(projectData.rawPart.y_Width);
-    ui->lineEdit_RawPartZ->setText(projectData.rawPart.z_Height);
-    ui->doubleSpinBox_ZRawPart->setValue(projectData.rawPart.z_RawPart.toFloat());
+    ui->lineEdit_RawPartX->setText(projectData.rawPart.x_Length);                   //Rohteil Länge in X
+    ui->lineEdit_RawPartY->setText(projectData.rawPart.y_Width);                    //Rohteil Breite in Y
+    ui->lineEdit_RawPartZ->setText(projectData.rawPart.z_Height);                   //Rohteil Höhe in Z
+    ui->doubleSpinBox_ZRawPart->setValue(projectData.rawPart.z_RawPart.toFloat());  //Z-Rohteil
 
-    ui->lineEdit_FinishPartX->setText(projectData.finishPart.x_Length);
-    ui->lineEdit_FinishPartY->setText(projectData.finishPart.y_Width);
-    ui->lineEdit_FinishPartZ->setText(projectData.finishPart.z_Height);
+    ui->lineEdit_FinishPartX->setText(projectData.finishPart.x_Length);             //Fertigteil Länge in X
+    ui->lineEdit_FinishPartY->setText(projectData.finishPart.y_Width);              //Fertigteil Breite in Y
+    ui->lineEdit_FinishPartZ->setText(projectData.finishPart.z_Height);             //Fertigteil Höhe in Z
 
-    foreach(QPixmap pixmap, projectData.listPictures)
+    ui->comboBox_Material->setCurrentText(projectData.material);                    //Material
+
+    ui->lineEdit_ZeroPointG->setText(projectData.zeroPoint.string_G);               //Nullpunkt G (G55 G506 etc)
+    ui->lineEdit_ZeroPointX->setText(projectData.zeroPoint.string_X);               //Nullpunkt X
+    ui->lineEdit_ZeroPointY->setText(projectData.zeroPoint.string_Y);               //Nullpunkt Y
+    ui->lineEdit_ZeroPointZ->setText(projectData.zeroPoint.string_Z);               //Nullpunkt Z
+
+    foreach(QPixmap pixmap, projectData.listPictures)                               //Bilder werden eingefügt
         insert_Pixmap(pixmap);
+
+    foreach(Tool* tool, projectData.toolList->get_List())
+        log->successful(tool->get_Number() + " " +tool->get_Description());
 }

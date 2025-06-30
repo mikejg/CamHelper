@@ -4,6 +4,8 @@
 #include <QPixmap>
 #include <QList>
 
+#include "../Tool/toollist.h"
+
 struct RawPart
 {
     QString id;                     //DatenBank ID
@@ -21,6 +23,16 @@ struct FinishPart
     QString z_Height;
 };
 
+struct ZeroPoint
+{
+    QString id;                     //DatenBank ID
+    QString string_X;
+    QString string_Y;
+    QString string_Z;
+    QString string_G;
+};
+
+
 struct ProjectData
 {
     QString id;                     //DatenBank ID
@@ -32,10 +44,14 @@ struct ProjectData
     QString header;                 //Programmkopf des Hauptprogramms;
     QString rawPart_Inspection;     //Die zu verwendende Rohteilkontrolle
     QString lastOpen;               //Zeitpunt des letzen Öffnens
-    QString lastProduction;          //Wann war das Project das letzte mal auf der Maschine
+    QString lastProduction;         //Wann war das Project das letzte mal auf der Maschine
     QList<QPixmap> listPictures;    //Liste der Bilder;
+
     RawPart rawPart;                //Struktur für Rohteilmasse
     FinishPart finishPart;          //Struktur für Fertigteilmasse
+    ZeroPoint zeroPoint;            //Struktur für Nullpunkt
+
+    ToolList* toolList = new ToolList();                 //Liste der Werkzeuge
 };
 
 #endif // STRUCT_H

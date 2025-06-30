@@ -19,10 +19,10 @@ MainWindow::MainWindow(QWidget *parent)
     logging = ui->tab_Logging;
 
     //Erstelle die Datenbank
-    database = new DataBase(this, logging);
+    dataBase = new DataBase(this, logging);
 
     //Übergebe die DatenBank, Logging
-    ui->tab_Project->set_DataBase(database);
+    //ui->tab_Project->set_DataBase(database);
     ui->tab_Project->set_Logging(logging);
 
     //übergebe den Zeiger für Dialog_Init
@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->toolButton_Open, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
 
     //Wenn im tab_Init auf ein Bild gecklict wird, soll das Projekt geöffnet werden
-    connect(ui->tab_Init, SIGNAL(sig_Clicked(QString)), ui->tab_Project, SLOT(slot_OpenProject(QString)));
+    connect(ui->tab_Init, SIGNAL(sig_Clicked(QString)), this, SLOT(slot_OpenProject(QString)));
 
 
     QTimer::singleShot(500, this, SLOT(slot_InitApp()));
@@ -69,15 +69,20 @@ void MainWindow::slot_InitApp()
     }
 
     //Öffne die Datenbanken
-    if(!database->open())
+    if(!dataBase->open())
         return;
 
     //Lade die Materialliste
     if(!ui->tab_Project->load_Material())
         return;
 
-    QList<ProjectData> list = database->get_LastOpen();
+    QList<ProjectData> list = dataBase->get_LastOpen();
     dialog_Init->set_Pictures(list);
+
+    //Dialog Open
+    dialog_Open = new Dialog_Open(this, dataBase);
+    dialog_Open->hide();
+    connect(dialog_Open, SIGNAL(sig_OpenProject(QString,QString)), this, SLOT(slot_OpenProject(QString,QString)));
 
 
     ui->toolButton_Project->setEnabled(true);
@@ -95,5 +100,30 @@ void MainWindow::slot_ToolButtonClicked()
         ui->stackedWidget->setCurrentWidget(ui->tab_Project);
 
     if(sender() == ui->toolButton_Open)
+    {
         ui->stackedWidget->setCurrentWidget(ui->tab_Init);
+        dialog_Open->slot_ShowDialog();
+    }
+}
+
+void MainWindow::slot_OpenProject(QString string_ProjectId)
+{
+    ProjectData projectData;
+
+    currentProject = new Project(this);                     //Erstelle einen Zeiger für das aktuelle Projekt
+    projectData = dataBase->get_Project(string_ProjectId);  //Lade die Projekdaten aus der DatenBank
+    currentProject->set_ProjectData(projectData);           //Übergebe die Projektdaten an das aktuelle Projekt
+    ui->tab_Project->set_ProjectData(projectData);          //Zeige die Projektaten im Tab Projekt an
+    ui->stackedWidget->setCurrentWidget(ui->tab_Project);   //Zeige Tab_Projekt an
+}
+
+void MainWindow::slot_OpenProject(QString string_Name, QString string_Tension)
+{
+    ProjectData projectData;
+
+    currentProject = new Project(this);                                 //Erstelle einen Zeiger für das aktuelle Projekt
+    projectData = dataBase->get_Project(string_Name, string_Tension);   //Lade die Projekdaten aus der DatenBank
+    currentProject->set_ProjectData(projectData);                       //Übergebe die Projektdaten an das aktuelle Projekt
+    ui->tab_Project->set_ProjectData(projectData);                      //Zeige die Projektaten im Tab Projekt an
+    ui->stackedWidget->setCurrentWidget(ui->tab_Project);               //Zeige Tab_Projekt an
 }

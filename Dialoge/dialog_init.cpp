@@ -11,6 +11,10 @@ Dialog_Init::Dialog_Init(QWidget *parent)
     connect(ui->widget_2, SIGNAL(sig_Clicked(QString)), this, SIGNAL(sig_Clicked(QString)));
     connect(ui->widget_3, SIGNAL(sig_Clicked(QString)), this, SIGNAL(sig_Clicked(QString)));
     connect(ui->widget_4, SIGNAL(sig_Clicked(QString)), this, SIGNAL(sig_Clicked(QString)));
+    connect(ui->widget_5, SIGNAL(sig_Clicked(QString)), this, SIGNAL(sig_Clicked(QString)));
+    connect(ui->widget_6, SIGNAL(sig_Clicked(QString)), this, SIGNAL(sig_Clicked(QString)));
+    connect(ui->widget_7, SIGNAL(sig_Clicked(QString)), this, SIGNAL(sig_Clicked(QString)));
+    connect(ui->widget_8, SIGNAL(sig_Clicked(QString)), this, SIGNAL(sig_Clicked(QString)));
 }
 
 Dialog_Init::~Dialog_Init()
@@ -32,5 +36,17 @@ void Dialog_Init::set_Pictures(QList<ProjectData> list_ProjectData)
 
     if(list_ProjectData.size() > 3)
         ui->widget_4->set_ProjectData(list_ProjectData.at(3));
+
+    if(list_ProjectData.size() > 4)
+        ui->widget_5->set_ProjectData(list_ProjectData.at(4));
+
+    if(list_ProjectData.size() > 5)
+        ui->widget_6->set_ProjectData(list_ProjectData.at(5));
+
+    if(list_ProjectData.size() > 6)
+        ui->widget_7->set_ProjectData(list_ProjectData.at(6));
+
+    if(list_ProjectData.size() > 7)
+        ui->widget_8->set_ProjectData(list_ProjectData.at(7));
 
 }

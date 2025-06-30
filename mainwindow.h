@@ -6,9 +6,12 @@
 #include <QTableWidgetItem>
 
 #include "Classes/database.h"
+#include "Classes/struct.h"
 #include "Dialoge/dialog_settings.h"
 #include "Dialoge/dialog_init.h"
+#include "Dialoge/dialog_open.h"
 #include "Logging/logging.h"
+#include "Project/project.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,10 +25,12 @@ class MainWindow : public QMainWindow
 
 private:
     Ui::MainWindow *ui;
-    DataBase* database;
+    DataBase* dataBase;
+    Dialog_Open* dialog_Open;
     Dialog_Settings* dialog_Settings;
     Dialog_Init* dialog_Init;
     Logging* logging;
+    Project* currentProject;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -37,6 +42,7 @@ signals:
 public slots:
     void slot_InitApp();
     void slot_ToolButtonClicked();
-
+    void slot_OpenProject(QString);
+    void slot_OpenProject(QString, QString);
 };
 #endif // MAINWINDOW_H

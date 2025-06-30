@@ -15,6 +15,7 @@ SOURCES += \
     Classes/mlineedit.cpp \
     Classes/roundedlabel.cpp \
     Dialoge/dialog_init.cpp \
+    Dialoge/dialog_open.cpp \
     Dialoge/dialog_settings.cpp \
     Logging/logging.cpp \
     Logging/mhighlighter.cpp \
@@ -24,6 +25,8 @@ SOURCES += \
     Project/project.cpp \
     Project/selectorwidget.cpp \
     Project/tab_project.cpp \
+    Tool/tool.cpp \
+    Tool/toollist.cpp \
     main.cpp \
     mainwindow.cpp \
     settings.cpp
@@ -36,6 +39,7 @@ HEADERS += \
     Classes/roundedlabel.h \
     Classes/struct.h \
     Dialoge/dialog_init.h \
+    Dialoge/dialog_open.h \
     Dialoge/dialog_settings.h \
     Logging/logging.h \
     Logging/mhighlighter.h \
@@ -45,12 +49,16 @@ HEADERS += \
     Project/project.h \
     Project/selectorwidget.h \
     Project/tab_project.h \
+    Tool/tool.h \
+    Tool/tool_Struct.h \
+    Tool/toollist.h \
     mainwindow.h \
     settings.h
 
 FORMS += \
     Classes/mcellwidget.ui \
     Dialoge/dialog_init.ui \
+    Dialoge/dialog_open.ui \
     Dialoge/dialog_settings.ui \
     Project/pix_scrollarea.ui \
     Project/pix_scrollcontent.ui \
