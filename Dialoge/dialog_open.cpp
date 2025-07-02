@@ -7,7 +7,13 @@ Dialog_Open::Dialog_Open(QWidget *parent, DataBase* db) :
 {
     ui->setupUi(this);
     dataBase = db;
-    //logging = l;
+
+    //Hintergrund Bild
+    QPixmap bkgnd(":/Icons/Main/Wallpaper3.png"); //Add commentMore actions
+    bkgnd = bkgnd.scaled(this->size());
+    QPalette palette;
+    palette.setBrush(QPalette::Window, bkgnd);
+    this->setPalette(palette);
 
     //dialog_Tag = new Dialog_Tag(this, db);
 
