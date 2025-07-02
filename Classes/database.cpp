@@ -151,11 +151,12 @@ ProjectData DataBase::get_Project(QString string_ProjectId)
         projectData.lastProduction      = query.value("Last_Production").toString();
         projectData.lastOpen            = query.value("Last_Open").toString();
 
-        insert_FinishPart(projectData); //Schreib die Fertigteilmasse ins Projekt
-        insert_Picutres(projectData);   //Schreib die Bilder ins Projekt
-        insert_RawPart(projectData);    //Schreib die Rohteilmasse ins Projekt
-        insert_ToolList(projectData);   //Schreib die Werkzeuge ins Projekt
-        insert_ZeroPoint(projectData);  //Schreib den Nullpunkt ins Projekt
+        insert_FinishPart(projectData);     //Schreib die Fertigteilmasse ins Projekt
+        insert_Picutres(projectData);       //Schreib die Bilder ins Projekt
+        insert_RawPart(projectData);        //Schreib die Rohteilmasse ins Projekt
+        insert_ToolList(projectData);       //Schreib die Werkzeuge ins Projekt
+        insert_ZeroPoint(projectData);      //Schreib den Nullpunkt ins Projekt
+        insert_OffsetRawPart(projectData);  //Schreib die Rohteil Aufmasse ins Projekt
     }
 
     return projectData;
@@ -360,5 +361,38 @@ void DataBase::insert_ToolList(ProjectData &projectData)
 
         projectData.toolList->insert_Tool(tool);
     }
+    return;
+}
+
+void DataBase::insert_OffsetRawPart(ProjectData &projectData)
+{
+    //such nach den Rohteil Aufmasse und schreib sie ins Projekt
+    QSqlQuery query (main_DataBase);
+    Offset_RawPart offset_RawPart;
+
+    query.exec("SELECT * FROM Offset_RawPart "
+               "WHERE Project_ID = '" + projectData.id + "';");
+
+    qDebug() << Q_FUNC_INFO << query.lastQuery();
+
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return;
+    }
+
+    while (query.next())
+    {
+        offset_RawPart.id = query.value("id").toString();
+        offset_RawPart.string_XPlus = query.value("X_Plus").toString();
+        offset_RawPart.string_XMinus = query.value("X_Minus").toString();
+        offset_RawPart.string_YPlus = query.value("Y_Plus").toString();
+        offset_RawPart.string_YMinus = query.value("Y_Minus").toString();
+        offset_RawPart.string_ZPlus = query.value("Z_Plus").toString();
+
+        projectData.offset_RawPart = offset_RawPart;
+    }
+
     return;
 }

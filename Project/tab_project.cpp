@@ -8,6 +8,9 @@ Tab_Project::Tab_Project(QWidget *parent)
     ui->setupUi(this);
     ui->scrollArea->set_Layout(ui->verticalLayout_Pictures);
     ui->scrollArea->set_Spacer(ui->verticalSpacer_Pictures);
+
+    connect(ui->checkBox_Offset_RawPart,SIGNAL(stateChanged(int)), this, SLOT(slot_checkBox_Offset_RawPart_stateChanged(int)));
+    connect(ui->checkBox_Offset_FinishPart,SIGNAL(stateChanged(int)), this, SLOT(slot_checkBox_Offset_FinishPart_stateChanged(int)));
 }
 
 Tab_Project::~Tab_Project()
@@ -79,4 +82,61 @@ void Tab_Project::set_ProjectData(ProjectData pd)
 
     foreach(Tool* tool, projectData.toolList->get_List())
         log->successful(tool->get_Number() + " " +tool->get_Description());
+
+    //Rohteil Aufmass
+    ui->doubleSpinBox_Offset_RawPart_XPlus->setValue(projectData.offset_RawPart.string_XPlus.toDouble());
+    ui->doubleSpinBox_Offset_RawPart_XMinus->setValue(projectData.offset_RawPart.string_XMinus.toDouble());
+    ui->doubleSpinBox_Offset_RawPart_YPlus->setValue(projectData.offset_RawPart.string_YPlus.toDouble());
+    ui->doubleSpinBox_Offset_RawPart_YMinus->setValue(projectData.offset_RawPart.string_YMinus.toDouble());
+    ui->doubleSpinBox_Offset_RawPart_ZPlus->setValue(projectData.offset_RawPart.string_ZPlus.toDouble());
+
+    ui->widget_Offset_RawPart->hide();
+    ui->checkBox_Offset_RawPart->setChecked(false);
+    if(ui->doubleSpinBox_Offset_RawPart_XMinus->value() != ui->doubleSpinBox_Offset_RawPart->value() ||
+       ui->doubleSpinBox_Offset_RawPart_XPlus->value()  != ui->doubleSpinBox_Offset_RawPart->value() ||
+       ui->doubleSpinBox_Offset_RawPart_YMinus->value() != ui->doubleSpinBox_Offset_RawPart->value() ||
+       ui->doubleSpinBox_Offset_RawPart_YPlus->value()  != ui->doubleSpinBox_Offset_RawPart->value() ||
+       ui->doubleSpinBox_Offset_RawPart_ZPlus->value()  != ui->doubleSpinBox_Offset_RawPart->value() )
+    {
+        ui->checkBox_Offset_RawPart->setChecked(true);
+    }
+
+    //Bauteil Aufmass
+    ui->widget_Offset_FinishPart->hide();
+    ui->checkBox_Offset_FinishPart->setChecked(false);
+    if(ui->doubleSpinBox_Offset_FinishPart_XMinus->value() != ui->doubleSpinBox_Offset_FinishPart->value() ||
+        ui->doubleSpinBox_Offset_FinishPart_XPlus->value()  != ui->doubleSpinBox_Offset_FinishPart->value() ||
+        ui->doubleSpinBox_Offset_FinishPart_YMinus->value() != ui->doubleSpinBox_Offset_FinishPart->value() ||
+        ui->doubleSpinBox_Offset_FinishPart_YPlus->value()  != ui->doubleSpinBox_Offset_FinishPart->value() )
+    {
+        ui->checkBox_Offset_FinishPart->setChecked(true);
+    }
 }
+
+void Tab_Project::slot_checkBox_Offset_RawPart_stateChanged(int state)
+{
+    Q_UNUSED(state);
+    if(ui->checkBox_Offset_RawPart->isChecked())
+    {
+        ui->widget_Offset_RawPart->show();
+    }
+    else
+    {
+        ui->widget_Offset_RawPart->hide();
+    }
+}
+
+void Tab_Project::slot_checkBox_Offset_FinishPart_stateChanged(int state)
+{
+    Q_UNUSED(state);
+    if(ui->checkBox_Offset_FinishPart->isChecked())
+    {
+        ui->widget_Offset_FinishPart->show();
+    }
+    else
+    {
+        ui->widget_Offset_FinishPart->hide();
+    }
+}
+
+

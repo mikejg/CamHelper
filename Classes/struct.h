@@ -32,6 +32,15 @@ struct ZeroPoint
     QString string_G;
 };
 
+struct Offset_RawPart
+{
+    QString id;
+    QString string_XPlus;
+    QString string_XMinus;
+    QString string_YPlus;
+    QString string_YMinus;
+    QString string_ZPlus;
+};
 
 struct ProjectData
 {
@@ -50,7 +59,7 @@ struct ProjectData
     RawPart rawPart;                //Struktur für Rohteilmasse
     FinishPart finishPart;          //Struktur für Fertigteilmasse
     ZeroPoint zeroPoint;            //Struktur für Nullpunkt
-
+    Offset_RawPart offset_RawPart;  //Struktur für Rohteil Aufmass
     ToolList* toolList = new ToolList();                 //Liste der Werkzeuge
 };
 

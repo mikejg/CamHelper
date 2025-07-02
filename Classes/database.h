@@ -42,6 +42,7 @@ public:
     void insert_RawPart(ProjectData &);         //Schreibt die RohteilDaten in ein Projekt
     void insert_ToolList(ProjectData &);        //Schreibt die Werkzeuge in ein Projekt
     void insert_ZeroPoint(ProjectData &);       //Schreibt den Nullpunkt in ein Projekt
+    void insert_OffsetRawPart(ProjectData &);   //Schreibt die Rohteil Aufmasse ins Projekt
 };
 
 #endif // DATABASE_H

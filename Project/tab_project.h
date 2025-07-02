@@ -35,6 +35,8 @@ public:
     void set_ProjectData(ProjectData);
 
 public slots:
+    void slot_checkBox_Offset_RawPart_stateChanged(int);
+    void slot_checkBox_Offset_FinishPart_stateChanged(int);
 };
 
 #endif // TAB_PROJECT_H
