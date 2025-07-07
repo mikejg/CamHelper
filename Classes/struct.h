@@ -55,6 +55,7 @@ struct ProjectData
     QString lastOpen;               //Zeitpunt des letzen Öffnens
     QString lastProduction;         //Wann war das Project das letzte mal auf der Maschine
     QList<QPixmap> listPictures;    //Liste der Bilder;
+    QStringList listTags;           //Liste der Tags;
 
     RawPart rawPart;                //Struktur für Rohteilmasse
     FinishPart finishPart;          //Struktur für Fertigteilmasse

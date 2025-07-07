@@ -15,14 +15,14 @@ Dialog_Open::Dialog_Open(QWidget *parent, DataBase* db) :
     palette.setBrush(QPalette::Window, bkgnd);
     this->setPalette(palette);
 
-    //dialog_Tag = new Dialog_Tag(this, db);
+    dialog_Tag = new Dialog_Tag(this, db);
 
     connect(this, SIGNAL(accepted()), this, SLOT(slot_accepted()));
     connect(ui->lineEdit_Project, SIGNAL(textChanged(QString)), this, SLOT(slot_TextChanged(QString)));
     connect(ui->listView_Project, SIGNAL(clicked(QModelIndex)), this, SLOT(slot_Clicked(QModelIndex)));
     connect(ui->toolButton_Tags, SIGNAL(released()), this, SLOT(slot_TagsClicked()));
-    //connect(dialog_Tag, SIGNAL(sig_NewProjectList(QStringList)), this, SLOT(slot_NewProjectList(QStringList)));
-    //connect(dialog_Tag, SIGNAL(sig_NoTagsSelected()), this, SLOT(slot_NoTagsSelected()));
+    connect(dialog_Tag, SIGNAL(sig_NewProjectList(QStringList)), this, SLOT(slot_NewProjectList(QStringList)));
+    connect(dialog_Tag, SIGNAL(sig_NoTagsSelected()), this, SLOT(slot_NoTagsSelected()));
 }
 
 Dialog_Open::~Dialog_Open()
@@ -111,7 +111,7 @@ void Dialog_Open::slot_Clicked(QModelIndex index)
 
 void Dialog_Open::slot_TagsClicked()
 {
-    //dialog_Tag->show();
+    dialog_Tag->show();
 }
 
 void Dialog_Open::slot_NewProjectList(QStringList stringList)

@@ -11,6 +11,9 @@ Tab_Project::Tab_Project(QWidget *parent)
 
     connect(ui->checkBox_Offset_RawPart,SIGNAL(stateChanged(int)), this, SLOT(slot_checkBox_Offset_RawPart_stateChanged(int)));
     connect(ui->checkBox_Offset_FinishPart,SIGNAL(stateChanged(int)), this, SLOT(slot_checkBox_Offset_FinishPart_stateChanged(int)));
+
+    connect(ui->toolButton_RawPartInspection, SIGNAL(released()), this, SLOT(slot_ShowRawPartInspection()));
+    connect(ui->toolButton_Tag, SIGNAL(released()), this, SLOT(slot_ShowTags()));    
 }
 
 Tab_Project::~Tab_Project()
@@ -25,7 +28,6 @@ void Tab_Project::insert_Pixmap(QPixmap p)
 
 bool Tab_Project::load_Material()
 {
-
     // Einlesen der Materialien
     // setze das File für die Materialien und lies es ein
     // gib alle Materialien in die ComboBox Material
@@ -51,8 +53,14 @@ void Tab_Project::set_ProjectData(ProjectData pd)
 {
     projectData = pd;
 
-    ui->scrollArea->clear();                                //Lösche die Bilder
-    ui->textEdit_Header->clear();                           //Lösche den Header
+    ui->scrollArea->clear();                                                        //Lösche die Bilder
+    ui->textEdit_Header->clear();                                                   //Lösche den Header
+
+    dialog_RawPartInspection = new Dialog_RawPartInspection(this);
+    connect(dialog_RawPartInspection, SIGNAL(sig_NewInspection(QString)),
+            this,   SLOT(slot_NewInspection(QString)));
+
+    dialog_Tag = new Dialog_Tag(this, &projectData, dataBase);
 
     //Befülle die Felder mit Daten
     ui->lineEdit_ProjectName->setText(projectData.name);                            //Name des Projects
@@ -71,6 +79,7 @@ void Tab_Project::set_ProjectData(ProjectData pd)
     ui->lineEdit_FinishPartZ->setText(projectData.finishPart.z_Height);             //Fertigteil Höhe in Z
 
     ui->comboBox_Material->setCurrentText(projectData.material);                    //Material
+    ui->label_RawPartInspection->setText(projectData.rawPart_Inspection);
 
     ui->lineEdit_ZeroPointG->setText(projectData.zeroPoint.string_G);               //Nullpunkt G (G55 G506 etc)
     ui->lineEdit_ZeroPointX->setText(projectData.zeroPoint.string_X);               //Nullpunkt X
@@ -79,9 +88,6 @@ void Tab_Project::set_ProjectData(ProjectData pd)
 
     foreach(QPixmap pixmap, projectData.listPictures)                               //Bilder werden eingefügt
         insert_Pixmap(pixmap);
-
-    foreach(Tool* tool, projectData.toolList->get_List())
-        log->successful(tool->get_Number() + " " +tool->get_Description());
 
     //Rohteil Aufmass
     ui->doubleSpinBox_Offset_RawPart_XPlus->setValue(projectData.offset_RawPart.string_XPlus.toDouble());
@@ -111,6 +117,8 @@ void Tab_Project::set_ProjectData(ProjectData pd)
     {
         ui->checkBox_Offset_FinishPart->setChecked(true);
     }
+
+
 }
 
 void Tab_Project::slot_checkBox_Offset_RawPart_stateChanged(int state)
@@ -139,4 +147,24 @@ void Tab_Project::slot_checkBox_Offset_FinishPart_stateChanged(int state)
     }
 }
 
+void Tab_Project::slot_ShowRawPartInspection()
+{
+    dialog_RawPartInspection->show();
+}
 
+void Tab_Project::slot_ShowTags()
+{
+    dialog_Tag->show();
+}
+
+void Tab_Project::slot_NewInspection(QString str)
+{
+    ui->label_RawPartInspection->setText(str);
+    projectData.rawPart_Inspection = str;
+
+    /*if(ui->label_RohteilKontrolle->text() != QString("Rohteilkontrolle"))
+    {
+        palette_Label.setColor(ui->label_RohteilKontrolle->foregroundRole(), forgroundColor);
+        ui->label_RohteilKontrolle->setPalette(palette_Label);
+    }*/
+}

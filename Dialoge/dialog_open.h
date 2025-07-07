@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QStringListModel>
 
-//#include "dialog_tag.h"
+#include "dialog_tag.h"
 #include "../Classes/database.h"
 #include "../Classes/struct.h"
 //#include "../Logging//logging.h"
@@ -20,7 +20,7 @@ class Dialog_Open : public QDialog
 private:
     Ui::Dialog_Open *ui;
     DataBase* dataBase;
-    //Dialog_Tag* dialog_Tag;
+    Dialog_Tag* dialog_Tag;
     //Logging* logging;
     QStringList stringList_Projects;
     QStringList stringList_Model;

@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     dataBase = new DataBase(this, logging);
 
     //Übergebe die DatenBank, Logging
-    //ui->tab_Project->set_DataBase(database);
+    ui->tab_Project->set_DataBase(dataBase);
     ui->tab_Project->set_Logging(logging);
 
     //übergebe den Zeiger für Dialog_Init
@@ -38,6 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->toolButton_Log, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_Project, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_Open, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
+    connect(ui->toolButton_ToolList, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
+    connect(ui->toolButton_ToolMagazin, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
 
     //Wenn im tab_Init auf ein Bild gecklict wird, soll das Projekt geöffnet werden
     connect(ui->tab_Init, SIGNAL(sig_Clicked(QString)), this, SLOT(slot_OpenProject(QString)));
@@ -84,11 +86,21 @@ void MainWindow::slot_InitApp()
     dialog_Open->hide();
     connect(dialog_Open, SIGNAL(sig_OpenProject(QString,QString)), this, SLOT(slot_OpenProject(QString,QString)));
 
+    magazin = ui->tab_Magazin;
+    magazin->set_FilePath(dialog_Settings->get_MagazinDir());
+    magazin->set_DataBase(dataBase);
+    magazin->set_Logging(logging);
+
+    //connect(magazin, SIGNAL(sig_NewMagazin()), this, SLOT(slot_NewMagazin()));
+    if(!magazin->create_ToolList())
+        return;
+
+
 
     ui->toolButton_Project->setEnabled(true);
     //ui->toolButton_MainProgramm->setEnabled(true);
-    //ui->toolButton_ToolList->setEnabled(true);
-    //ui->toolButton_ToolMagazin->setEnabled(true);
+    ui->toolButton_ToolList->setEnabled(true);
+    ui->toolButton_ToolMagazin->setEnabled(true);
 }
 
 void MainWindow::slot_ToolButtonClicked()
@@ -104,6 +116,12 @@ void MainWindow::slot_ToolButtonClicked()
         ui->stackedWidget->setCurrentWidget(ui->tab_Init);
         dialog_Open->slot_ShowDialog();
     }
+
+    if(sender() == ui->toolButton_ToolList)
+        ui->stackedWidget->setCurrentWidget(ui->tab_ToolList);
+
+    if(sender() == ui->toolButton_ToolMagazin)
+        ui->stackedWidget->setCurrentWidget(ui->tab_Magazin);
 }
 
 void MainWindow::slot_OpenProject(QString string_ProjectId)

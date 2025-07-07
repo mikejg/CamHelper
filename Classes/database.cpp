@@ -62,6 +62,31 @@ bool DataBase::open()
     return true;
 }
 
+int DataBase::get_Counter(QString toolID)
+{
+    QSqlQuery query (main_DataBase);
+    int counter = 0;
+
+    query.exec("select counter from NCTool "
+               "where T_Number = '" + toolID + "';");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+    }
+
+    while (query.next())
+    {
+        counter = query.value("counter").toInt();
+        //qDebug() << QString("%1").arg(counter);
+    }
+
+    //qDebug() << QString("%1").arg(counter);
+    return counter;
+}
+
 QList<ProjectData> DataBase::get_LastOpen()
 {
     QList<ProjectData> list;
@@ -121,6 +146,103 @@ QStringList DataBase::get_LastOpenList()
     return stringList;
 }
 
+QStringList DataBase::get_Tags()
+{
+    QStringList returnList;
+    QString string_Tag;
+
+    QSqlQuery query (main_DataBase);
+    query.exec("SELECT tag FROM Tags ORDER BY tag;");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return returnList;
+    }
+
+    while(query.next())
+    {
+        string_Tag = query.value("tag").toString();
+        if(!returnList.contains(string_Tag))
+        {
+            returnList.append(string_Tag);
+        }
+    }
+    return returnList;
+}
+
+QStringList DataBase::get_Tags(QString string_ProjectID)
+{
+    QStringList returnList;
+    QString string_Tag;
+    QSqlQuery query (main_DataBase);
+    query.exec("SELECT * FROM Tags "
+               "WHERE project_id = '" + string_ProjectID +"' "
+               "ORDER BY tag;");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return returnList;
+    }
+
+    while(query.next())
+    {
+        string_Tag = query.value("tag").toString();
+        if(!returnList.contains(string_Tag))
+        {
+            returnList.append(string_Tag);
+        }
+    }
+    return returnList;
+}
+
+QStringList DataBase::get_ToolData(QString toolID)
+{
+    QStringList returnList;
+    bool bool_Hals = true;
+    QString string_TipLength = "0";
+    QSqlQuery query (tool_DataBase);
+
+    query.exec("select nc_number_str, "
+               "gage_length, "
+               "tool_length,"
+               "nc_name, "
+               "Tools.dbl_param5, Tools.bool_param2, Tools.dbl_param1 "
+               "FROM NCTools "
+               "INNER JOIN Tools on "
+               "Tools.id = NCTools.tool_id "
+               "where NCTools.nc_number_str = '" + toolID + "';");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return returnList;
+    }
+
+    while (query.next())
+    {
+        returnList.append(query.value("gage_length").toString());
+        returnList.append(query.value("tool_length").toString());
+
+        string_TipLength = query.value("dbl_param5").toString();
+        bool_Hals = query.value("bool_param2").toBool();
+        if(!bool_Hals) string_TipLength = " - ";
+        returnList.append(string_TipLength);
+        bool_Hals = true;
+
+        returnList.append(query.value("nc_name").toString());
+        returnList.append(query.value("dbl_param1").toString());
+    }
+
+    return returnList;
+}
 
 ProjectData DataBase::get_Project(QString string_ProjectId)
 {
@@ -184,6 +306,37 @@ ProjectData DataBase::get_Project(QString string_Name, QString string_Tension)
       projectData = get_Project(query.value("id").toString());
 
     return projectData;
+}
+
+QStringList DataBase::get_ProjectFromTag(QString string_Tag)
+{
+    QSqlQuery query (main_DataBase);
+    QStringList returnList;
+    QString string;
+
+    query.exec("SELECT Project.Name, Project.Tension FROM Tags "
+               "INNER JOIN Project on "
+               "Project.id = Tags.project_id "
+               "WHERE tag = '" + string_Tag + "';");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return returnList;
+    }
+
+    while(query.next())
+    {
+        string = query.value("Project.Name").toString();
+        string = string + "_";
+        string = string + query.value("Project.Tension").toString();
+
+        returnList.append(string);
+    }
+
+    return returnList;
 }
 
 QStringList DataBase::get_ProjectList()
@@ -372,8 +525,6 @@ void DataBase::insert_OffsetRawPart(ProjectData &projectData)
 
     query.exec("SELECT * FROM Offset_RawPart "
                "WHERE Project_ID = '" + projectData.id + "';");
-
-    qDebug() << Q_FUNC_INFO << query.lastQuery();
 
     if(!query.lastError().text().isEmpty())
     {

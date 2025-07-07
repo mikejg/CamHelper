@@ -11,6 +11,7 @@
 #include "Dialoge/dialog_init.h"
 #include "Dialoge/dialog_open.h"
 #include "Logging/logging.h"
+#include "Magazin/magazin.h"
 #include "Project/project.h"
 
 QT_BEGIN_NAMESPACE
@@ -30,6 +31,7 @@ private:
     Dialog_Settings* dialog_Settings;
     Dialog_Init* dialog_Init;
     Logging* logging;
+    Magazin* magazin;
     Project* currentProject;
 
 public:

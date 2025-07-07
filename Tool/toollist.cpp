@@ -117,7 +117,6 @@ void ToolList::sort_Counter()
         }
     }
 }
-
 /*bool operator == (const ToolList& lhs, const ToolList& rhs)
 {
     if(lhs.list.size() != rhs.list.size())

@@ -29,6 +29,7 @@ public:
     explicit Dialog_Settings(QWidget *parent = nullptr, Logging*  l = nullptr);
     ~Dialog_Settings();
 
+    QString get_MagazinDir() {return settings->get_MagazinDir();}
     //void set_Settings(Settings* s);
     bool checkSettings();
 

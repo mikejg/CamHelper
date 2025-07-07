@@ -24,3 +24,8 @@ void Logging::vailed(QString s)
 {
     append(QString("☒ " ) +s);
 }
+
+void Logging::warning(QString s)
+{
+    append(QString("⚠ " ) +s);
+}

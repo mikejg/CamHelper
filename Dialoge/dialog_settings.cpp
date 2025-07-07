@@ -69,8 +69,6 @@ Dialog_Settings::~Dialog_Settings()
 
 bool Dialog_Settings::checkSettings()
 {
-    qDebug() << Q_FUNC_INFO;
-
     if(!ui->lineEdit_ProgrammDir->check())
     {
         log->vailed("Settings: Verzeichnis Programme");

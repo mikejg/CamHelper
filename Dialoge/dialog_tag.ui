@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog_Tag</class>
+ <widget class="QDialog" name="Dialog_Tag">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>301</width>
+    <height>378</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Tags</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../Icons.qrc">
+    <normaloff>:/Icons/Project/tag.png</normaloff>:/Icons/Project/tag.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog#Dialog_Tag {border-image: url(:/Icons/Main/Wallpaper3.png) 0 0 0 0 stretch stretch;}
+QListWidget::indicator {
+    width: 12px; /* Größe der Checkbox anpassen */
+    height: 12px; /* Größe der Checkbox anpassen */
+    border-radius: 6px; /* Macht die Checkbox rund (die Hälfte von Breite/Höhe) */
+    border: 1px solid gray; /* Rahmen, wenn nicht angewählt */
+    background-color:rgba(0,0,0,0); /* Hintergrund, wenn nicht angewählt */
+}
+
+QListWidget::indicator:checked {
+    background-color: rgb(128,128,192); /* Blauer Punkt, wenn angewählt */
+    border: 3px solid gray; /* Blauer Rahmen, wenn angewählt */
+}
+
+QListWidget::indicator:hover {
+    border: 3px solid darkgray; /* Leichte Rahmenänderung beim Hovern */
+	background-color: rgb(128, 192, 128);
+    color:(255,0,0);
+}
+
+QListWidget::item {
+    color: rgb(160,160,160); /* Standard-Schriftfarbe für Listenelemente */
+}
+QListWidget::item:selected {
+	 background: rgba(0,0,0,0);
+    /*border: 1px solid #6a6ea9;*/
+}
+QListWidget::item:hover {
+    color:rgb(255,255,255);
+    background: rgb(128,192,128);
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QListWidget" name="listWidget_Tags">
+     <property name="styleSheet">
+      <string notr="true">QListWidget {color:rgb(160,160,160);
+                  background-color: rgba(255, 255, 255,32);
+                  border-radius:5px;
+      			 /*show-decoration-selected: 1; /* make the selection span the entire width of the view */
+}</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="lineEdit"/>
+     </item>
+     <item>
+      <widget class="QToolButton" name="toolButton_Add">
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/Icons/Main/add.png</normaloff>:/Icons/Main/add.png</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Dialog_Tag</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Dialog_Tag</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

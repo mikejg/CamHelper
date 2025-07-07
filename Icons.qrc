@@ -23,5 +23,11 @@
         <file>Icons/Main/File_Open2.png</file>
         <file>Icons/Main/Wallpaper3.png</file>
         <file>Icons/Main/check.png</file>
+        <file>Icons/Main/add.png</file>
+        <file>Icons/RawPart/RawPartInspection00_192.png</file>
+        <file>Icons/RawPart/RawPartInspection01_192.png</file>
+        <file>Icons/RawPart/RawPartInspection02_192.png</file>
+        <file>Icons/RawPart/RawPartInspection03_192.PNG</file>
+        <file>Icons/RawPart/Rohteilkontrolle03.PNG</file>
     </qresource>
 </RCC>

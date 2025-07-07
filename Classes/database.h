@@ -31,10 +31,15 @@ public:
 
     bool open();
 
+    int                 get_Counter(QString);   //Hole mir den Zähler für das Werkzeug aus der Datenbank
     QList<ProjectData>  get_LastOpen();         //Hole mir die letzten 10 Projekt aus der Datenbank
     QStringList         get_LastOpenList();     //Hole mir eine Liste mit den letzten 10 ProjectNamen
+    QStringList         get_Tags();             //Hole mir eine Liste mit den Tags
+    QStringList         get_Tags(QString);      //Hole mir die Tags eines Projects
+    QStringList         get_ToolData(QString);  //Hole mir die Werkzeugdaten aus der hyperMILL Datenbank
     ProjectData         get_Project(QString);   //Hole mir ein Project mit der ProjctId aus der Datenbank
     ProjectData         get_Project(QString, QString);
+    QStringList         get_ProjectFromTag(QString); //Hole mir eine Liste aller Projecte mit dem gleichen Tag
     QStringList         get_ProjectList();       //Hole mir eine Liste aller ProjectNamen
 
     void insert_FinishPart(ProjectData &);      //Schreibt die FertigteilDaten in ein Projekt

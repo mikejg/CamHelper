@@ -4,6 +4,7 @@
 #include <QScrollArea>
 #include <QVBoxLayout>
 #include "mlabel.h"
+//#include "../Classes/roundedlabel.h"
 
 namespace Ui {
 class Pix_ScrollArea;
@@ -16,6 +17,7 @@ private:
     Ui::Pix_ScrollArea *ui;
     QVBoxLayout* layout;
     QList<MLabel*> label_List;
+    //QList<RoundedLabel*> label_List;
     QSpacerItem* spacerItem;
 
 protected:
