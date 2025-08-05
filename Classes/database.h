@@ -31,23 +31,25 @@ public:
 
     bool open();
 
-    int                 get_Counter(QString);   //Hole mir den Zähler für das Werkzeug aus der Datenbank
-    QList<ProjectData>  get_LastOpen();         //Hole mir die letzten 10 Projekt aus der Datenbank
-    QStringList         get_LastOpenList();     //Hole mir eine Liste mit den letzten 10 ProjectNamen
-    QStringList         get_Tags();             //Hole mir eine Liste mit den Tags
-    QStringList         get_Tags(QString);      //Hole mir die Tags eines Projects
-    QStringList         get_ToolData(QString);  //Hole mir die Werkzeugdaten aus der hyperMILL Datenbank
-    ProjectData         get_Project(QString);   //Hole mir ein Project mit der ProjctId aus der Datenbank
+    int                 get_Counter(QString);           //Hole mir den Zähler für das Werkzeug aus der Datenbank
+    QList<ProjectData>  get_LastOpen();                 //Hole mir die letzten 10 Projekt aus der Datenbank
+    QStringList         get_LastOpenList();             //Hole mir eine Liste mit den letzten 10 ProjectNamen
+    QStringList         get_Tags();                     //Hole mir eine Liste mit den Tags
+    QStringList         get_Tags(QString);              //Hole mir die Tags eines Projects
+    QStringList         get_ToolData(QString);          //Hole mir die Werkzeugdaten aus der hyperMILL Datenbank
+    ProjectData         get_Project(QString);           //Hole mir ein Project mit der ProjctId aus der Datenbank
     ProjectData         get_Project(QString, QString);
-    QStringList         get_ProjectFromTag(QString); //Hole mir eine Liste aller Projecte mit dem gleichen Tag
-    QStringList         get_ProjectList();       //Hole mir eine Liste aller ProjectNamen
+    QStringList         get_ProjectFromTag(QString);    //Hole mir eine Liste aller Projecte mit dem gleichen Tag
+    QStringList         get_ProjectList();              //Hole mir eine Liste aller ProjectNamen
+    void                get_Top100(ToolList*);          //Hole mir die 100 meist benutzten Werkzeuge
 
-    void insert_FinishPart(ProjectData &);      //Schreibt die FertigteilDaten in ein Projekt
-    void insert_Picutres(ProjectData &);        //Schreibt die Bilder in ein Projekt
-    void insert_RawPart(ProjectData &);         //Schreibt die RohteilDaten in ein Projekt
-    void insert_ToolList(ProjectData &);        //Schreibt die Werkzeuge in ein Projekt
-    void insert_ZeroPoint(ProjectData &);       //Schreibt den Nullpunkt in ein Projekt
-    void insert_OffsetRawPart(ProjectData &);   //Schreibt die Rohteil Aufmasse ins Projekt
+    void insert_FinishPart(ProjectData &);              //Schreibt die FertigteilDaten in ein Projekt
+    void insert_Picutres(ProjectData &);                //Schreibt die Bilder in ein Projekt
+    void insert_RawPart(ProjectData &);                 //Schreibt die RohteilDaten in ein Projekt
+    void insert_ToolList(ProjectData &);                //Schreibt die Werkzeuge in ein Projekt
+    void insert_ZeroPoint(ProjectData &);               //Schreibt den Nullpunkt in ein Projekt
+    void insert_OffsetRawPart(ProjectData &);           //Schreibt die Rohteil Aufmasse ins Projekt
+    void insert_Programm(ProjectData &);
 };
 
 #endif // DATABASE_H

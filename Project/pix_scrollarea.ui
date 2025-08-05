@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>Pix_ScrollArea</class>
  <widget class="QScrollArea" name="Pix_ScrollArea">
@@ -12,5 +13,10 @@
   <property name="windowTitle">
    <string>ScrollArea</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
  </widget>
+ <resources/>
+ <connections/>
 </ui>

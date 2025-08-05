@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog_Programm</class>
+ <widget class="QDialog" name="Dialog_Programm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>300</width>
+    <height>450</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>300</width>
+    <height>450</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Programme</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/Icons/programm.png</normaloff>:/Icons/programm.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog#Dialog_Programm {border-image: url(:/Icons/Main/Wallpaper5_klein.png) 0 0 0 0 stretch stretch;}
+
+QTableView {color:rgb(192,192,192);
+                  background-color: rgb(80,80,112);
+                  border-radius:7px;
+      			 /*show-decoration-selected: 1; /* make the selection span the entire width of the view */
+}
+</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTableView" name="tableView_Programme">
+     <property name="styleSheet">
+      <string notr="true">QTableView::indicator {
+   /* border: 1px solid #888888; /* Rahmenfarbe und -stärke */
+    border-radius: 3px;       /* Leichte Abrundung der Ecken */
+    width: 14px;              /* Breite des Indikators/der Checkbox */
+    height: 14px;             /* Höhe des Indikators/der Checkbox */
+    margin: 2px;              /* Abstand zum Inhalt des Items */
+}
+
+QTableView::indicator:checked {
+    background-color: #4CAF50; /* Hintergrundfarbe wenn gecheckt (Beispiel: Grün) */
+     background-color: rgba(255, 255, 255,0);
+    /*border: 1px solid #4CAF50; /* Rahmenfarbe wenn gecheckt (kann gleich sein) */
+    /*image: url(:/icons/checkmark.png); /* Optional: Ein Häkchen-Bild einfügen */
+    image: url(:/Icons/Main/check.png);
+    /* Achtung: Das Bild muss in Ihren Ressourcen vorhanden sein (z.B. mittels Qt Resource System) */
+}
+
+QTableView::indicator:unchecked {
+    background-color: #808080; /* Hintergrundfarbe wenn nicht gecheckt (Beispiel: Weiß) */
+}
+
+QTableView::indicator:hover {
+   /* border: 1px solid #555555; /* Rahmenfarbe beim Hovern */
+}
+
+QTableView::indicator:disabled {
+    background-color: #DDDDDD; /* Hintergrundfarbe wenn deaktiviert */
+    /*border: 1px solid #AAAAAA; /* Rahmenfarbe wenn deaktiviert */
+}
+
+QHeaderView::section:first {
+    border-top-left-radius: 8px; } /* Obere linke Ecke abrunden */
+
+QHeaderView::section:last {
+    border-top-right-radius: 8px; /* Obere rechte Ecke abrunden */
+    border-buttom-right-radius: 0px;
+}</string>
+     </property>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>false</bool>
+     </attribute>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

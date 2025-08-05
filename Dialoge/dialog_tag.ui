@@ -18,7 +18,7 @@
     <normaloff>:/Icons/Project/tag.png</normaloff>:/Icons/Project/tag.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">QDialog#Dialog_Tag {border-image: url(:/Icons/Main/Wallpaper3.png) 0 0 0 0 stretch stretch;}
+   <string notr="true">QDialog#Dialog_Tag {border-image: url(:/Icons/Main/Wallpaper5_klein.png) 0 0 0 0 stretch stretch;}
 QListWidget::indicator {
     width: 12px; /* Größe der Checkbox anpassen */
     height: 12px; /* Größe der Checkbox anpassen */
@@ -54,8 +54,8 @@ QListWidget::item:hover {
    <item>
     <widget class="QListWidget" name="listWidget_Tags">
      <property name="styleSheet">
-      <string notr="true">QListWidget {color:rgb(160,160,160);
-                  background-color: rgba(255, 255, 255,32);
+      <string notr="true">QListWidget {color:rgb(224,224,224);
+                  background-color: rgb(80,80,112);
                   border-radius:5px;
       			 /*show-decoration-selected: 1; /* make the selection span the entire width of the view */
 }</string>

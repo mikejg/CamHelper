@@ -8,6 +8,7 @@
 
 #include "../Dialoge/dialog_tag.h"
 #include "../Dialoge/dialog_rawpartinspection.h"
+#include "../Dialoge/dialog_programm.h"
 
 #include "../Logging/logging.h"
 
@@ -25,6 +26,7 @@ private:
     DataBase* dataBase;
     Dialog_Tag* dialog_Tag;
     Dialog_RawPartInspection* dialog_RawPartInspection;
+    Dialog_Programm* dialog_Programm;
     Logging* log;
     MFile* mfile; // wird in set_Logging erstellt
     ProjectData projectData;
@@ -39,13 +41,16 @@ public:
     void set_DataBase(DataBase* db) {dataBase = db;}
     void set_Logging(Logging* l); //Logging wird gesetzt und MFile mit Logging erstellt
     void set_ProjectData(ProjectData);
+    bool check_InputFields();
 
 public slots:
     void slot_NewInspection(QString);
     void slot_ShowRawPartInspection();
     void slot_ShowTags();
+    void slot_ShowProgramm();
     void slot_checkBox_Offset_RawPart_stateChanged(int);
     void slot_checkBox_Offset_FinishPart_stateChanged(int);
+    //void slot_NewProgrammList(QList<Item_Programm>);
 };
 
 #endif // TAB_PROJECT_H

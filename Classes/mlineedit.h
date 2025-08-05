@@ -19,9 +19,12 @@ private:
     QString string_Text;
     bool bool_OK;
 
+    bool check_ZeroPointG(QString);
+    bool check_Tension(QString);
+
 public:
     explicit MLineEdit(QWidget *parent = nullptr);
-    enum State{Dir, File, Digi};
+    enum State{Dir, File, Digi, Tension, noState, ZeroPointG};
     State state;
 
     void set_Empty();

@@ -15,7 +15,40 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTableView" name="tableView_ToolSheet"/>
+    <widget class="QTableView" name="tableView_ToolSheet">
+     <property name="styleSheet">
+      <string notr="true">QTableView{ border: 1px  solid;
+                      border-color: rgb(128, 128, 192);
+					  border-radius: 10px;}
+
+QScrollBar:vertical {
+    border: 1px solid #999999;
+    background: rgba(255, 255, 255,32);
+    width: 12px; /* Breite der Scrollbar */
+    margin: 0px 0px 0px 0px;
+    border-radius: 6px; /* Abrundung der Scrollbar-Leiste */
+}
+
+QScrollBar::handle:vertical {
+    background: rgb(128,128,192);/*#a0a0a0; /* Farbe des Scrollbar-Griffs */
+    min-height: 20px;
+    border-radius: 5px; /* Abrundung des Griffs */
+}
+
+QScrollBar::add-line:vertical {
+    border: none;
+    background: none;
+}
+
+QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+}</string>
+     </property>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>true</bool>
+     </attribute>
+    </widget>
    </item>
   </layout>
  </widget>

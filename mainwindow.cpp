@@ -7,27 +7,32 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    QPixmap bkgnd(":/Icons/Main/Wallpaper3.png"); //Add commentMore actions
+    QPixmap bkgnd(":/Icons/Main/Wallpaper5.png"); //Add commentMore actions
     bkgnd = bkgnd.scaled(this->size());
     QPalette palette;
     palette.setBrush(QPalette::Window, bkgnd);
     this->setPalette(palette);
 
+    QIcon *ico = new QIcon();
+    ico->addPixmap(QPixmap(":/Icons/Main/ToolList2.png"),QIcon::Normal,QIcon::On);
+    ico->addPixmap(QPixmap(":/Icons/Main/print.png"),QIcon::Normal,QIcon::Off);
+    ui->toolButton_ToolList->setIcon(*ico);
+    ui->toolButton_ToolList->setCheckable(true);
+    ui->toolButton_ToolList->setChecked(true);
+
     ui->stackedWidget->setCurrentWidget(ui->tab_Init);
 
-    //übergebe den Zeiger für das Logging
-    logging = ui->tab_Logging;
+    logging = ui->tab_Logging;                          //übergebe den Zeiger für das Logging
 
-    //Erstelle die Datenbank
-    dataBase = new DataBase(this, logging);
+    dataBase = new DataBase(this, logging);             //Erstelle die Datenbank
 
-    //Übergebe die DatenBank, Logging
-    ui->tab_Project->set_DataBase(dataBase);
-    ui->tab_Project->set_Logging(logging);
+    ui->tab_Project->set_DataBase(dataBase);            //Übergebe die DatenBank an Tab_Project
+    ui->tab_Project->set_Logging(logging);              //Übergebe Logging an Tab_Project
+    ui->tab_Project->installEventFilter(this);
 
-    //übergebe den Zeiger für Dialog_Init
-    dialog_Init = ui->tab_Init;
+    dialog_Init = ui->tab_Init;                         //übergebe den Zeiger für Dialog_Init
 
+    bool_IgnoreToggle = false;
 
     //Erstelle den Dialog Settings. Wenn alle Einstellungen OK sind und gespeichert wurden
     //wird der InitApp neu gestartet
@@ -38,12 +43,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->toolButton_Log, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_Project, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_Open, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
-    connect(ui->toolButton_ToolList, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
+    connect(ui->toolButton_ToolList, SIGNAL(toggled(bool)), this, SLOT(slot_ToolListToggled(bool)));
     connect(ui->toolButton_ToolMagazin, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
 
     //Wenn im tab_Init auf ein Bild gecklict wird, soll das Projekt geöffnet werden
     connect(ui->tab_Init, SIGNAL(sig_Clicked(QString)), this, SLOT(slot_OpenProject(QString)));
-
 
     QTimer::singleShot(500, this, SLOT(slot_InitApp()));
 }
@@ -51,6 +55,15 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
+{
+    if(obj == ui->tab_Project && ev->type() == QEvent::Leave)
+    {
+        ui->tab_Project->check_InputFields();
+    }
+    return true;
 }
 
 void MainWindow::slot_InitApp()
@@ -77,6 +90,13 @@ void MainWindow::slot_InitApp()
     //Lade die Materialliste
     if(!ui->tab_Project->load_Material())
         return;
+
+    //Übergebe die Anzahl der Magazinplätze an den Rüstplan
+    ui->tab_ToolSheet->set_MagazinCapacity(dialog_Settings->get_MagazinCapacity());
+    ui->tab_ToolSheet->set_Magazin(ui->tab_Magazin);                    //Übergebe das Magazin an den Rüstplan
+    ui->tab_ToolSheet->set_DataBase(dataBase);                          //Übergebe die Datenbank an den Rüstplan
+    connect(ui->tab_ToolSheet, SIGNAL(sig_DialogPrintFinished(int)),    //Verbinde das beenden des Druckens mit
+            this, SLOT(slot_DialogPrintFinished(int)));                 //dem SLOT
 
     QList<ProjectData> list = dataBase->get_LastOpen();
     dialog_Init->set_Pictures(list);
@@ -105,6 +125,10 @@ void MainWindow::slot_InitApp()
 
 void MainWindow::slot_ToolButtonClicked()
 {
+    bool_IgnoreToggle = true;                                   //Ignoriere das Umschalten
+    ui->toolButton_ToolList->setCheckable(true);                //Schalte den ToolButton wieder ein
+    ui->toolButton_ToolList->setChecked(true);                  //Schalte auf das Icon ToolList um
+
     if(sender() == ui->toolButton_Log)
         ui->stackedWidget->setCurrentWidget(ui->tab_Logging);
 
@@ -117,11 +141,10 @@ void MainWindow::slot_ToolButtonClicked()
         dialog_Open->slot_ShowDialog();
     }
 
-    if(sender() == ui->toolButton_ToolList)
-        ui->stackedWidget->setCurrentWidget(ui->tab_ToolList);
-
     if(sender() == ui->toolButton_ToolMagazin)
         ui->stackedWidget->setCurrentWidget(ui->tab_Magazin);
+
+    bool_IgnoreToggle = false;
 }
 
 void MainWindow::slot_OpenProject(QString string_ProjectId)
@@ -132,6 +155,7 @@ void MainWindow::slot_OpenProject(QString string_ProjectId)
     projectData = dataBase->get_Project(string_ProjectId);  //Lade die Projekdaten aus der DatenBank
     currentProject->set_ProjectData(projectData);           //Übergebe die Projektdaten an das aktuelle Projekt
     ui->tab_Project->set_ProjectData(projectData);          //Zeige die Projektaten im Tab Projekt an
+    ui->tab_ToolSheet->showTable(projectData);
     ui->stackedWidget->setCurrentWidget(ui->tab_Project);   //Zeige Tab_Projekt an
 }
 
@@ -143,5 +167,29 @@ void MainWindow::slot_OpenProject(QString string_Name, QString string_Tension)
     projectData = dataBase->get_Project(string_Name, string_Tension);   //Lade die Projekdaten aus der DatenBank
     currentProject->set_ProjectData(projectData);                       //Übergebe die Projektdaten an das aktuelle Projekt
     ui->tab_Project->set_ProjectData(projectData);                      //Zeige die Projektaten im Tab Projekt an
+    ui->tab_ToolSheet->showTable(projectData);
     ui->stackedWidget->setCurrentWidget(ui->tab_Project);               //Zeige Tab_Projekt an
+}
+
+void MainWindow::slot_ToolListToggled(bool bool_Toggle)
+{
+    if(bool_IgnoreToggle) return;   //Ignoriere das Umschalten
+
+    if(!bool_Toggle)
+        ui->stackedWidget->setCurrentWidget(ui->tab_ToolSheet);
+
+    if(bool_Toggle)
+    {
+        bool_IgnoreToggle = true;                                   //Ignoriere das Umschalten
+        ui->toolButton_ToolList->setChecked(false);                 //Schalte auf das Icon Drucken
+        ui->toolButton_ToolList->setCheckable(false);               //Schalte den Toolbutton aus
+        ui->tab_ToolSheet->printTable();                            //Öffne den Druckdialog
+    }
+}
+
+void MainWindow::slot_DialogPrintFinished(int result)
+{
+    Q_UNUSED(result);
+    ui->toolButton_ToolList->setCheckable(true);                    //Schalte den Toolbutten wieder ein
+    bool_IgnoreToggle = false;
 }

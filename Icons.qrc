@@ -29,5 +29,11 @@
         <file>Icons/RawPart/RawPartInspection02_192.png</file>
         <file>Icons/RawPart/RawPartInspection03_192.PNG</file>
         <file>Icons/RawPart/Rohteilkontrolle03.PNG</file>
+        <file>Icons/Main/print.png</file>
+        <file>Icons/Main/print2.png</file>
+        <file>Icons/Main/Wallpaper4.png</file>
+        <file>Icons/Main/Wallpaper4_klein.png</file>
+        <file>Icons/Main/Wallpaper5.png</file>
+        <file>Icons/Main/Wallpaper5_klein.png</file>
     </qresource>
 </RCC>

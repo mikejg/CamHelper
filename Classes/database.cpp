@@ -279,6 +279,7 @@ ProjectData DataBase::get_Project(QString string_ProjectId)
         insert_ToolList(projectData);       //Schreib die Werkzeuge ins Projekt
         insert_ZeroPoint(projectData);      //Schreib den Nullpunkt ins Projekt
         insert_OffsetRawPart(projectData);  //Schreib die Rohteil Aufmasse ins Projekt
+        insert_Programm(projectData);       //Schreib die Programm ins Projekt
     }
 
     return projectData;
@@ -368,6 +369,37 @@ QStringList DataBase::get_ProjectList()
     }
 
     return stringList;
+}
+
+void DataBase::get_Top100(ToolList* toolList)
+{
+    toolList->clear();
+    Tool* tool;
+
+    QSqlQuery query (main_DataBase);
+
+    query.exec("select T_Number, counter, Description FROM NCTool "
+               "ORDER BY counter desc, T_Number ASC LIMIT 100;");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return;
+    }
+
+    int i = 0;
+    while (query.next() && i < 100)
+    {
+        tool = new Tool(toolList);
+        tool->set_Number(query.value("T_Number").toString());
+        tool->set_Description(query.value("Description").toString());
+        tool->set_Counter(query.value("counter").toInt());
+
+        toolList->insert_Tool(tool);
+        i++;
+    }
 }
 
 void DataBase::insert_FinishPart(ProjectData &projectData)
@@ -543,6 +575,39 @@ void DataBase::insert_OffsetRawPart(ProjectData &projectData)
         offset_RawPart.string_ZPlus = query.value("Z_Plus").toString();
 
         projectData.offset_RawPart = offset_RawPart;
+    }
+
+    return;
+}
+
+void DataBase::insert_Programm(ProjectData &projectData)
+{
+    QSqlQuery query (main_DataBase);
+
+    query.exec("SELECT * from Programm_Project "
+               "WHERE project_id = " + projectData.id + " "
+               "ORDER BY Programm;");
+
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return;
+    }
+
+    while(query.next())
+    {
+        Programm programm;
+        programm.id = query.value("id").toString();
+        programm.ProgrammName = query.value("Programm").toString();
+        programm.Project_ID = query.value("project_id").toString();
+        programm.Offset_X = query.value("Offset_X").toBool();
+        programm.Offset_Y = query.value("Offset_Y").toBool();
+        programm.Offset_Z = query.value("Offset_Z").toBool();
+        programm.TOFFL = query.value("TOFFL").toBool();
+        programm.NoXY = query.value("NoXY").toBool();
+
+        projectData.list_Programm.append(programm);
     }
 
     return;

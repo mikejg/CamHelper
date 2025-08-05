@@ -1,5 +1,6 @@
 #include "tab_project.h"
 #include "ui_tab_project.h"
+#include "../Classes/mlineedit.h"
 
 Tab_Project::Tab_Project(QWidget *parent)
     : QWidget(parent)
@@ -9,11 +10,40 @@ Tab_Project::Tab_Project(QWidget *parent)
     ui->scrollArea->set_Layout(ui->verticalLayout_Pictures);
     ui->scrollArea->set_Spacer(ui->verticalSpacer_Pictures);
 
+    ui->lineEdit_ProjectName->set_TextNecessary(true);
+    ui->lineEdit_ProjectState->set_TextNecessary(true);
+    ui->lineEdit_Tension->set_TextNecessary(true);
+    ui->lineEdit_Tension->state = MLineEdit::Tension;
+
+    ui->lineEdit_RawPartX->set_TextNecessary(true);
+    ui->lineEdit_RawPartX->state = MLineEdit::Digi;
+    ui->lineEdit_RawPartY->set_TextNecessary(true);
+    ui->lineEdit_RawPartY->state = MLineEdit::Digi;
+    ui->lineEdit_RawPartZ->set_TextNecessary(true);
+    ui->lineEdit_RawPartZ->state = MLineEdit::Digi;
+
+    ui->lineEdit_FinishPartX->set_TextNecessary(true);
+    ui->lineEdit_FinishPartX->state = MLineEdit::Digi;
+    ui->lineEdit_FinishPartY->set_TextNecessary(true);
+    ui->lineEdit_FinishPartY->state = MLineEdit::Digi;
+    ui->lineEdit_FinishPartZ->set_TextNecessary(true);
+    ui->lineEdit_FinishPartZ->state = MLineEdit::Digi;
+
+    ui->lineEdit_ZeroPointG->set_TextNecessary(true);
+    ui->lineEdit_ZeroPointG->state = MLineEdit::ZeroPointG;
+    ui->lineEdit_ZeroPointX->set_TextNecessary(true);
+    ui->lineEdit_ZeroPointX->state = MLineEdit::Digi;
+    ui->lineEdit_ZeroPointY->set_TextNecessary(true);
+    ui->lineEdit_ZeroPointY->state = MLineEdit::Digi;
+    ui->lineEdit_ZeroPointZ->set_TextNecessary(true);
+    ui->lineEdit_ZeroPointZ->state = MLineEdit::Digi;
+
     connect(ui->checkBox_Offset_RawPart,SIGNAL(stateChanged(int)), this, SLOT(slot_checkBox_Offset_RawPart_stateChanged(int)));
     connect(ui->checkBox_Offset_FinishPart,SIGNAL(stateChanged(int)), this, SLOT(slot_checkBox_Offset_FinishPart_stateChanged(int)));
 
     connect(ui->toolButton_RawPartInspection, SIGNAL(released()), this, SLOT(slot_ShowRawPartInspection()));
-    connect(ui->toolButton_Tag, SIGNAL(released()), this, SLOT(slot_ShowTags()));    
+    connect(ui->toolButton_Tag, SIGNAL(released()), this, SLOT(slot_ShowTags()));
+    connect(ui->toolButton_Programme, SIGNAL(released()), this, SLOT(slot_ShowProgramm()));
 }
 
 Tab_Project::~Tab_Project()
@@ -61,6 +91,8 @@ void Tab_Project::set_ProjectData(ProjectData pd)
             this,   SLOT(slot_NewInspection(QString)));
 
     dialog_Tag = new Dialog_Tag(this, &projectData, dataBase);
+
+    dialog_Programm = new Dialog_Programm(this, &projectData);
 
     //Befülle die Felder mit Daten
     ui->lineEdit_ProjectName->setText(projectData.name);                            //Name des Projects
@@ -157,6 +189,11 @@ void Tab_Project::slot_ShowTags()
     dialog_Tag->show();
 }
 
+void Tab_Project::slot_ShowProgramm()
+{
+    dialog_Programm->show();
+}
+
 void Tab_Project::slot_NewInspection(QString str)
 {
     ui->label_RawPartInspection->setText(str);
@@ -167,4 +204,93 @@ void Tab_Project::slot_NewInspection(QString str)
         palette_Label.setColor(ui->label_RohteilKontrolle->foregroundRole(), forgroundColor);
         ui->label_RohteilKontrolle->setPalette(palette_Label);
     }*/
+}
+
+bool Tab_Project::check_InputFields()
+{
+    bool bool_Return = true;
+    if(!ui->lineEdit_ProjectName->check())
+    {
+        log->vailed("Eingabefeld Projektname ist leer");
+        bool_Return = false;
+    }
+
+    if(!ui->lineEdit_ProjectState->check())
+    {
+        log->vailed("Eingabefeld Projektstand ist leer");
+        bool_Return = false;
+    }
+
+    if(!ui->lineEdit_Tension->check())
+    {
+        log->vailed("Eingabefeld Spannung ist fehlerhaft");
+        bool_Return = false;
+    }
+
+    if(!ui->lineEdit_RawPartX->check())
+    {
+        log->vailed("Eingabefeld Rohteil X ist fehlerhaft");
+        bool_Return = false;
+    }
+
+    if(!ui->lineEdit_RawPartY->check())
+    {
+        log->vailed("Eingabefeld Rohteil Y ist fehlerhaft");
+        bool_Return = false;
+    }
+
+    if(!ui->lineEdit_RawPartZ->check())
+    {
+        log->vailed("Eingabefeld Rohteil Z ist fehlerhaft");
+        bool_Return = false;
+    }
+
+    if(!ui->lineEdit_FinishPartX->check())
+    {
+        log->vailed(("Eingabefeld Bauteil X ist fehlerhat"));
+        bool_Return = false;
+    }
+
+    if(!ui->lineEdit_FinishPartY->check())
+    {
+        log->vailed(("Eingabefeld Bauteil Y ist fehlerhat"));
+        bool_Return = false;
+    }
+
+    if(!ui->lineEdit_FinishPartZ->check())
+    {
+        log->vailed(("Eingabefeld Bauteil Z ist fehlerhat"));
+        bool_Return = false;
+    }
+
+    if(!ui->lineEdit_ZeroPointG->check())
+    {
+        log->vailed(("Eingabefeld Nullpunkt G ist fehlerhat"));
+        bool_Return = false;
+    }
+
+    if(!ui->lineEdit_ZeroPointX->check())
+    {
+        log->vailed(("Eingabefeld Nullpunkt X ist fehlerhat"));
+        bool_Return = false;
+    }
+
+    if(!ui->lineEdit_ZeroPointY->check())
+    {
+        log->vailed(("Eingabefeld Nullpunkt Y ist fehlerhat"));
+        bool_Return = false;
+    }
+
+    if(!ui->lineEdit_ZeroPointZ->check())
+    {
+        log->vailed(("Eingabefeld Nullpunkt Z ist fehlerhat"));
+        bool_Return = false;
+    }
+
+    if(!ui->comboBox_Material->currentText().isEmpty())
+    {
+        log->vailed("Material fehlt");
+        bool_Return = false;
+    }
+    return bool_Return;
 }

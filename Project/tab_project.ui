@@ -14,16 +14,16 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget{background-color: rgba(0, 0, 0, 128);}
+   <string notr="true">QWidget{background-color: rgba(0, 0, 0, 96);}
 
 QWidget#widget_Offset_RawPart{background-color: rgba(0, 0, 0, 0);}
 QWidget#widget_Offset_FinishPart{background-color: rgba(0, 0, 0, 0);}
 
-QLabel{color:rgb(160,160,160);
+QLabel{color:rgb(192,192,192);
              background-color: rgba(255, 255, 255,0);
              border-radius:3px;}
 
-QCheckBox{color:rgb(160,160,160);
+QCheckBox{color:rgb(192,192,192);
                       background-color: rgba(255, 255, 255,0);}
 
 /*QCheckBox::indicator {border: 1px  solid;
@@ -57,7 +57,7 @@ QCheckBox::indicator:hover {
 
 QToolButton{background-color: rgba(0, 0, 0,0);}
 
-QDoubleSpinBox{color:rgb(160,160,160);
+QDoubleSpinBox{color:rgb(192,192,192);
                                background-color: rgba(255, 255, 255,32);
                                border-radius:3px;}
 QDoubleSpinBox:focus{color:rgb(192,192,192);
@@ -65,7 +65,7 @@ QDoubleSpinBox:focus{color:rgb(192,192,192);
                                           border-color: rgb(0, 128, 0);
                                           selection-background-color: rgb(40, 76, 117);}
 
-QLineEdit{color:rgb(160,160,160);
+QLineEdit{color:rgb(192,192,192);
                   background-color: rgba(255, 255, 255,32);
                   border-radius:3px;}
 QLineEdit:focus{color:rgb(192,192,192);
@@ -73,7 +73,7 @@ QLineEdit:focus{color:rgb(192,192,192);
                              border-color: rgb(0, 128, 0);
                             selection-background-color: rgb(40, 76, 117);}
 
-QComboBox{color:rgb(160,160,160);
+QComboBox{color:rgb(192,192,192);
                         background-color: rgba(255, 255, 255,32);
                          border-radius:3px;}
 
@@ -89,18 +89,18 @@ QGroupBox {
     border-color: rgb(128, 128, 128);
     border-radius: 6px;
     margin-top: 20px;
-   background-color: rgba(255, 255, 255,0);
+   background-color: rgba(0,0,0,128);
 }
 
 QGroupBox::title {
-    color:rgb(160,160,160);
+    color:rgb(192,192,192);
     subcontrol-origin: margin;
     left: 7px;
     padding: 0px 5px 0px 5px;
 }
 
-QTextEdit{color:rgb(160,160,160);
-                  background-color: rgba(255, 255, 255,32);
+QTextEdit{color:rgb(192,192,192);
+                  background-color: rgba(0,0,0,128);
                   border-radius:6px;}
 
 QTextEdit:focus{color:rgb(192,192,192);
@@ -110,14 +110,14 @@ QTextEdit:focus{color:rgb(192,192,192);
 
 QScrollBar:vertical {
     border: 1px solid #999999;
-    background: rgba(255, 255, 255,32);
+    background: rgba(255, 255, 255,0);
     width: 12px; /* Breite der Scrollbar */
     margin: 0px 0px 0px 0px;
     border-radius: 6px; /* Abrundung der Scrollbar-Leiste */
 }
 
 QScrollBar::handle:vertical {
-    background: rgb(128,128,192);/*#a0a0a0; /* Farbe des Scrollbar-Griffs */
+    background: rgba(255,255,255,128);/*#a0a0a0; /* Farbe des Scrollbar-Griffs */
     min-height: 20px;
     border-radius: 5px; /* Abrundung des Griffs */
 }
@@ -234,7 +234,7 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QLineEdit" name="lineEdit_ProjectName">
+            <widget class="MLineEdit" name="lineEdit_ProjectName">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -244,7 +244,7 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_ProjectState">
+            <widget class="MLineEdit" name="lineEdit_ProjectState">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -260,7 +260,7 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_Tension">
+            <widget class="MLineEdit" name="lineEdit_Tension">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -565,7 +565,7 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_RawPartX">
+            <widget class="MLineEdit" name="lineEdit_RawPartX">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -573,8 +573,7 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: rgba(255, 255, 255,32);
-border-radius:5px;</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string/>
@@ -589,7 +588,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_RawPartY">
+            <widget class="MLineEdit" name="lineEdit_RawPartY">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -609,7 +608,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_RawPartZ">
+            <widget class="MLineEdit" name="lineEdit_RawPartZ">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -707,7 +706,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_FinishPartX">
+            <widget class="MLineEdit" name="lineEdit_FinishPartX">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -727,7 +726,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_FinishPartY">
+            <widget class="MLineEdit" name="lineEdit_FinishPartY">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -747,7 +746,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_FinishPartZ">
+            <widget class="MLineEdit" name="lineEdit_FinishPartZ">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -780,7 +779,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_ZeroPointG">
+            <widget class="MLineEdit" name="lineEdit_ZeroPointG">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -797,7 +796,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_ZeroPointX">
+            <widget class="MLineEdit" name="lineEdit_ZeroPointX">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -814,7 +813,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_ZeroPointY">
+            <widget class="MLineEdit" name="lineEdit_ZeroPointY">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -831,7 +830,7 @@ border-radius:5px;</string>
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lineEdit_ZeroPointZ">
+            <widget class="MLineEdit" name="lineEdit_ZeroPointZ">
              <property name="maximumSize">
               <size>
                <width>40</width>
@@ -1454,6 +1453,9 @@ border-radius:5px;</string>
          <height>16777215</height>
         </size>
        </property>
+       <property name="styleSheet">
+        <string notr="true">QWidget{background-color: rgba(0,0,0, 64);}</string>
+       </property>
        <property name="widgetResizable">
         <bool>true</bool>
        </property>
@@ -1503,6 +1505,11 @@ border-radius:5px;</string>
    <extends>QScrollArea</extends>
    <header>Project/pix_scrollarea.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">Classes/mlineedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

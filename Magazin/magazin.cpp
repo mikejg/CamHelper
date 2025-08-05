@@ -9,6 +9,7 @@ Magazin::Magazin(QWidget *parent) :
     ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->tableView->verticalHeader()->hide();
 
     mfile = new MFile(this);
 
@@ -20,6 +21,7 @@ Magazin::Magazin(QWidget *parent) :
 
     QPalette palette;
     palette.setColor(QPalette::Highlight, ui->tableView->palette().color(QPalette::Base));
+    //palette.setColor(QPalette::Highlight, QColor(128,128,192));
     palette.setColor(QPalette::HighlightedText, ui->tableView->palette().color(QPalette::Text));
 
     ui->tableView->setPalette(palette);
@@ -61,8 +63,6 @@ void Magazin::contains(QString str, ToolList* list)
 
 bool Magazin::create_ToolList()
 {
-    qDebug() << Q_FUNC_INFO;
-
     QStringList stringList_ToolData;
     sizeIn = 0;
 
@@ -170,7 +170,6 @@ bool Magazin::create_ToolList()
         tool->set_Counter(dataBase->get_Counter(tool->get_Number()));
     }
 
-    qDebug() << "sizeIn:" << sizeIn;
     showToolList(toolList);
     return true;
 }
@@ -219,17 +218,18 @@ void Magazin::slot_TableClicked(const QModelIndex &modelIndex)
 
     if(list_ToolState[modelIndex.row()] == "In")
     {
-        palette.setColor(QPalette::Highlight, ui->tableView->palette().color(QPalette::Base));
+        //palette.setColor(QPalette::Highlight, ui->tableView->palette().color(QPalette::Base));
+        palette.setColor(QPalette::Highlight, QColor(128,128,192));
         palette.setColor(QPalette::HighlightedText, Qt::green);
     }
     else if(list_ToolState[modelIndex.row()] == "Out")
     {
-        palette.setColor(QPalette::Highlight, ui->tableView->palette().color(QPalette::Base));
+        palette.setColor(QPalette::Highlight, QColor(128,128,192));
         palette.setColor(QPalette::HighlightedText, Qt::yellow);
     }
     else if(list_ToolState[modelIndex.row()] == "Disassembled")
     {
-        palette.setColor(QPalette::Highlight, ui->tableView->palette().color(QPalette::Base));
+        palette.setColor(QPalette::Highlight, QColor(128,128,192));
         palette.setColor(QPalette::HighlightedText, Qt::red);
     }
     else

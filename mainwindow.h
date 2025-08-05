@@ -33,6 +33,10 @@ private:
     Logging* logging;
     Magazin* magazin;
     Project* currentProject;
+    bool bool_IgnoreToggle;
+
+protected:
+    bool eventFilter(QObject *obj, QEvent *ev) override;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -46,5 +50,7 @@ public slots:
     void slot_ToolButtonClicked();
     void slot_OpenProject(QString);
     void slot_OpenProject(QString, QString);
+    void slot_ToolListToggled(bool);
+    void slot_DialogPrintFinished(int);
 };
 #endif // MAINWINDOW_H
