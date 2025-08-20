@@ -24,6 +24,7 @@ SOURCES += \
     Logging/mhighlighter.cpp \
     Magazin/magazin.cpp \
     Magazin/magazinmodel.cpp \
+    MainProgramm/highlighter840.cpp \
     MainProgramm/mainprogramm.cpp \
     Model/programmmodel.cpp \
     Project/mlabel.cpp \
@@ -58,6 +59,7 @@ HEADERS += \
     Logging/mhighlighter.h \
     Magazin/magazin.h \
     Magazin/magazinmodel.h \
+    MainProgramm/highlighter840.h \
     MainProgramm/mainprogramm.h \
     Model/programmmodel.h \
     Project/mlabel.h \

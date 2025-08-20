@@ -10,11 +10,11 @@ class Project : public QObject
     Q_OBJECT
 
 private:
-    ProjectData projectData;
+    ProjectData* projectData;
 
 public:
     explicit Project(QObject *parent = nullptr);
-    void set_ProjectData(ProjectData pd) {projectData = pd;}
+    void set_ProjectData(ProjectData* pd) {projectData = pd;}
 };
 
 #endif // PROJECT_H

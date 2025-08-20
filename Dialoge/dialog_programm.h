@@ -22,8 +22,8 @@ public:
     explicit Dialog_Programm(QWidget *parent = nullptr, ProjectData *pd = nullptr);
     ~Dialog_Programm();
 
-//signals:
-//    void sig_NewProgrammList(QList<Item_Programm>);
+public slots:
+    void slot_NewProgrammList(QList<Programm>);
 };
 
 #endif // DIALOG_PROGRAMM_H

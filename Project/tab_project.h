@@ -29,7 +29,7 @@ private:
     Dialog_Programm* dialog_Programm;
     Logging* log;
     MFile* mfile; // wird in set_Logging erstellt
-    ProjectData projectData;
+    ProjectData* projectData;
 
     void insert_Pixmap(QPixmap p);
 
@@ -40,7 +40,7 @@ public:
     bool load_Material();
     void set_DataBase(DataBase* db) {dataBase = db;}
     void set_Logging(Logging* l); //Logging wird gesetzt und MFile mit Logging erstellt
-    void set_ProjectData(ProjectData);
+    void set_ProjectData(ProjectData* );
     bool check_InputFields();
 
 public slots:

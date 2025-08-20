@@ -19,14 +19,24 @@ Dialog_Programm::Dialog_Programm(QWidget *parent, ProjectData* pd) :
     this->setPalette(palette);
 
     programmModel = new ProgrammModel();                                        //erzeuge ein neues ProgrammModel
-    programmModel->populateData(projectData->list_Programm);                   //Überge dem ProgrammModel die Item_Programm Liste
+    programmModel->populateData(projectData->list_Programm);                    //Überge dem ProgrammModel die Programmliste
     ui->tableView_Programme->setModel(programmModel);                           //setze das ProgrammModel in tableView_Programme
-    //Verbinde sig / slot NewProgrammList(QList<Item_ProgrammProject>)
-    //connect(programmModel, SIGNAL(sig_NewProgrammList(QList<Item_Programm>)),
-    //        this, SIGNAL(sig_NewProgrammList(QList<Item_Programm>)));
+
+    connect(programmModel, SIGNAL(sig_NewProgrammList(QList<Programm>)), this, SLOT(slot_NewProgrammList(QList<Programm>)));
 }
 
 Dialog_Programm::~Dialog_Programm()
 {
     delete ui;
+}
+
+void Dialog_Programm::slot_NewProgrammList(QList<Programm> programmList)
+{
+    projectData->list_Programm = programmList;
+
+    foreach(Programm prg, projectData->list_Programm)
+    {
+        if(prg.NoXY)
+            qDebug() << Q_FUNC_INFO << prg.ProgrammName << prg.NoXY;
+    }
 }

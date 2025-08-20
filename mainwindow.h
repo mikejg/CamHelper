@@ -33,6 +33,7 @@ private:
     Logging* logging;
     Magazin* magazin;
     Project* currentProject;
+    ProjectData* projectData;
     bool bool_IgnoreToggle;
 
 protected:

@@ -25,6 +25,7 @@ public:
 
 signals:
     void sig_NewProgrammList(QList<Programm>);
+    void sig_ProgrammChanged();
 };
 
 

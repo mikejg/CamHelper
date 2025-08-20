@@ -948,20 +948,31 @@ QFrame{border-radius:10px;
 border-radius: 10px</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>1</number>
       </property>
       <widget class="Tab_Project" name="tab_Project"/>
       <widget class="ToolSheet" name="tab_ToolSheet">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(0, 0, 0, 192);</string>
+       </property>
        <layout class="QVBoxLayout" name="verticalLayout"/>
       </widget>
       <widget class="Dialog_Init" name="tab_Init"/>
       <widget class="Logging" name="tab_Logging">
        <property name="styleSheet">
-        <string notr="true">font: bold 14px;</string>
+        <string notr="true">font: bold 14px;
+</string>
        </property>
       </widget>
-      <widget class="QWidget" name="page"/>
-      <widget class="Magazin" name="tab_Magazin"/>
+      <widget class="MainProgramm" name="tab_MainProgramm">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgba(0, 0, 0,192);
+font: 9pt &quot;Lucida Console&quot;;</string>
+       </property>
+      </widget>
+      <widget class="Magazin" name="tab_Magazin">
+       <layout class="QVBoxLayout" name="verticalLayout_3"/>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -1008,6 +1019,11 @@ border-radius: 10px</string>
    <extends>QWidget</extends>
    <header>ToolSheet/toolsheet.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MainProgramm</class>
+   <extends>QTextEdit</extends>
+   <header location="global">MainProgramm/mainprogramm.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
