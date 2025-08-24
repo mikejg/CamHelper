@@ -94,6 +94,30 @@ QFrame{border-radius:10px;
         </widget>
        </item>
        <item>
+        <widget class="QToolButton" name="toolButton_New">
+         <property name="minimumSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normalon>:/Icons/Main/new.png</normalon>
+          </iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QToolButton" name="toolButton_Project">
          <property name="minimumSize">
           <size>
@@ -666,6 +690,30 @@ QFrame{border-radius:10px;
         </widget>
        </item>
        <item>
+        <widget class="QToolButton" name="toolButton_TouchProbe">
+         <property name="minimumSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normalon>:/Icons/Main/Touchprobe.png</normalon>
+          </iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QToolButton" name="toolButton_Log">
          <property name="minimumSize">
           <size>
@@ -948,7 +996,7 @@ QFrame{border-radius:10px;
 border-radius: 10px</string>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="Tab_Project" name="tab_Project"/>
       <widget class="ToolSheet" name="tab_ToolSheet">
@@ -957,6 +1005,7 @@ border-radius: 10px</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout"/>
       </widget>
+      <widget class="TouchProbe" name="tab_Touchprobe"/>
       <widget class="Dialog_Init" name="tab_Init"/>
       <widget class="Logging" name="tab_Logging">
        <property name="styleSheet">
@@ -1024,6 +1073,12 @@ font: 9pt &quot;Lucida Console&quot;;</string>
    <class>MainProgramm</class>
    <extends>QTextEdit</extends>
    <header location="global">MainProgramm/mainprogramm.h</header>
+  </customwidget>
+  <customwidget>
+   <class>TouchProbe</class>
+   <extends>QWidget</extends>
+   <header>TouchProbe/touchprobe.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

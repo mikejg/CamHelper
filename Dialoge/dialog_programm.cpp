@@ -1,5 +1,6 @@
 #include "dialog_programm.h"
 #include "ui_dialog_programm.h"
+#include <QScrollBar>
 
 Dialog_Programm::Dialog_Programm(QWidget *parent, ProjectData* pd) :
     QDialog(parent),
@@ -33,10 +34,4 @@ Dialog_Programm::~Dialog_Programm()
 void Dialog_Programm::slot_NewProgrammList(QList<Programm> programmList)
 {
     projectData->list_Programm = programmList;
-
-    foreach(Programm prg, projectData->list_Programm)
-    {
-        if(prg.NoXY)
-            qDebug() << Q_FUNC_INFO << prg.ProgrammName << prg.NoXY;
-    }
 }

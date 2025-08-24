@@ -35,5 +35,57 @@
         <file>Icons/Main/Wallpaper4_klein.png</file>
         <file>Icons/Main/Wallpaper5.png</file>
         <file>Icons/Main/Wallpaper5_klein.png</file>
+        <file>Icons/Main/Touchprobe.png</file>
+        <file>Icons/TouchProbe/Ausrichten/Ausrichten_XMinus1.png</file>
+        <file>Icons/TouchProbe/Ausrichten/Ausrichten_XMinus2.png</file>
+        <file>Icons/TouchProbe/Ausrichten/Ausrichten_XPlus1.png</file>
+        <file>Icons/TouchProbe/Ausrichten/Ausrichten_XPlus2.png</file>
+        <file>Icons/TouchProbe/Ausrichten/Ausrichten_YMinus1.png</file>
+        <file>Icons/TouchProbe/Ausrichten/Ausrichten_YMinus2.png</file>
+        <file>Icons/TouchProbe/Ausrichten/Ausrichten_YPlus1.png</file>
+        <file>Icons/TouchProbe/Ausrichten/Ausrichten_YPlus2.png</file>
+        <file>Icons/TouchProbe/Ausrichten/Ausrichten_ZMinus1.png</file>
+        <file>Icons/TouchProbe/Ausrichten/Ausrichten_ZMinus2.png</file>
+        <file>Icons/TouchProbe/Bohrung/Bohrung01.png</file>
+        <file>Icons/TouchProbe/Bohrung/Bohrung02.png</file>
+        <file>Icons/TouchProbe/Ebenheit/Ebenheit_01.png</file>
+        <file>Icons/TouchProbe/Kante/X_Minus1.png</file>
+        <file>Icons/TouchProbe/Kante/X_Minus2.png</file>
+        <file>Icons/TouchProbe/Kante/X_Minus3.png</file>
+        <file>Icons/TouchProbe/Kante/X_Plus1.png</file>
+        <file>Icons/TouchProbe/Kante/X_Plus2.png</file>
+        <file>Icons/TouchProbe/Kante/X_Plus3.png</file>
+        <file>Icons/TouchProbe/Kante/Y_Minus1.png</file>
+        <file>Icons/TouchProbe/Kante/Y_Minus2.png</file>
+        <file>Icons/TouchProbe/Kante/Y_Minus3.png</file>
+        <file>Icons/TouchProbe/Kante/Y_Plus1.png</file>
+        <file>Icons/TouchProbe/Kante/Y_Plus2.png</file>
+        <file>Icons/TouchProbe/Kante/Y_Plus3.png</file>
+        <file>Icons/TouchProbe/Kante/Z_Minus1.png</file>
+        <file>Icons/TouchProbe/Kante/Z_Minus2.png</file>
+        <file>Icons/TouchProbe/Kante/Z_Minus3.png</file>
+        <file>Icons/TouchProbe/Nut/Nut_TSA.png</file>
+        <file>Icons/TouchProbe/Nut/Nut_W.png</file>
+        <file>Icons/TouchProbe/Nut/Nut_X.png</file>
+        <file>Icons/TouchProbe/Nut/Nut_Y.png</file>
+        <file>Icons/TouchProbe/Steg/Steg_DFA.png</file>
+        <file>Icons/TouchProbe/Steg/Steg_X1.png</file>
+        <file>Icons/TouchProbe/Steg/Steg_X2.png</file>
+        <file>Icons/TouchProbe/Steg/Steg_X3.png</file>
+        <file>Icons/TouchProbe/Steg/Steg_Y1.png</file>
+        <file>Icons/TouchProbe/Steg/Steg_Y2.png</file>
+        <file>Icons/TouchProbe/Steg/Steg_Y3.png</file>
+        <file>Icons/TouchProbe/add.png</file>
+        <file>Icons/TouchProbe/Ausrichten.png</file>
+        <file>Icons/TouchProbe/Bohrung.png</file>
+        <file>Icons/TouchProbe/create.png</file>
+        <file>Icons/TouchProbe/delete.png</file>
+        <file>Icons/TouchProbe/down-arrow.png</file>
+        <file>Icons/TouchProbe/Ebene.png</file>
+        <file>Icons/TouchProbe/Kante.png</file>
+        <file>Icons/TouchProbe/Nut.png</file>
+        <file>Icons/TouchProbe/picture.png</file>
+        <file>Icons/TouchProbe/Steg.png</file>
+        <file>Icons/Main/new.png</file>
     </qresource>
 </RCC>

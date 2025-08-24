@@ -6,6 +6,7 @@
 #include <QTableWidgetItem>
 
 #include "Classes/database.h"
+#include "Classes/spf_parser.h"
 #include "Classes/struct.h"
 #include "Dialoge/dialog_settings.h"
 #include "Dialoge/dialog_init.h"
@@ -35,7 +36,8 @@ private:
     Project* currentProject;
     ProjectData* projectData;
     bool bool_IgnoreToggle;
-
+    QIcon *ico;
+    SPF_Parser* spf_Parser;
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
 
@@ -53,5 +55,7 @@ public slots:
     void slot_OpenProject(QString, QString);
     void slot_ToolListToggled(bool);
     void slot_DialogPrintFinished(int);
+    void slot_NewToolList();
+    void slot_NewProject();
 };
 #endif // MAINWINDOW_H

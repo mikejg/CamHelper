@@ -280,6 +280,7 @@ ProjectData DataBase::get_Project(QString string_ProjectId)
         insert_ZeroPoint(projectData);      //Schreib den Nullpunkt ins Projekt
         insert_OffsetRawPart(projectData);  //Schreib die Rohteil Aufmasse ins Projekt
         insert_Programm(projectData);       //Schreib die Programm ins Projekt
+        insert_TouchProbe(projectData);
     }
 
     return projectData;
@@ -611,4 +612,306 @@ void DataBase::insert_Programm(ProjectData &projectData)
     }
 
     return;
+}
+
+void DataBase::insert_TouchProbe(ProjectData& projectData)
+{
+    QList<Item_TouchProbe> list;
+    QString string_ProjectID = projectData.id;
+    QSqlQuery query (main_DataBase);
+    Struct_Ausrichten struct_Ausrichten;
+    Struct_Ebenheit   struct_Ebenheit;
+    Struct_Kante      struct_Kante;
+    Struct_Steg       struct_Steg;
+    Struct_Bohrung    struct_Bohrung;
+    Struct_Nut        struct_Nut;
+
+    Item_TouchProbe item;
+
+    //--------- Lade TP_Ausrichten -----------------------------------------------------------
+    query.exec("SELECT * FROM TP_Ausrichten "
+               "WHERE project_id = '" + string_ProjectID + "';");
+
+    if(!query.lastError().text().isEmpty())
+    {
+       log->vailed(query.lastError().text());
+        return;
+    }
+
+    while (query.next())
+    {
+        item = Item_TouchProbe();
+
+        struct_Ausrichten = Struct_Ausrichten();
+        struct_Ausrichten.string_Pos = query.value("Pos").toString();
+        struct_Ausrichten.string_Frame = query.value("Frame").toString();
+        struct_Ausrichten.string_Messrichtung = query.value("Messrichtung").toString();
+        struct_Ausrichten.string_Messachse = query.value("Messachse").toString();
+        struct_Ausrichten.string_Positionierachse = query.value("Positionierachse").toString();
+        struct_Ausrichten.string_L2 = query.value("L2").toString();
+        struct_Ausrichten.string_TSA = query.value("TSA").toString();
+        struct_Ausrichten.string_Anfahren = query.value("Anfahren").toString();
+
+        item.state = Item_TouchProbe::Ausrichten;
+        item.Pos = struct_Ausrichten.string_Pos.toInt();
+        item.struct_Ausrichten = struct_Ausrichten;
+
+        list.append(item);
+    }
+
+
+    //--------------------Lade TP_Kante -----------------------------------------------------
+    query.exec("SELECT * FROM TP_Kante "
+               "WHERE project_id = '" + string_ProjectID + "';");
+
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(query.lastError().text());
+        return;
+    }
+
+    while (query.next())
+    {
+        item = Item_TouchProbe();
+
+        struct_Kante = Struct_Kante();
+        struct_Kante.string_Pos = query.value("Pos").toString();
+        struct_Kante.string_Frame = query.value("Frame").toString();
+        struct_Kante.string_Messrichtung = query.value("Messrichtung").toString();
+        struct_Kante.string_Messachse = query.value("Messachse").toString();
+        struct_Kante.string_Wert = query.value("Wert").toString();
+        struct_Kante.string_DFA = query.value("DFA").toString();
+        struct_Kante.string_TSA = query.value("TSA").toString();
+        struct_Kante.string_Anfahren = query.value("Anfahren").toString();
+
+        item.state = Item_TouchProbe::Kante;
+        item.Pos = struct_Kante.string_Pos.toInt();
+        item.struct_Kante = struct_Kante;
+
+        list.append(item);
+    }
+
+    //--------------------Lade TP_Ebenheit -----------------------------------------------------
+    query.exec("SELECT * FROM TP_Ebenheit "
+               "WHERE project_id = '" + string_ProjectID + "';");
+
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(query.lastError().text());
+        return;
+    }
+
+    while (query.next())
+    {
+        item = Item_TouchProbe();
+
+        struct_Ebenheit = Struct_Ebenheit();
+        struct_Ebenheit.string_Pos = query.value("Pos").toString();
+        struct_Ebenheit.string_Frame = query.value("Frame").toString();
+        struct_Ebenheit.string_Vertrauensbereich = query.value("Vertrauensbereich").toString();
+        struct_Ebenheit.string_ZEbene = query.value("ZEbene").toString();
+        struct_Ebenheit.string_Punkt1X = query.value("Punkt1X").toString();
+        struct_Ebenheit.string_Punkt1Y = query.value("Punkt1Y").toString();
+        struct_Ebenheit.string_Punkt2X = query.value("Punkt2X").toString();
+        struct_Ebenheit.string_Punkt2Y = query.value("Punkt2Y").toString();
+        struct_Ebenheit.string_Punkt3X = query.value("Punkt3X").toString();
+        struct_Ebenheit.string_Punkt3Y = query.value("Punkt3Y").toString();
+        struct_Ebenheit.string_Punkt4X = query.value("Punkt4X").toString();
+        struct_Ebenheit.string_Punkt4Y = query.value("Punkt4Y").toString();
+        struct_Ebenheit.bool_Jump1 = query.value("Jump1").toBool();
+        struct_Ebenheit.bool_Jump2 = query.value("Jump2").toBool();
+        struct_Ebenheit.bool_Jump3 = query.value("Jump3").toBool();
+
+        item.state = Item_TouchProbe::Ebenheit;
+        item.Pos = struct_Ebenheit.string_Pos.toInt();
+        item.struct_Ebenheit = struct_Ebenheit;
+
+        list.append(item);
+    }
+
+    //--------------------Lade TP_Steg -----------------------------------------------------
+    query.exec("SELECT * FROM TP_Steg "
+               "WHERE project_id = '" + string_ProjectID + "';");
+
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(query.lastError().text());
+        return;
+    }
+
+    while (query.next())
+    {
+        item = Item_TouchProbe();
+
+        struct_Steg = Struct_Steg();
+        struct_Steg.string_Pos = query.value("Pos").toString();
+        struct_Steg.string_Frame = query.value("Frame").toString();
+        struct_Steg.string_Messachse = query.value("Messachse").toString();
+        struct_Steg.string_W = query.value("W").toString();
+        struct_Steg.string_DZ = query.value("DZ").toString();
+        struct_Steg.string_DFA = query.value("DFA").toString();
+        struct_Steg.string_TSA = query.value("TSA").toString();
+        struct_Steg.string_Anfahren = query.value("Anfahren").toString();
+
+        item.state = Item_TouchProbe::Steg;
+        item.Pos = struct_Steg.string_Pos.toInt();
+        item.struct_Steg = struct_Steg;
+
+        list.append(item);
+    }
+
+    //--------------------Lade TP_Nut -----------------------------------------------------
+    query.exec("SELECT * FROM TP_Nut "
+               "WHERE project_id = '" + string_ProjectID + "';");
+
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(query.lastError().text());
+        return;
+    }
+
+    while (query.next())
+    {
+        item = Item_TouchProbe();
+
+        struct_Nut = Struct_Nut();
+        struct_Nut.string_Pos = query.value("Pos").toString();
+        struct_Nut.string_Frame = query.value("Frame").toString();
+        struct_Nut.string_Messachse = query.value("Messachse").toString();
+        struct_Nut.string_W = query.value("W").toString();
+        struct_Nut.string_DFA = query.value("DFA").toString();
+        struct_Nut.string_TSA = query.value("TSA").toString();
+        struct_Nut.string_Anfahren = query.value("Anfahren").toString();
+
+        item.state = Item_TouchProbe::Nut;
+        item.Pos = struct_Nut.string_Pos.toInt();
+        item.struct_Nut = struct_Nut;
+
+        list.append(item);
+    }
+
+    //--------------------Lade TP_Bohrung -----------------------------------------------------
+    query.exec("SELECT * FROM TP_Bohrung "
+               "WHERE project_id = '" + string_ProjectID + "';");
+
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(query.lastError().text());
+        return ;
+    }
+
+    while (query.next())
+    {
+        item = Item_TouchProbe();
+
+        struct_Bohrung = Struct_Bohrung();
+        struct_Bohrung.string_Pos = query.value("Pos").toString();
+        struct_Bohrung.string_Frame = query.value("Frame").toString();
+        struct_Bohrung.string_Durchmesser = query.value("Durchmesser").toString();
+        struct_Bohrung.string_TSA = query.value("TSA").toString();
+        struct_Bohrung.string_Anfahren = query.value("Anfahren").toString();
+
+        item.state = Item_TouchProbe::Bohrung;
+        item.Pos = struct_Bohrung.string_Pos.toInt();
+        item.struct_Bohrung = struct_Bohrung;
+
+        list.append(item);
+    }
+
+    //sortiere die Liste nach Position
+    for (int i = 0; i<list.size(); i++)
+    {
+
+        for(int j = 0; j<i; j++)
+        {
+            if(list.at(i).Pos < list.at(j).Pos)
+            {
+                list.move(i,j);
+                break;
+            }
+        }
+    }
+
+    projectData.list_TouchProbe = list;
+}
+
+QString DataBase::get_ToolLength(QString toolID)
+{
+    // Holt die Ausspannlaenge des Werkzeugs aus der Datenbank
+    QSqlQuery query (tool_DataBase);
+    QString string_ToolLength;
+    string_ToolLength = "0";
+
+    query.exec("select nc_number_str, tool_length from NCTools "
+               "where nc_number_str = '" + toolID + "';");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(query.lastError().text());
+        return " ";
+    }
+
+    while (query.next())
+    {
+        string_ToolLength = query.value("tool_length").toString();
+    }
+    return string_ToolLength;
+}
+
+QString DataBase::get_TipLength(QString toolID)
+{
+    // Holt die Freistellange des Werkzeugs aus der Datenbank
+    QSqlQuery query (tool_DataBase);
+    QString string_TipLength;
+
+    bool bool_Hals = true;
+
+    string_TipLength = "0";
+
+    query.exec("SELECT Tools.dbl_param5, Tools.bool_param2 from NCTools "
+               "INNER JOIN Tools on "
+               "Tools.id = NCTools.tool_id "
+               "where NCTools.nc_number_str = '" + toolID + "';");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(query.lastError().text());
+        return " ";
+    }
+
+    while (query.next())
+    {
+        string_TipLength = query.value("dbl_param5").toString();
+        bool_Hals        = query.value("bool_param2").toBool();
+    }
+
+    if(!bool_Hals)
+        string_TipLength = " - ";
+
+    return string_TipLength;
+}
+
+QString DataBase::get_Description(QString toolID)
+{
+    //Holt die Beschreibung des Werkzeugs aus der Datenbank
+    QString string_Description;
+    QSqlQuery query (tool_DataBase);
+
+    query.exec("select nc_name from NCTools "
+               "where nc_number_str = '" + toolID + "';");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(query.lastError().text());
+        return " ";
+    }
+
+    while (query.next())
+    {
+        string_Description = query.value("nc_name").toString();
+    }
+    return string_Description;
 }

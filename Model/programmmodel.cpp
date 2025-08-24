@@ -77,7 +77,7 @@ bool ProgrammModel::setData(const QModelIndex& index, const QVariant& value, int
             else
             {
                 list_Programme[row].TOFFL = false;
-                //emit sig_NewProgrammList(list_Programme);
+                emit sig_NewProgrammList(list_Programme);
                 return true;
             }
         }
@@ -87,17 +87,13 @@ bool ProgrammModel::setData(const QModelIndex& index, const QVariant& value, int
             if ((Qt::CheckState)value.toInt() == Qt::Checked)
             {
                 list_Programme[row].NoXY = true;
-                qDebug() << Q_FUNC_INFO << list_Programme[row].ProgrammName << list_Programme[row].NoXY;
-                emit sig_ProgrammChanged();
                 emit sig_NewProgrammList(list_Programme);
                 return true;
             }
             else
             {
                 list_Programme[row].NoXY = false;
-                qDebug() << Q_FUNC_INFO << list_Programme[row].ProgrammName << list_Programme[row].NoXY;
-                emit sig_ProgrammChanged();
-                //emit sig_NewProgrammList(list_Programme);
+                emit sig_NewProgrammList(list_Programme);
                 return true;
             }
         }

@@ -35,6 +35,12 @@ void MLineEdit::set_Empty()
     setStyleSheet(string_StyleSheet + "background-color:rgb(255,116,108);");
 }
 
+/*void MLineEdit::set_Text(QString string)
+{
+    if(string.isEmpty()) string = " ";
+    setText(string);
+}*/
+
 void MLineEdit::slot_textChanged(QString newText)
 {
 
@@ -96,7 +102,9 @@ bool MLineEdit::check()
     {
         text().toFloat(&bool_OK);
         if(!bool_OK)
+        {
             return false;
+        }
     }
 
     if(state == State::ZeroPointG)

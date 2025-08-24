@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
+    <width>350</width>
     <height>450</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>300</width>
+    <width>350</width>
     <height>450</height>
    </size>
   </property>
@@ -26,10 +26,45 @@
   <property name="styleSheet">
    <string notr="true">QDialog#Dialog_Programm {border-image: url(:/Icons/Main/Wallpaper5_klein.png) 0 0 0 0 stretch stretch;}
 
-QTableView {color:rgb(192,192,192);
-                  background-color: rgb(80,80,112);
-                  border-radius:7px;
+/*QTableView {color:rgb(192,192,192);
+                  background-color: rgba(0,0,0,192);
+                  border-radius:7px;}*/
       			 /*show-decoration-selected: 1; /* make the selection span the entire width of the view */
+
+QTableView{color:rgb(128,128,128);
+					 background:rgba(0,0,0,168); 
+                     border: 1px  solid;
+                      border-color: rgb(128, 128, 192);
+					  border-radius: 10px;}
+
+QScrollBar:vertical {
+    border: 1px solid #999999;
+    background: rgba(255,255,255,32);
+    width: 12px; /* Breite der Scrollbar */
+    margin: 0px 0px 0px 0px;
+    border-radius: 6px; /* Abrundung der Scrollbar-Leiste */
+}
+
+QScrollBar::handle:vertical {
+    background: rgb(128,128,192);/*#a0a0a0; /* Farbe des Scrollbar-Griffs */
+    min-height: 20px;
+    border-radius: 5px; /* Abrundung des Griffs */
+}
+
+QScrollBar::add-line:vertical {
+    border: none;
+    background: none;
+}
+
+QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+}
+
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+    border: none;
+    background: none;
+    color: none;
 }
 </string>
   </property>
@@ -47,15 +82,17 @@ QTableView {color:rgb(192,192,192);
 
 QTableView::indicator:checked {
     background-color: #4CAF50; /* Hintergrundfarbe wenn gecheckt (Beispiel: Grün) */
-     background-color: rgba(255, 255, 255,0);
+   border-radius:6px;
+     /*background-color: rgba(255, 255, 255,0);
     /*border: 1px solid #4CAF50; /* Rahmenfarbe wenn gecheckt (kann gleich sein) */
     /*image: url(:/icons/checkmark.png); /* Optional: Ein Häkchen-Bild einfügen */
-    image: url(:/Icons/Main/check.png);
+   /* image: url(:/Icons/Main/check.png);
     /* Achtung: Das Bild muss in Ihren Ressourcen vorhanden sein (z.B. mittels Qt Resource System) */
 }
 
 QTableView::indicator:unchecked {
     background-color: #808080; /* Hintergrundfarbe wenn nicht gecheckt (Beispiel: Weiß) */
+    border-radius:3px
 }
 
 QTableView::indicator:hover {
@@ -71,12 +108,10 @@ QHeaderView::section:first {
     border-top-left-radius: 8px; } /* Obere linke Ecke abrunden */
 
 QHeaderView::section:last {
-    border-top-right-radius: 8px; /* Obere rechte Ecke abrunden */
-    border-buttom-right-radius: 0px;
-}</string>
+    border-top-right-radius: 8px; }/* Obere rechte Ecke abrunden */</string>
      </property>
      <attribute name="horizontalHeaderStretchLastSection">
-      <bool>false</bool>
+      <bool>true</bool>
      </attribute>
     </widget>
    </item>

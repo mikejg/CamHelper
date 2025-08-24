@@ -5,6 +5,7 @@
 #include <QList>
 
 #include "../Tool/toollist.h"
+#include "../TouchProbe/tp_struct.h"
 
 struct RawPart
 {
@@ -63,6 +64,35 @@ struct Programm
     }
 };
 
+struct Item_TouchProbe
+{
+    enum State{NoState, Kante, Ausrichten, Steg, Bohrung, Ebenheit, Nut};
+
+    int Pos;
+    State state;
+    Struct_Ausrichten struct_Ausrichten;
+    Struct_Kante struct_Kante;
+    Struct_Ebenheit struct_Ebenheit;
+    Struct_Steg struct_Steg;
+    Struct_Bohrung struct_Bohrung;
+    Struct_Nut struct_Nut;
+
+    bool operator!=(const Item_TouchProbe& t) const
+    {
+        if(Pos != t.Pos) return true;
+        if(state != t.state) return true;
+        if(struct_Ausrichten != t.struct_Ausrichten) return true;
+        if(struct_Kante != t.struct_Kante) return true;
+        if(struct_Ebenheit != t.struct_Ebenheit) return true;
+        if(struct_Steg != t.struct_Steg) return true;
+        if(struct_Bohrung != t.struct_Bohrung) return true;
+        if(struct_Nut != t.struct_Nut) return true;
+
+        return false;
+    }
+};
+
+
 struct ProjectData
 {
     QString id;                             //DatenBank ID
@@ -84,6 +114,7 @@ struct ProjectData
     Offset_RawPart offset_RawPart;          //Struktur für Rohteil Aufmass
     ToolList* toolList = new ToolList();    //Liste der Werkzeuge
     QList<Programm> list_Programm;          //Liste der Programme
+    QList<Item_TouchProbe> list_TouchProbe; //Liste der Antastzyklen
 };
 
 #endif // STRUCT_H

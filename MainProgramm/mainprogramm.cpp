@@ -60,6 +60,12 @@ void MainProgramm::set_ProjectData(ProjectData pd)
 
     if(pd.tension == "Sp1")
         string_MainProgramm = QDir::homePath()+"/CamHelper/Vorlagen/Hauptprogramme/Hauptprogramm_SP1.MPF";
+    if(pd.tension == "Sp2")
+        string_MainProgramm = QDir::homePath()+"/CamHelper/Vorlagen/Hauptprogramme/Hauptprogramm_SP2.MPF";
+    if(pd.tension == "Sp3")
+        string_MainProgramm = QDir::homePath()+"/CamHelper/Vorlagen/Hauptprogramme/Hauptprogramm_SP3.MPF";
+    if(pd.tension == "Sp4")
+        string_MainProgramm = QDir::homePath()+"/CamHelper/Vorlagen/Hauptprogramme/Hauptprogramm_SP4.MPF";
 
     mfile->setFileName(string_MainProgramm);
     if(!mfile->read_Content())

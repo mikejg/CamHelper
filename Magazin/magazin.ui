@@ -18,7 +18,8 @@
     background-color: rgb(128,128,192);
     border: 0px;}*/
 
-QTableView{background:rgb(80,80,112); 
+QTableView{/*background:rgb(80,80,112);*/
+					 background:rgba(0,0,0,168); 
                      border: 1px  solid;
                       border-color: rgb(128, 128, 192);
 					  border-radius: 10px;}

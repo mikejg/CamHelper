@@ -20,10 +20,11 @@ Magazin::Magazin(QWidget *parent) :
     searchList = new ToolList(this);
 
     QPalette palette;
+    text_Color = QColor(128,128,128);
     palette.setColor(QPalette::Highlight, ui->tableView->palette().color(QPalette::Base));
     //palette.setColor(QPalette::Highlight, QColor(128,128,192));
     palette.setColor(QPalette::HighlightedText, ui->tableView->palette().color(QPalette::Text));
-
+    palette.setColor(QPalette::Text,text_Color);
     ui->tableView->setPalette(palette);
     connect(&fileSystemWatcher, SIGNAL(fileChanged(QString)), this, SLOT(slot_MagazinChanged(QString)));
 }
@@ -221,16 +222,19 @@ void Magazin::slot_TableClicked(const QModelIndex &modelIndex)
         //palette.setColor(QPalette::Highlight, ui->tableView->palette().color(QPalette::Base));
         palette.setColor(QPalette::Highlight, QColor(128,128,192));
         palette.setColor(QPalette::HighlightedText, Qt::green);
+        palette.setColor(QPalette::Text,text_Color);
     }
     else if(list_ToolState[modelIndex.row()] == "Out")
     {
         palette.setColor(QPalette::Highlight, QColor(128,128,192));
         palette.setColor(QPalette::HighlightedText, Qt::yellow);
+        palette.setColor(QPalette::Text, text_Color);
     }
     else if(list_ToolState[modelIndex.row()] == "Disassembled")
     {
         palette.setColor(QPalette::Highlight, QColor(128,128,192));
         palette.setColor(QPalette::HighlightedText, Qt::red);
+        palette.setColor(QPalette::Text, text_Color);
     }
     else
     {

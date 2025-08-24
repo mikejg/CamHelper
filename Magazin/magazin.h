@@ -39,6 +39,7 @@ private:
     QList<QString> list_CutLength;
 
     QString string_old;
+    QColor text_Color;
 
     void contains(QString, ToolList*);
 public:

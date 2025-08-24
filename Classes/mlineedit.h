@@ -27,6 +27,7 @@ public:
     enum State{Dir, File, Digi, Tension, noState, ZeroPointG};
     State state;
 
+    //void set_Text(QString);
     void set_Empty();
     void set_Invalid();
     void set_TextNecessary(bool n) {bool_TextNecessary = n;}

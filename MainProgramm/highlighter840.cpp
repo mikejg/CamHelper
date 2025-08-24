@@ -88,18 +88,6 @@ Highlighter840::Highlighter840(QTextDocument *parent) : QSyntaxHighlighter(paren
         rule.capture = 0;
         highlightingRules.append(rule);
     }
-
-
-    QString text = "N74 WRITE(LOG_ERROR,\"_N_LogFile\",\";--- \" << LOG_DATUM << \" - \" << LOG_ZEIT << \" ---\")";
-
-    QRegularExpression re(QStringLiteral("\"[^;]*;[^\"]*\""));
-    QRegularExpressionMatch match = re.match(text);
-
-    if (match.hasMatch()) {
-        qDebug() << "Gefundene Zeichenkette mit Semikolon:" << match.captured(0);
-    } else {
-        qDebug() << "Kein Match gefunden.";
-    }
 }
 
 Highlighter840::~Highlighter840()
@@ -134,8 +122,6 @@ void Highlighter840::highlightBlock(const QString &text)
 
     QRegularExpression re(QStringLiteral("^[^;]*\"[^\"]*;[^\"]*\""));
     match = re.match(text);
-    if (match.hasMatch())
-        qDebug() << "Gefundene Zeichenkette mit Semikolon:" << match.captured(0);
 
     if(!match.hasMatch())
     {
