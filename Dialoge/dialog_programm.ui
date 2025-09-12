@@ -81,8 +81,11 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
 }
 
 QTableView::indicator:checked {
-    background-color: #4CAF50; /* Hintergrundfarbe wenn gecheckt (Beispiel: Grün) */
-   border-radius:6px;
+   
+	/*background-image: url(:/Icons/Main/CheckBox_On.png);*/
+    background-color: #80FF80; /* Hintergrundfarbe wenn gecheckt (Beispiel: Grün) */
+   border-radius:3px;
+	border: 3px solid #808080;
      /*background-color: rgba(255, 255, 255,0);
     /*border: 1px solid #4CAF50; /* Rahmenfarbe wenn gecheckt (kann gleich sein) */
     /*image: url(:/icons/checkmark.png); /* Optional: Ein Häkchen-Bild einfügen */

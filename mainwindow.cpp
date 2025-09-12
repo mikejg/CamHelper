@@ -22,19 +22,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->stackedWidget->setCurrentWidget(ui->tab_Init);
 
-    logging = ui->tab_Logging;                          //übergebe den Zeiger für das Logging
+    logging = ui->tab_Logging;                              //übergebe den Zeiger für das Logging
+    mfile = new MFile(this, logging);                       //Erstelle ein MFile
+    dataBase = new DataBase(this, logging);                 //Erstelle die Datenbank
 
-    dataBase = new DataBase(this, logging);             //Erstelle die Datenbank
+    ui->tab_Project->set_DataBase(dataBase);                //Übergebe die DatenBank an Tab_Project
+    ui->tab_Project->set_Logging(logging);                  //Übergebe Logging an Tab_Project
+    ui->tab_Project->set_StackedWidget(ui->stackedWidget);  //Übergebe StackedWidget an Tab_Project
+    ui->tab_Project->set_TouchProbe(ui->tab_Touchprobe);    //Übergebe Touchprobe an Tab_Prject;
+    ui->tab_Project->set_MainProgramm(ui->tab_MainProgramm);//Übergebe MainProgramm an Tab_Project
 
-    ui->tab_Project->set_DataBase(dataBase);            //Übergebe die DatenBank an Tab_Project
-    ui->tab_Project->set_Logging(logging);              //Übergebe Logging an Tab_Project
     ui->tab_Project->installEventFilter(this);
     connect(ui->tab_Project, SIGNAL(sig_NewToolList()), this, SLOT(slot_NewToolList()));
 
     ui->tab_MainProgramm->set_Logging(logging);         //Übergebe Lobbing an Tab_MainProgramm
     dialog_Init = ui->tab_Init;                         //übergebe den Zeiger für Dialog_Init
 
-    //bool_IgnoreToggle = false;
+
 
     //Erstelle den Dialog Settings. Wenn alle Einstellungen OK sind und gespeichert wurden
     //wird der InitApp neu gestartet
@@ -69,10 +73,8 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
 {
     if(obj == ui->tab_Project && ev->type() == QEvent::Leave)
     {
-        if(ui->tab_Project->check_InputFields())
+        if(ui->tab_Project->update_ProjectData())
         {
-            //foreach(Programm pgr, projectData->list_Programm)
-            //    qDebug() << Q_FUNC_INFO << pgr.ProgrammName << pgr.NoXY;
             ui->tab_MainProgramm->set_ProjectData(*projectData);
         }
     }
@@ -118,8 +120,8 @@ void MainWindow::slot_InitApp()
     connect(ui->tab_ToolSheet, SIGNAL(sig_DialogPrintFinished(int)),    //Verbinde das beenden des Druckens mit
             this, SLOT(slot_DialogPrintFinished(int)));                 //dem SLOT
 
-    QList<ProjectData> list = dataBase->get_LastOpen();
-    dialog_Init->set_Pictures(list);
+    QList<ProjectData> list = dataBase->get_LastOpen();                 //Lade die Letzten Projekte
+    dialog_Init->set_Pictures(list);                                    //Übergebe die letzten Projekte an Dialog_Init
 
     //Dialog Open
     dialog_Open = new Dialog_Open(this, dataBase);
@@ -152,10 +154,48 @@ void MainWindow::slot_NewProject()
     if(!spf_Parser->scann_ForData())            //Suche in den SPF Files nach Project Name_Stand_Spannung
         return;
 
+    if(projectData->tension == "Sp0")
+        projectData->zeroPoint.string_G = "G54";
+
+    if(projectData->tension == "Sp1")
+            projectData->zeroPoint.string_G = "G55";
+
+    if(projectData->tension == "Sp2")
+        projectData->zeroPoint.string_G = "G506";
+
+    if(projectData->tension == "Sp3")
+        projectData->zeroPoint.string_G = "G507";
+
+    if(projectData->tension == "Sp4")
+        projectData->zeroPoint.string_G = "G508";
     // Scanne SPF Files nach Werkzeugen
     // wenn das fehlschlägt brich die Funktion ab
     if(!spf_Parser->scann_ForTools())
         return;
+
+    if(!spf_Parser->scann_ForNoXY())
+        return;
+
+    //lade den Standart Comment für Spannung 0 und Spannung1
+    if(projectData->tension == "Sp0" || projectData->tension == "Sp1")
+    {
+        mfile->setFileName(QDir::homePath() + "/CamHelper/config/Comment01.txt");
+        if(!mfile->read_Content())
+            return;
+    }
+
+    //lade den Standart Comment für Spannung 2 - 5
+    else
+    {
+        mfile->setFileName(QDir::homePath() + "/CamHelper/config/Comment25.txt");
+        if(!mfile->read_Content())
+            return;
+    }
+    //setze den Standart Header für das Project
+    foreach (QString str, mfile->get_Content())
+    {
+        projectData->header = projectData->header + str + "\n";
+    }
 
     ui->tab_Project->set_ProjectData(projectData);
     ui->tab_ToolSheet->showTable(*projectData);
@@ -174,11 +214,12 @@ void MainWindow::slot_OpenProject(QString string_ProjectId)
     projectData =  new ProjectData();
 
     currentProject = new Project(this);                     //Erstelle einen Zeiger für das aktuelle Projekt
-    *projectData = dataBase->get_Project(string_ProjectId);  //Lade die Projekdaten aus der DatenBank
+    projectData = dataBase->get_Project(string_ProjectId);  //Lade die Projekdaten aus der DatenBank
     currentProject->set_ProjectData(projectData);           //Übergebe die Projektdaten an das aktuelle Projekt
     ui->tab_Project->set_ProjectData(projectData);         //Zeige die Projektaten im Tab Projekt an
     ui->tab_ToolSheet->showTable(*projectData);
     ui->tab_Touchprobe->set_ProjectData(projectData);
+    qDebug() << Q_FUNC_INFO << projectData->list_TouchProbe.size();
     ui->tab_Touchprobe->insert_Item(projectData->list_TouchProbe);
     ui->stackedWidget->setCurrentWidget(ui->tab_Project);   //Zeige Tab_Projekt an
 }
@@ -188,7 +229,7 @@ void MainWindow::slot_OpenProject(QString string_Name, QString string_Tension)
     projectData =  new ProjectData();
 
     currentProject = new Project(this);                                 //Erstelle einen Zeiger für das aktuelle Projekt
-    *projectData = dataBase->get_Project(string_Name, string_Tension);   //Lade die Projekdaten aus der DatenBank
+    projectData = dataBase->get_Project(string_Name, string_Tension);   //Lade die Projekdaten aus der DatenBank
     currentProject->set_ProjectData(projectData);                       //Übergebe die Projektdaten an das aktuelle Projekt
     ui->tab_Project->set_ProjectData(projectData);                      //Zeige die Projektaten im Tab Projekt an
     ui->tab_ToolSheet->showTable(*projectData);

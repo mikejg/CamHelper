@@ -12,6 +12,7 @@ SOURCES += \
     Classes/database.cpp \
     Classes/mcellwidget.cpp \
     Classes/mcombobox.cpp \
+    Classes/mdoublespinbox.cpp \
     Classes/mfile.cpp \
     Classes/mlineedit.cpp \
     Classes/roundedlabel.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
     Dialoge/dialog_init.cpp \
     Dialoge/dialog_open.cpp \
     Dialoge/dialog_programm.cpp \
+    Dialoge/dialog_progress.cpp \
     Dialoge/dialog_rawpartinspection.cpp \
     Dialoge/dialog_settings.cpp \
     Dialoge/dialog_tag.cpp \
@@ -36,6 +38,7 @@ SOURCES += \
     Project/pix_scrollarea.cpp \
     Project/pix_scrollcontent.cpp \
     Project/project.cpp \
+    Project/project_export.cpp \
     Project/selectorwidget.cpp \
     Project/tab_project.cpp \
     Tool/tool.cpp \
@@ -62,6 +65,7 @@ HEADERS += \
     Classes/database.h \
     Classes/mcellwidget.h \
     Classes/mcombobox.h \
+    Classes/mdoublespinbox.h \
     Classes/mfile.h \
     Classes/mlineedit.h \
     Classes/roundedlabel.h \
@@ -70,6 +74,7 @@ HEADERS += \
     Dialoge/dialog_init.h \
     Dialoge/dialog_open.h \
     Dialoge/dialog_programm.h \
+    Dialoge/dialog_progress.h \
     Dialoge/dialog_rawpartinspection.h \
     Dialoge/dialog_settings.h \
     Dialoge/dialog_tag.h \
@@ -87,6 +92,7 @@ HEADERS += \
     Project/pix_scrollarea.h \
     Project/pix_scrollcontent.h \
     Project/project.h \
+    Project/project_export.h \
     Project/selectorwidget.h \
     Project/tab_project.h \
     Tool/tool.h \
@@ -115,6 +121,7 @@ FORMS += \
     Dialoge/dialog_init.ui \
     Dialoge/dialog_open.ui \
     Dialoge/dialog_programm.ui \
+    Dialoge/dialog_progress.ui \
     Dialoge/dialog_rawpartinspection.ui \
     Dialoge/dialog_settings.ui \
     Dialoge/dialog_tag.ui \

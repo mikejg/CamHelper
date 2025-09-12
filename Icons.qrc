@@ -87,5 +87,7 @@
         <file>Icons/TouchProbe/picture.png</file>
         <file>Icons/TouchProbe/Steg.png</file>
         <file>Icons/Main/new.png</file>
+        <file>Icons/Main/CheckBox_On.png</file>
+        <file>Icons/Project/export.png</file>
     </qresource>
 </RCC>

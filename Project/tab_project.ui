@@ -26,33 +26,21 @@ QLabel{color:rgb(192,192,192);
 QCheckBox{color:rgb(192,192,192);
                       background-color: rgba(255, 255, 255,0);}
 
-/*QCheckBox::indicator {border: 1px  solid;
-                                        border-radius: 4px;
-                                        border-color: rgb(128, 128, 128);}
-
-QCheckBox::indicator:checked {image: url(:/Icons/Main/check.png);
-                                                        border-color: rgba(128, 128, 128,0);}
-*/
-
 QCheckBox::indicator {
-    width: 16px; /* Adjust size as needed */
-    height: 16px; /* Adjust size as needed */
-    border-radius: 8px; /* Makes it round (half of width/height) */
-    border: 1px solid gray; /* Border when unchecked */
-   /* background-color: white; /* Background when unchecked */
-   background-color: rgba(255, 255, 255,0);
+    width: 10px; /* Adjust size as needed */
+    height: 10px; /* Adjust size as needed */
+    border-radius: 3px; /* Makes it round (half of width/height) */
+	border: 3px solid #808080;
+   background-color: rgb(128,128,128);
 }
 
 QCheckBox::indicator:checked {
-   
-	background-color: rgb(128, 128, 192);
-    /*background-color: blue; /* Blue dot when checked */
+	background-color: #80FF80; /* Hintergrundfarbe wenn gecheckt (Beispiel: Grün) */
+    border-radius:3px;
+	border: 3px solid #808080;
+   /*background-image: url(:/Icons/Main/CheckBox_On.png);*/
+	/*background-color: rgb(128, 128, 192);
     border: 1px solid gray; /* Blue border when checked */
-}
-
-QCheckBox::indicator:hover {
-    border: 1px solid; /* Slight border change on hover */
-    border-color: rgb(128, 192, 128);
 }
 
 QToolButton{background-color: rgba(0, 0, 0,0);}
@@ -203,6 +191,18 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
           <property name="icon">
            <iconset>
             <normalon>:/Icons/Project/tools.png</normalon>
+           </iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="toolButton_Export">
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normalon>:/Icons/Project/export.png</normalon>
            </iconset>
           </property>
          </widget>
@@ -537,7 +537,7 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="comboBox_Material">
+          <widget class="MComboBox" name="comboBox_Material">
            <property name="minimumSize">
             <size>
              <width>435</width>
@@ -641,7 +641,7 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_ZRawPart">
+            <widget class="MDoubleSpinBox" name="doubleSpinBox_ZRawPart">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -881,8 +881,14 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
           <layout class="QHBoxLayout" name="horizontalLayout">
            <item>
             <widget class="QCheckBox" name="checkBox_Offset_RawPart">
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
              <property name="text">
               <string>Einzelaufmasse</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -1127,6 +1133,9 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
             <widget class="QCheckBox" name="checkBox_Offset_FinishPart">
              <property name="text">
               <string>Einzelaufmasse</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -1510,6 +1519,16 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
    <class>MLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">Classes/mlineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MComboBox</class>
+   <extends>QComboBox</extends>
+   <header>Classes/mcombobox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MDoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header>Classes/mdoublespinbox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

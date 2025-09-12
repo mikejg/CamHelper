@@ -22,6 +22,7 @@ void MCellWidget::set_ProjectData(ProjectData pd)
         ui->label_Pixmap->setPixmap(pd.listPictures.at(0), 10);
 
     ui->label_Text->setText(pd.name);
+    setMinimumHeight(200);
 }
 
 void MCellWidget::mousePressEvent(QMouseEvent *event)

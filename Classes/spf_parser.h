@@ -22,6 +22,8 @@ private:
     Logging * log;
     MFile* mfile;
     DataBase* dataBase;
+    QStringList stringList_Content;
+
     void insert_Tool(QString, ToolList*);
     QString parse_ProjectName(QString);
     QString parse_PostProcessor(QString);
@@ -35,7 +37,7 @@ public:
                         DataBase* db = nullptr);
     bool scann_ForData();
     bool scann_ForTools();
-
+    bool scann_ForNoXY();
     void set_ProjectData(ProjectData* pd) {projectData = pd;}
 
 signals:

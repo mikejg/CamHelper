@@ -84,7 +84,7 @@ void Dialog_Open::slot_Clicked(QModelIndex index)
 
     QString itemText = index.data(Qt::DisplayRole).toString();
     QStringList stringList;
-    ProjectData projectData;
+    ProjectData* projectData;
 
     QList<QPixmap> picList;
     //Teile den String am Unterstrich für das Project und die Spannung
@@ -95,9 +95,9 @@ void Dialog_Open::slot_Clicked(QModelIndex index)
         //Lade alle Daten des Projects, uns interessiert nur die DatenBank ID
         projectData = dataBase->get_Project(stringList.at(0), stringList.at(1));
 
-        if(projectData.listPictures.size() > 0)
+        if(projectData->listPictures.size() > 0)
         {
-            ui->label->setPixmap(projectData.listPictures.at(0),10);
+            ui->label->setPixmap(projectData->listPictures.at(0),10);
         }
     }
 }

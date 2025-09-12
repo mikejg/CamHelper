@@ -50,7 +50,7 @@
        <property name="minimumSize">
         <size>
          <width>20</width>
-         <height>20</height>
+         <height>200</height>
         </size>
        </property>
       </widget>
@@ -60,7 +60,7 @@
        <property name="minimumSize">
         <size>
          <width>20</width>
-         <height>20</height>
+         <height>200</height>
         </size>
        </property>
       </widget>
@@ -70,7 +70,7 @@
        <property name="minimumSize">
         <size>
          <width>20</width>
-         <height>20</height>
+         <height>200</height>
         </size>
        </property>
       </widget>
@@ -80,7 +80,7 @@
        <property name="minimumSize">
         <size>
          <width>20</width>
-         <height>20</height>
+         <height>200</height>
         </size>
        </property>
       </widget>
@@ -120,7 +120,7 @@
        <property name="minimumSize">
         <size>
          <width>20</width>
-         <height>20</height>
+         <height>200</height>
         </size>
        </property>
       </widget>
@@ -130,7 +130,7 @@
        <property name="minimumSize">
         <size>
          <width>20</width>
-         <height>20</height>
+         <height>200</height>
         </size>
        </property>
       </widget>
@@ -140,7 +140,7 @@
        <property name="minimumSize">
         <size>
          <width>20</width>
-         <height>20</height>
+         <height>200</height>
         </size>
        </property>
       </widget>
@@ -150,7 +150,7 @@
        <property name="minimumSize">
         <size>
          <width>20</width>
-         <height>20</height>
+         <height>200</height>
         </size>
        </property>
       </widget>

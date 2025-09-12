@@ -17,7 +17,6 @@ private:
     Ui::Pix_ScrollArea *ui;
     QVBoxLayout* layout;
     QList<MLabel*> label_List;
-    //QList<RoundedLabel*> label_List;
     QSpacerItem* spacerItem;
 
 protected:

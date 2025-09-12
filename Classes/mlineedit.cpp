@@ -21,7 +21,6 @@ MLineEdit::MLineEdit(QWidget *parent) : QLineEdit(parent)
 
 void MLineEdit::set_Invalid()
 {
-    qDebug() << Q_FUNC_INFO << string_StyleSheet;
     setStyleSheet(string_StyleSheet + "color:rgb(255,0,0);");
 }
 

@@ -7,6 +7,11 @@ Tab_Project::Tab_Project(QWidget *parent)
     , ui(new Ui::Tab_Project)
 {
     ui->setupUi(this);
+
+    settings = new QSettings("Gareiss", "CamHelper");
+    clipboard = QApplication::clipboard();
+    projectExport = new Project_Export(this);
+
     ui->scrollArea->set_Layout(ui->verticalLayout_Pictures);
     ui->scrollArea->set_Spacer(ui->verticalSpacer_Pictures);
 
@@ -45,6 +50,9 @@ Tab_Project::Tab_Project(QWidget *parent)
     connect(ui->toolButton_Tag, SIGNAL(released()), this, SLOT(slot_ShowTags()));
     connect(ui->toolButton_Programme, SIGNAL(released()), this, SLOT(slot_ShowProgramm()));
     connect(ui->toolButton_Tools, SIGNAL(released()), this, SLOT(slot_ShowTools()));
+    connect(ui->toolButton_Selector, SIGNAL(released()), this, SLOT(slot_NewSelector()));
+    connect(ui->toolButton_Paste,SIGNAL(released()), this, SLOT(slot_NPPaste()));
+    connect(ui->toolButton_Export, SIGNAL(released()), this, SLOT(slot_Export()));
 }
 
 Tab_Project::~Tab_Project()
@@ -52,10 +60,22 @@ Tab_Project::~Tab_Project()
     delete ui;
 }
 
+void Tab_Project::slot_Export()
+{
+    if(!update_ProjectData())
+        stackedWidget->setCurrentWidget(log);
+
+    mainProgramm->set_ProjectData(*projectData);            //Erzeuge das Hauptprogramm im Tab_MainProgramm
+    projectExport->set_ContentMainProgramm(mainProgramm);   //Übergebe das Hauptprogramm an projectExport
+
+    projectExport->exportProject(projectData);
+
+}
+
 bool Tab_Project::check_InputFields()
 {
     bool bool_Return = true;
-    QString string;
+
 
     if(!ui->lineEdit_ProjectName->check())
     {
@@ -111,6 +131,13 @@ bool Tab_Project::check_InputFields()
             log->vailed(("Eingabefeld Bauteil Z ist fehlerhat"));
             bool_Return = false;
         }
+
+        if(ui->doubleSpinBox_ZRawPart->value() == 0)
+        {
+            log->vailed("Z Rohteil auf 0");
+            ui->doubleSpinBox_ZRawPart->set_Null();
+            bool_Return = false;
+        }
     }
 
     if(!ui->lineEdit_ZeroPointG->check())
@@ -140,13 +167,34 @@ bool Tab_Project::check_InputFields()
     if(ui->comboBox_Material->currentText().isEmpty())
     {
         log->vailed("Material fehlt");
+        ui->comboBox_Material->set_Empty();
         bool_Return = false;
     }
 
-    if(!bool_Return)                //Wenn ein Fehler aufgetreten ist brech hier ab
-        return bool_Return;
+    if(ui->label_RawPartInspection->text().isEmpty() ||
+       ui->label_RawPartInspection->text() == "Rohteil")
+    {
+        log->vailed("Keine Rohteilkontrolle ausgewählt");
+        ui->label_RawPartInspection->setText("Rohteil");
+        ui->label_RawPartInspection->setStyleSheet("color:rgb(255,0,0);");
+        bool_Return = false;
+    }
+    else
+        ui->label_RawPartInspection->setStyleSheet("color:rgb(192,192,192);");
 
 
+    return bool_Return;
+}
+
+bool Tab_Project::update_ProjectData()
+{
+    QString string;
+
+    //Überprüfe die Eingabefelder
+    if(!check_InputFields())
+        return false;
+
+    //Schreibe die Daten aus den Eingabefeldern in ProjectData
     projectData->name = ui->lineEdit_ProjectName->text();
     projectData->state = ui->lineEdit_ProjectState->text();
     projectData->tension = ui->lineEdit_Tension->text();
@@ -188,10 +236,104 @@ bool Tab_Project::check_InputFields()
     string = string.replace(",",".");
     projectData->offset_RawPart.string_ZPlus = string;
 
+    //Lösche die Bilderliste und schreibe die Bilder in die Bilderliste
+    projectData->listPictures.clear();
+    foreach(MLabel* label, ui->scrollArea->get_PictureList())
+    {
+        projectData->listPictures.append(label->get_Pixmap());
+    }
 
-    return bool_Return;
+    projectData->list_TouchProbe.clear();
+    int pos = 0;
+    foreach(TP_Item* item, touchProbe->get_ItemList())
+    {
+        Item_TouchProbe item_TouchProbe;
+
+        if(item->get_State() == TP_Item::Ausrichten)
+        {
+            item_TouchProbe.struct_Ausrichten = item->get_Ausrichten();             //Schreibe Ausrichten in item_Touchprobe
+            item_TouchProbe.struct_Ausrichten.string_Pos = QString("%1").arg(pos);  //Schreibe die Position in Austrichten
+            item_TouchProbe.state = Item_TouchProbe::Ausrichten;                    //setze den Status
+            projectData->list_TouchProbe.append(item_TouchProbe);                   //speicher item_TouchProbe in projecData
+            pos++;
+            continue;
+        }
+        if(item->get_State() == TP_Item::Kante)
+        {
+            item_TouchProbe.struct_Kante = item->get_Kante();
+            item_TouchProbe.struct_Kante.string_Pos = QString("%1").arg(pos);
+            item_TouchProbe.state = Item_TouchProbe::Kante;
+            projectData->list_TouchProbe.append(item_TouchProbe);
+            pos++;
+            continue;
+        }
+
+        if(item->get_State() == TP_Item::Ebenheit)
+        {
+            item_TouchProbe.struct_Ebenheit = item->get_Ebenheit();
+            item_TouchProbe.struct_Ebenheit.string_Pos = QString("%1").arg(pos);
+            item_TouchProbe.state = Item_TouchProbe::Ebenheit;
+            projectData->list_TouchProbe.append(item_TouchProbe);
+            pos++;
+            continue;
+        }
+
+        if(item->get_State() == TP_Item::Steg)
+        {
+            item_TouchProbe.struct_Steg = item->get_Steg();
+            item_TouchProbe.struct_Steg.string_Pos = QString("%1").arg(pos);
+            item_TouchProbe.state = Item_TouchProbe::Steg;
+            projectData->list_TouchProbe.append(item_TouchProbe);
+            pos++;
+            continue;
+        }
+
+        if(item->get_State() == TP_Item::Bohrung)
+        {
+            item_TouchProbe.struct_Bohrung = item->get_Bohrung();
+            item_TouchProbe.struct_Bohrung.string_Pos = QString("%1").arg(pos);
+            item_TouchProbe.state = Item_TouchProbe::Bohrung;
+            projectData->list_TouchProbe.append(item_TouchProbe);
+            pos++;
+            continue;
+        }
+
+        if(item->get_State() == TP_Item::Nut)
+        {
+            item_TouchProbe.struct_Nut = item->get_Nut();
+            item_TouchProbe.struct_Nut.string_Pos = QString("%1").arg(pos);
+            item_TouchProbe.state = Item_TouchProbe::Nut;
+            projectData->list_TouchProbe.append(item_TouchProbe);
+            pos++;
+            continue;
+        }
+    }
+    return true;
 }
 
+float Tab_Project::filter_Value(QString string)
+{
+    float float_Value;
+    bool bool_OK;
+    QStringList stringList_Parts;
+    //QString string_Return;
+
+    stringList_Parts = string.split(" ");
+    foreach(QString str, stringList_Parts)
+    {
+        str.toFloat(&bool_OK);
+        if(bool_OK)
+        {
+            float_Value = str.toFloat(&bool_OK);
+            break;
+        }
+    }
+
+    // runde auf 3 stellen nach dem komma ab
+    //if(bool_OK)
+    //    string_Return = QString::number(float_Value, 'f', 3);
+    return float_Value;
+}
 
 void Tab_Project::insert_Pixmap(QPixmap p)
 {
@@ -215,6 +357,56 @@ bool Tab_Project::load_Material()
     return true;
 }
 
+void Tab_Project::slot_NPPaste()
+{
+    //Settings* settings = project->get_Settings();
+
+    float float_OffsetX = settings->value("OffsetX",999).toFloat();
+    float float_OffsetY = settings->value("OffsetY",999).toFloat();
+    float float_OffsetZ = settings->value("OffsetZ",999).toFloat();
+    float float_NPx, float_NPy, float_NPz;
+
+    QString string_Text = clipboard->text();
+    QString string_X = "";
+    QString string_Y = "";
+    QString string_Z = "";
+
+    // zerlege den String in Zeilen
+    QStringList stringList = string_Text.split("\n");
+
+    //geh durch alle Zeilen
+    for(int i = 0; i<stringList.size(); i++)
+    {
+        // Wenn in der Zeile das Schlüsselwort Endpunkt vorkommt lies
+        // die nächsten 3 Zeilen ein
+        if(stringList.at(i).contains("Delta-Koordinaten") && i+3 < stringList.size())
+        {
+            string_X = stringList.at(i+1);
+            string_Y = stringList.at(i+2);
+            string_Z = stringList.at(i+3);
+        }
+    }
+
+    if(!string_X.isEmpty())
+        float_NPx = float_OffsetX + filter_Value(string_X);
+    if(!string_Y.isEmpty())
+        float_NPy = float_OffsetY + filter_Value(string_Y);
+    if(!string_Z.isEmpty())
+        float_NPz = float_OffsetZ + filter_Value(string_Z);
+
+    ui->lineEdit_ZeroPointX->setText(QString::number(float_NPx, 'f', 2));
+    ui->lineEdit_ZeroPointY->setText(QString::number(float_NPy, 'f', 2));
+    ui->lineEdit_ZeroPointZ->setText(QString::number(float_NPz, 'f', 2));
+
+    //qDebug() << Q_FUNC_INFO << float_NPx << float_NPy << float_NPz;
+}
+
+void Tab_Project::set_DataBase(DataBase *db)
+{
+    dataBase = db;                          //Übernehme die Datenbank in den Zeiger dataBase
+    projectExport->set_DataBase(dataBase);  //Übergebe die Datenbank an projectExprot
+}
+
 void Tab_Project::set_Logging(Logging *l)
 {
     log = l;
@@ -227,6 +419,8 @@ void Tab_Project::set_ProjectData(ProjectData* pd)
 
     ui->scrollArea->clear();                                                        //Lösche die Bilder
     ui->textEdit_Header->clear();                                                   //Lösche den Header
+    ui->label_RawPartInspection->setText("Rohteil");
+    ui->label_RawPartInspection->setStyleSheet("color:rgb(255,0,0);");
 
     dialog_RawPartInspection = new Dialog_RawPartInspection(this);
     connect(dialog_RawPartInspection, SIGNAL(sig_NewInspection(QString)),
@@ -347,11 +541,18 @@ void Tab_Project::slot_ShowTools()
 void Tab_Project::slot_NewInspection(QString str)
 {
     ui->label_RawPartInspection->setText(str);
+    ui->label_RawPartInspection->setStyleSheet("");
     projectData->rawPart_Inspection = str;
+}
 
-    /*if(ui->label_RohteilKontrolle->text() != QString("Rohteilkontrolle"))
-    {
-        palette_Label.setColor(ui->label_RohteilKontrolle->foregroundRole(), forgroundColor);
-        ui->label_RohteilKontrolle->setPalette(palette_Label);
-    }*/
+void Tab_Project::slot_NewSelector()
+{
+    selectorWidget = new SelectorWidget();
+    connect(selectorWidget, SIGNAL(sig_NewPixmap(QPixmap)), this, SLOT(slot_NewPixmap(QPixmap)));
+    selectorWidget->show();
+}
+
+void Tab_Project::slot_NewPixmap(QPixmap pixmap)
+{
+    ui->scrollArea->insert_Pixmap(pixmap);
 }

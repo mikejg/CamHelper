@@ -71,12 +71,12 @@ bool SPF_Parser::scann_ForData()
     dir_ProgrammDir.setPath(string_ProgrammDir);
     stringList_Programme = dir_ProgrammDir.entryList(QDir::Files);
 
-    /* Befülle QList<Item_Programm> aus der ProgrammListe*/
-    projectData->list_Programm.clear();             //Lösche alle Proamme aus dem ProjectData;
-    foreach(QString string, stringList_Programme)   //geh durch die Liste der Programme
+    /* Befülle QList<Programm> aus der ProgrammListe*/
+    projectData->list_Programm.clear();                 //Lösche alle Proamme aus dem ProjectData;
+    foreach(QString string, stringList_Programme)       //geh durch die Liste der Programme
     {
-        programm.ProgrammName = string;             //setze den ProgrammNamen in der Struktur programm
-        projectData->list_Programm.append(programm);             //Füge die Struktur programm in die Liste ein
+        programm.ProgrammName = string;                 //setze den ProgrammNamen in der Struktur programm
+        projectData->list_Programm.append(programm);    //Füge die Struktur programm in die Liste ein
     }
 
     /* Lösche alle Einträge in der StringList Projektnames */
@@ -152,12 +152,6 @@ bool SPF_Parser::scann_ForData()
     log->successful("ProjectStatus:   " + projectData->state);
     log->successful("ProjectClamping: " + projectData->tension);
 
-    /*stringList_Message.clear();
-    stringList_Message.append("Project::scann_PrgrammFiles()");
-    foreach(QString str, stringList_Programme)
-        stringList_Message.append(str);
-    log->frame_Message(stringList_Message);*/
-
     return true;
 }
 
@@ -180,6 +174,89 @@ bool SPF_Parser::scann_ForTools()
     }
     log->frame_Message(stringList_Message);
     */
+
+    return true;
+}
+
+bool SPF_Parser::scann_ForNoXY()
+{
+    QString str;
+    QString string_ToolID;
+    QString string_GageLength;
+    int int_GageLength;
+
+    //foreach (Programm programm, projectData->list_Programm)
+    for(auto& programm : projectData->list_Programm)
+    {
+        mfile->setFileName(string_ProgrammDir + "/" + programm.ProgrammName);
+
+        if(!mfile->read_Content())
+        {
+            log->vailed(Q_FUNC_INFO);
+            return false;
+        }
+
+        stringList_Content = mfile->get_Content();
+
+        for(int i = 0; i < stringList_Content.size(); i++)
+        {
+            str = stringList_Content.at(i);
+            if(str.contains("T=\""))
+            {
+                string_ToolID = str;
+                while(!string_ToolID.startsWith("\"") && string_ToolID.length()>0)
+                {
+                    string_ToolID = string_ToolID.right(string_ToolID.length()-1);
+                }
+
+                while(!string_ToolID.endsWith("\"") && string_ToolID.length()>0)
+                {
+                    string_ToolID = string_ToolID.left(string_ToolID.length()-1);
+                }
+
+                string_ToolID = string_ToolID.remove("\"");
+                string_GageLength = dataBase->get_GageLength(string_ToolID);
+
+
+                if(!string_GageLength.isEmpty())
+                {
+                    int_GageLength = string_GageLength.toInt();
+                }
+                else
+                {
+                    int_GageLength = 9999;
+                }
+
+            }
+
+            if(str.contains("Reset - Cycle800") && int_GageLength <= 160)
+            {
+                //Ich möchte 6 Zeilen vorlesen
+                if(i+6 < stringList_Content.size())
+                {
+                    //Folgende Zeilen müssen so nach dem "Reset - Cycle800" kommen
+                    //N89 CYCLE800()
+                    //N90 D0
+                    //N91 G0 G153 Z499.9
+                    //N92 G0 G153 X325. Y640.
+                    //N93 D1
+                    //N94 CYCLE800 (0,"HERMLE",100000,57,0.,42.5,-30.265,-90.,0.,180.,0,0,0,-1,0,0)
+
+                    if(stringList_Content.at(i+1).contains("CYCLE800()") &&
+                        stringList_Content.at(i+2).contains("D0") &&
+                        stringList_Content.at(i+3).contains("G0 G153 Z499.9") &&
+                        stringList_Content.at(i+4).contains("G0 G153 X325. Y640.") &&
+                        stringList_Content.at(i+5).contains("D1") &&
+                        stringList_Content.at(i+6).contains("CYCLE800 (0,\"HERMLE\""))
+                    {
+                        log->successful(programm.ProgrammName);
+                        programm.NoXY = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     return true;
 }

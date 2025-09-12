@@ -36,11 +36,11 @@ struct ZeroPoint
 struct Offset_RawPart
 {
     QString id;
-    QString string_XPlus;
-    QString string_XMinus;
-    QString string_YPlus;
-    QString string_YMinus;
-    QString string_ZPlus;
+    QString string_XPlus = "2";
+    QString string_XMinus = "2";
+    QString string_YPlus = "2";
+    QString string_YMinus = "2";
+    QString string_ZPlus= "2";
 };
 
 struct Programm

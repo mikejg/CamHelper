@@ -8,6 +8,8 @@
 #include "Classes/database.h"
 #include "Classes/spf_parser.h"
 #include "Classes/struct.h"
+#include "Classes/mfile.h"
+
 #include "Dialoge/dialog_settings.h"
 #include "Dialoge/dialog_init.h"
 #include "Dialoge/dialog_open.h"
@@ -38,6 +40,7 @@ private:
     bool bool_IgnoreToggle;
     QIcon *ico;
     SPF_Parser* spf_Parser;
+    MFile* mfile;
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
 

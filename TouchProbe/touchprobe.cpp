@@ -126,7 +126,6 @@ void TouchProbe::insert_Item()
 
 void TouchProbe::insert_Item(QList<Item_TouchProbe> list)
 {
-    //qDebug() << Q_FUNC_INFO << list.size();
     ui->scrollAreaWidgetContents->insertItem(list);
 }
 
