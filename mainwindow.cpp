@@ -38,8 +38,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tab_MainProgramm->set_Logging(logging);         //Übergebe Lobbing an Tab_MainProgramm
     dialog_Init = ui->tab_Init;                         //übergebe den Zeiger für Dialog_Init
 
-
-
     //Erstelle den Dialog Settings. Wenn alle Einstellungen OK sind und gespeichert wurden
     //wird der InitApp neu gestartet
     dialog_Settings = new Dialog_Settings(this, logging);
@@ -52,12 +50,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->toolButton_Log, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_Project, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_Open, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
-    //connect(ui->toolButton_ToolList, SIGNAL(toggled(bool)), this, SLOT(slot_ToolListToggled(bool)));
     connect(ui->toolButton_ToolList, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_ToolMagazin, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_MainProgramm, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_TouchProbe, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_New, SIGNAL(clicked()), this, SLOT(slot_NewProject()));
+
     //Wenn im tab_Init auf ein Bild gecklict wird, soll das Projekt geöffnet werden
     connect(ui->tab_Init, SIGNAL(sig_Clicked(QString)), this, SLOT(slot_OpenProject(QString)));
 
@@ -149,6 +147,7 @@ void MainWindow::slot_InitApp()
 void MainWindow::slot_NewProject()
 {
     projectData = new ProjectData;
+    projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
 
     spf_Parser->set_ProjectData(projectData);   //übergib den Parser projectData
     if(!spf_Parser->scann_ForData())            //Suche in den SPF Files nach Project Name_Stand_Spannung
@@ -198,7 +197,7 @@ void MainWindow::slot_NewProject()
     }
 
     ui->tab_Project->set_ProjectData(projectData);
-    ui->tab_ToolSheet->showTable(*projectData);
+    ui->tab_ToolSheet->showTable(projectData);
     ui->tab_Touchprobe->set_ProjectData(projectData);
     ui->tab_Touchprobe->insert_Item(projectData->list_TouchProbe);
     ui->stackedWidget->setCurrentWidget(ui->tab_Project);
@@ -206,36 +205,35 @@ void MainWindow::slot_NewProject()
 
 void MainWindow::slot_NewToolList()
 {
-    ui->tab_ToolSheet->showTable(*projectData);
+    ui->tab_ToolSheet->showTable(projectData);
 }
 
 void MainWindow::slot_OpenProject(QString string_ProjectId)
 {
-    projectData =  new ProjectData();
-
-    currentProject = new Project(this);                     //Erstelle einen Zeiger für das aktuelle Projekt
+    //currentProject = new Project(this);                     //Erstelle einen Zeiger für das aktuelle Projekt
     projectData = dataBase->get_Project(string_ProjectId);  //Lade die Projekdaten aus der DatenBank
-    currentProject->set_ProjectData(projectData);           //Übergebe die Projektdaten an das aktuelle Projekt
+    projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
+    //currentProject->set_ProjectData(projectData);           //Übergebe die Projektdaten an das aktuelle Projekt
     ui->tab_Project->set_ProjectData(projectData);         //Zeige die Projektaten im Tab Projekt an
-    ui->tab_ToolSheet->showTable(*projectData);
+    ui->tab_ToolSheet->showTable(projectData);
     ui->tab_Touchprobe->set_ProjectData(projectData);
-    qDebug() << Q_FUNC_INFO << projectData->list_TouchProbe.size();
     ui->tab_Touchprobe->insert_Item(projectData->list_TouchProbe);
     ui->stackedWidget->setCurrentWidget(ui->tab_Project);   //Zeige Tab_Projekt an
 }
 
 void MainWindow::slot_OpenProject(QString string_Name, QString string_Tension)
 {
-    projectData =  new ProjectData();
+    //projectData =  new ProjectData();
 
-    currentProject = new Project(this);                                 //Erstelle einen Zeiger für das aktuelle Projekt
-    projectData = dataBase->get_Project(string_Name, string_Tension);   //Lade die Projekdaten aus der DatenBank
-    currentProject->set_ProjectData(projectData);                       //Übergebe die Projektdaten an das aktuelle Projekt
-    ui->tab_Project->set_ProjectData(projectData);                      //Zeige die Projektaten im Tab Projekt an
-    ui->tab_ToolSheet->showTable(*projectData);
+    //currentProject = new Project(this);                                       //Erstelle einen Zeiger für das aktuelle Projekt
+    projectData = dataBase->get_Project(string_Name, string_Tension);       //Lade die Projekdaten aus der DatenBank
+    projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
+    //currentProject->set_ProjectData(projectData);                             //Übergebe die Projektdaten an das aktuelle Projekt
+    ui->tab_Project->set_ProjectData(projectData);                          //Zeige die Projektaten im Tab Projekt an
+    ui->tab_ToolSheet->showTable(projectData);
     ui->tab_Touchprobe->set_ProjectData(projectData);
     ui->tab_Touchprobe->insert_Item(projectData->list_TouchProbe);
-    ui->stackedWidget->setCurrentWidget(ui->tab_Project);               //Zeige Tab_Projekt an
+    ui->stackedWidget->setCurrentWidget(ui->tab_Project);                   //Zeige Tab_Projekt an
 }
 
 void MainWindow::slot_ToolButtonClicked()
@@ -289,7 +287,6 @@ void MainWindow::slot_ToolButtonClicked()
 
     if(sender() == ui->toolButton_MainProgramm)
         ui->stackedWidget->setCurrentWidget(ui->tab_MainProgramm);
-    //bool_IgnoreToggle = false;
 
     if(sender() == ui->toolButton_TouchProbe)
         ui->stackedWidget->setCurrentWidget(ui->tab_Touchprobe);

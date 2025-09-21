@@ -20,7 +20,7 @@ public:
     ~Dialog_Progress();
     void set_Value(QString, int);
     void set_Maximum(int i);
-    void init_Dialog(QList<Programm>);
+    void init_Dialog(int);
 
 private:
     Ui::Dialog_Progress *ui;

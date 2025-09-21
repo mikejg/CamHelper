@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QDir>
+#include <QRegularExpression>
 #include "mfile.h"
 #include "struct.h"
 #include "database.h"
@@ -23,12 +24,21 @@ private:
     MFile* mfile;
     DataBase* dataBase;
     QStringList stringList_Content;
+    QMap<QString, QString> map_Bruch;
+    bool bool_ersterBruch;
+    bool bool_Messerkopf;
+    bool bool_EinlippenBohrer;
+    QString string_Line;
+    QStringList stringList_Log;
 
+    void checkOptimiertesTieflochbohren();
     void insert_Tool(QString, ToolList*);
     QString parse_ProjectName(QString);
     QString parse_PostProcessor(QString);
     bool parse_Tool(QString, ToolList*);
     bool sort_Programms();
+    void loadBruch();
+    void compare(QStringList, QStringList);
 
 public:
     explicit SPF_Parser(QObject *parent = nullptr,
@@ -39,7 +49,9 @@ public:
     bool scann_ForTools();
     bool scann_ForNoXY();
     void set_ProjectData(ProjectData* pd) {projectData = pd;}
+    void finish(QString, Programm);
 
+    QStringList replace_Wildcard(QStringList);
 signals:
 };
 

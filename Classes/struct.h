@@ -36,11 +36,24 @@ struct ZeroPoint
 struct Offset_RawPart
 {
     QString id;
-    QString string_XPlus = "2";
-    QString string_XMinus = "2";
-    QString string_YPlus = "2";
-    QString string_YMinus = "2";
-    QString string_ZPlus= "2";
+    QString string_Max_XPlus  = "2";
+    QString string_Max_XMinus = "2";
+    QString string_Max_YPlus  = "2";
+    QString string_Max_YMinus = "2";
+    QString string_Max_ZPlus  = "2";
+
+    QString string_Min_XPlus  = "0.8";
+    QString string_Min_XMinus = "0.8";
+    QString string_Min_YPlus  = "0.8";
+    QString string_Min_YMinus = "0.8";
+    QString string_Min_ZPlus  = "0.8";
+
+    //Werte für die Rohteilkontrolle
+    QString string_Max_XPlus_RawpartInspection;
+    QString string_Max_XMinus_RawpartInspection;
+    QString string_Max_YPlus_RawpartInspection;
+    QString string_Max_YMinus_RawpartInspection;
+    QString string_Max_ZPlus_RawpartInspection;
 };
 
 struct Programm
@@ -107,12 +120,14 @@ struct ProjectData
     QString lastProduction;                 //Wann war das Project das letzte mal auf der Maschine
     QList<QPixmap> listPictures;            //Liste der Bilder;
     QStringList listTags;                   //Liste der Tags;
+    QString string_ProgrammDir;             //Pfad wo die Programme liegen
 
     RawPart rawPart;                        //Struktur für Rohteilmasse
     FinishPart finishPart;                  //Struktur für Fertigteilmasse
     ZeroPoint zeroPoint;                    //Struktur für Nullpunkt
     Offset_RawPart offset_RawPart;          //Struktur für Rohteil Aufmass
     ToolList* toolList = new ToolList();    //Liste der Werkzeuge
+    ToolList* toolList_IN;                  //Liste der Werkzeuge die Eingelagert werden müssen
     QList<Programm> list_Programm;          //Liste der Programme
     QList<Item_TouchProbe> list_TouchProbe; //Liste der Antastzyklen
 };

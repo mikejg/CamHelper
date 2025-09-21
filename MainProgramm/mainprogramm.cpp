@@ -145,9 +145,7 @@ QStringList MainProgramm::set_PlaceHolder(QStringList stringList_Content)
             //TOFFL = 0 in die stringList_Content
             if(bool_TOFFL)
             {
-                //stringList_Content.append(";----------------------+");
                 stringList_Content.append("TOFFL = 0; Reset TOFFL ");
-                //stringList_Content.append(";----------------------+");
             }
             continue;
         }
@@ -163,6 +161,7 @@ QStringList MainProgramm::set_PlaceHolder(QStringList stringList_Content)
             write_Parts(&stringList_Content);
             continue;
         }
+
         /* füge string_Line in stringList_Content ein */
         stringList_Content.append(string_Line);
 
@@ -198,7 +197,6 @@ QStringList MainProgramm::set_PlaceHolder(QStringList stringList_Content)
             }
         }
     }
-    //number_Programm(&stringList_Content);
     return number_Programm(stringList_Content);
 }
 

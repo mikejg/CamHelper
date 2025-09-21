@@ -18,6 +18,7 @@ public:
     void successful(QString);
     void vailed(QString);
     void warning(QString);
+    void log(QString s) {append(s);}
 };
 
 #endif // LOGGING_H

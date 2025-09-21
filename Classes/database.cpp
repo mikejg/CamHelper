@@ -45,6 +45,7 @@ bool DataBase::delete_ProjectData(ProjectData* pd)
     if(!delete_FromTable("TP_Nut", pd->id)) return false;
     if(!delete_FromTable("TP_Steg", pd->id)) return false;
     if(!delete_FromTable("Tags", pd->id)) return false;
+    if(!delete_FromTable("Offset_RawPart", pd->id)) return false;
 
     return true;
 }
@@ -475,6 +476,9 @@ QStringList DataBase::get_ProjectList()
 
 bool DataBase::save(ProjectData* pd)
 {
+    if(!delete_ProjectData(pd))
+        return false;
+
     QSqlQuery query (main_DataBase);
 
     if(!get_ProjectID(pd))  //Suche nach dem Project in der Datenbank und
@@ -517,6 +521,8 @@ bool DataBase::save(ProjectData* pd)
     if(!save_NCTools(pd)) return false;
     if(!save_TouchProbe(pd)) return false;
     if(!save_Tags(pd)) return false;
+    if(!save_Offset_RawPart(pd)) return false;
+
     return true;
 }
 
@@ -582,11 +588,11 @@ bool DataBase::save_TouchProbe(ProjectData* pd)
             continue;
         }
 
-        if(item.state == Item_TouchProbe::Steg)
+        if(item.state == Item_TouchProbe::Nut)
         {
-            struct_Steg = item.struct_Steg;
-            struct_Steg.string_Pos = QString("%1").arg(pos);
-            if(!create_TPSteg(struct_Steg, pd->id))
+            struct_Nut = item.struct_Nut;
+            struct_Nut.string_Pos = QString("%1").arg(pos);
+            if(!create_TPNut(struct_Nut, pd->id))
                 return false;
             pos++;
             continue;
@@ -628,6 +634,28 @@ bool DataBase::save_RawPart(ProjectData* pd)
     query.bindValue(":y_Width", pd->rawPart.y_Width);
     query.bindValue(":z_Height", pd->rawPart.z_Height);
     query.bindValue(":z_RawPart", pd->rawPart.z_RawPart);
+
+    if(!query.exec())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        log->vailed(query.lastQuery());
+        return false;
+    }
+    return true;
+}
+
+bool DataBase::save_Offset_RawPart(ProjectData* pd)
+{
+    QSqlQuery query (main_DataBase);
+    query.prepare("INSERT INTO Offset_RawPart (Project_ID, X_Plus, X_Minus, Y_Plus, Y_Minus, Z_Plus) "
+                  "VALUES (:Project_ID, :X_Plus, :X_Minus, :Y_Plus, :Y_Minus, :Z_Plus)");
+    query.bindValue(":Project_ID", pd->id);
+    query.bindValue(":X_Plus", pd->offset_RawPart.string_Max_XPlus);
+    query.bindValue(":X_Minus", pd->offset_RawPart.string_Max_XMinus);
+    query.bindValue(":Y_Plus", pd->offset_RawPart.string_Max_YPlus);
+    query.bindValue(":Y_Minus", pd->offset_RawPart.string_Max_YMinus);
+    query.bindValue(":Z_Plus", pd->offset_RawPart.string_Max_ZPlus);
 
     if(!query.exec())
     {
@@ -690,7 +718,7 @@ bool DataBase::save_Programm(ProjectData* pd)
                      "Offset_X, Offset_Y, Offset_Z, TOFFL, NoXY) "
                      "VALUES (:Programm, :Project_ID, :Project, "
                      ":Offset_X, :Offset_Y, :Offset_Z, :TOFFL, :NoXY)");
-        query.bindValue(":Progamm", programm.ProgrammName);
+        query.bindValue(":Programm", programm.ProgrammName);
         query.bindValue(":Project_ID", pd->id);
         query.bindValue(":Project", pd->name);
         query.bindValue(":Offset_X", int(programm.Offset_X));
@@ -1334,11 +1362,11 @@ void DataBase::insert_OffsetRawPart(ProjectData* projectData)
     while (query.next())
     {
         offset_RawPart.id = query.value("id").toString();
-        offset_RawPart.string_XPlus = query.value("X_Plus").toString();
-        offset_RawPart.string_XMinus = query.value("X_Minus").toString();
-        offset_RawPart.string_YPlus = query.value("Y_Plus").toString();
-        offset_RawPart.string_YMinus = query.value("Y_Minus").toString();
-        offset_RawPart.string_ZPlus = query.value("Z_Plus").toString();
+        offset_RawPart.string_Max_XPlus = query.value("X_Plus").toString();
+        offset_RawPart.string_Max_XMinus = query.value("X_Minus").toString();
+        offset_RawPart.string_Max_YPlus = query.value("Y_Plus").toString();
+        offset_RawPart.string_Max_YMinus = query.value("Y_Minus").toString();
+        offset_RawPart.string_Max_ZPlus = query.value("Z_Plus").toString();
 
         projectData->offset_RawPart = offset_RawPart;
     }
@@ -1679,4 +1707,50 @@ QString DataBase::get_Description(QString toolID)
         string_Description = query.value("nc_name").toString();
     }
     return string_Description;
+}
+
+bool DataBase::inc_ToolCounter(ToolList* toolList)
+{
+    QSqlQuery query (main_DataBase);
+    int int_ToolCounter;
+
+    foreach(Tool* tool, toolList->get_List())
+    {
+        int_ToolCounter = -1;
+
+        // hol dir den Counter
+        query.exec("SELECT Counter FROM NCTool WHERE T_Number = '" + tool->get_Number() + "';");
+        if(!query.lastError().text().isEmpty())
+        {
+            log->vailed(query.lastError().text());
+            return false;
+        }
+
+        while (query.next())
+        {
+            int_ToolCounter = query.value("Counter").toString().toInt();
+        }
+
+        // Wenn der Counter immer noch -1 ist brich ab
+        if(int_ToolCounter == -1)
+        {
+            log->vailed(tool->get_Number() + " Counter = -1");
+            return false;
+        }
+
+        // setzt den Counter um eins hoch
+        int_ToolCounter++;
+
+        // Update das Werkzeug
+        query.exec("UPDATE NCTool SET Counter=" + QString("%1").arg(int_ToolCounter) +
+                   " WHERE T_Number = '" + tool->get_Number() + "';");
+
+        if(!query.lastError().text().isEmpty())
+        {
+            log->vailed(Q_FUNC_INFO);
+            log->vailed(query.lastError().text());
+            return false;
+        }
+    }
+    return true;
 }

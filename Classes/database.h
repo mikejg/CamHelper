@@ -60,6 +60,7 @@ public:
     bool save_NCTools(ProjectData*);                    //Speicher die NCTools;
     bool save_TouchProbe(ProjectData*);                 //Speicher die Antastzyklen;
     bool save_Tags(ProjectData*);                       //Speicher die Tags
+    bool save_Offset_RawPart(ProjectData*);             //Speicher Offset Rohteil
 
     void insert_FinishPart(ProjectData*);              //Schreibt die FertigteilDaten in ein Projekt
     void insert_Picutres(ProjectData*);                //Schreibt die Bilder in ein Projekt
@@ -78,6 +79,7 @@ public:
     bool create_TPSteg(Struct_Steg, QString);               //Erstelle einen neuen Datensatz in TP_Steg
     bool create_TPBohrung(Struct_Bohrung, QString);         //Erstelle einen neuen Datensatz in TP_Bohrung
     bool create_TPNut(Struct_Nut, QString);                 //Erstelle einen neuen Datensatz in TP_Nut
+    bool inc_ToolCounter(ToolList* );                       //Zähle die Werkzeuge eins hoch
 };
 
 #endif // DATABASE_H

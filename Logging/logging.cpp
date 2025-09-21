@@ -29,3 +29,4 @@ void Logging::warning(QString s)
 {
     append(QString("⚠ " ) +s);
 }
+

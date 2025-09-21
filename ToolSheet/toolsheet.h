@@ -30,7 +30,7 @@ public:
     void set_MagazinCapacity(int mc) {int_MagazineCapacity = mc;}
     void set_DataBase(DataBase* db);
 
-    void showTable(ProjectData, bool bool_Print=false);
+    void showTable(ProjectData*, bool bool_Print=false);
 
     void printTable();
 private:
@@ -39,7 +39,7 @@ private:
     DataBase* dataBase;
     Magazin* magazin;
     ToolSheet_Model* toolSheet_Model;
-    ProjectData projectData;
+    ProjectData* projectData;
 
     ToolList* toolList_IN;                  //Liste der Werkzeuge die eingelagert werden müssen
     ToolList* toolList_OUT;                 //Liste der Werkzeuge die ausgelagert werden müssen

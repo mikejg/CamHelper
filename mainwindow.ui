@@ -996,7 +996,7 @@ QFrame{border-radius:10px;
 border-radius: 10px</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <widget class="Tab_Project" name="tab_Project"/>
       <widget class="ToolSheet" name="tab_ToolSheet">
@@ -1008,9 +1008,17 @@ border-radius: 10px</string>
       <widget class="TouchProbe" name="tab_Touchprobe"/>
       <widget class="Dialog_Init" name="tab_Init"/>
       <widget class="Logging" name="tab_Logging">
+       <property name="font">
+        <font>
+         <family>Lucida Console</family>
+         <pointsize>9</pointsize>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="styleSheet">
-        <string notr="true">font: bold 14px;
-</string>
+        <string notr="true">background-color: rgba(0, 0, 0,192);
+font: 9pt &quot;Lucida Console&quot;;</string>
        </property>
       </widget>
       <widget class="MainProgramm" name="tab_MainProgramm">

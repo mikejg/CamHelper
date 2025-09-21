@@ -30,7 +30,7 @@ public:
     ~Dialog_Settings();
 
     QString get_MagazinDir() {return settings->get_MagazinDir();}
-    //void set_Settings(Settings* s);
+
     bool checkSettings();
     int     get_MagazinCapacity()   {return settings->get_ToolPlaces();}
     QString get_ProgrammDir()       {return settings->get_ProgrammDir();}

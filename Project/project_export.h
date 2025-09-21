@@ -5,10 +5,15 @@
 #include <QStringList>
 #include <QWidget>
 #include <QTextEdit>
+#include <QDir>
+#include <QFile>
 
 #include "../Dialoge/dialog_progress.h"
 #include "../Classes/struct.h"
 #include "../Classes/database.h"
+#include "../Classes/mfile.h"
+#include "../Classes/spf_parser.h"
+#include "../Logging/logging.h"
 
 class Project_Export : public QObject
 {
@@ -18,13 +23,29 @@ private:
     QStringList stringList_ContentMainProgramm;
     ProjectData* projectData;
     DataBase* dataBase;
+    Logging* log;
+    MFile* mfile;
+    int counter;
+    Programm programm;
+    SPF_Parser* spf_Parser;
+    QDir dir_Destination;
+    QMap<QString, QString> map_Bruch;
 
+    bool loadBruch();
 public:
     explicit Project_Export(QObject *parent = nullptr);
     void set_ContentMainProgramm(QTextEdit*);
-    void set_DataBase(DataBase* db) {dataBase = db;}    //Übernehme die Datenbank in den Zeiger dataBase
-    void exportProject(ProjectData*);
+    void set_DataBase(DataBase* db) {dataBase = db;}    //Übernehme die Datenbank, wird von tab_Project::set_DataBase übergeben
+    void exportProject(ProjectData*, bool bool_IncToolCounter);
+    void set_Logging(Logging* l);                       //Übernehme das Logging, wird von tab_Project::set_Logging übergeben
+                                                        //erzeuge mfile(this, logging);
+    bool replace_Wildcart(QString);
+    bool finish_Load();
+
 signals:
+
+public slots:
+    void slot_NextProgramm();
 };
 
 #endif // PROJECT_EXPORT_H

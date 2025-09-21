@@ -40,7 +40,7 @@ void ToolSheet::set_DataBase(DataBase *db)
     dataBase->get_Top100(toolList_Top100);      //befülle die Liste der meist benutzen Werkzeuge
 }
 
-void ToolSheet::showTable(ProjectData pd, bool bool_Print)
+void ToolSheet::showTable(ProjectData* pd, bool bool_Print)
 {
     projectData = pd;
 
@@ -55,7 +55,7 @@ void ToolSheet::showTable(ProjectData pd, bool bool_Print)
     list_TipLength.clear();
     list_Counter.clear();
 
-    int_Projects_Size = projectData.toolList->get_Size();   //Hol dir die Anzahl der benötigten Werkzeuge
+    int_Projects_Size = projectData->toolList->get_Size();   //Hol dir die Anzahl der benötigten Werkzeuge
     int_In_Size       = 0;
     int_Out_Size      = 0;
     int_Free_Size     = 0;
@@ -63,7 +63,7 @@ void ToolSheet::showTable(ProjectData pd, bool bool_Print)
 
     //Kopiere die ToolList aus dem Projekt in toolList_Table
     //sortiere toolList_Table nach der Tool_Nummer
-    foreach(Tool* tool, projectData.toolList->get_List())
+    foreach(Tool* tool, projectData->toolList->get_List())
         toolList_Project->insert_Tool(tool);
     toolList_Project->sort_Number();
 
@@ -72,6 +72,7 @@ void ToolSheet::showTable(ProjectData pd, bool bool_Print)
         if(!magazin->contains(tool))                            //Wenn das Werkzeug nicht im Magazin ist
             toolList_IN->insert_Tool(tool);                     //Füge das Werkzeug in die Lister der zu rüstenden Werkzeuge ein
     }
+
     int_In_Size = toolList_IN->get_Size();                      //Speicher die Anzahl zu rüstenden Werkzeuge in int_In_Size
 
     foreach(Tool* tool, magazin->get_ToolList()->get_List())    //Geh durch alle Werkzeuge im Magazin
@@ -91,9 +92,9 @@ void ToolSheet::showTable(ProjectData pd, bool bool_Print)
     if(!bool_Print || bool_PrintProject)
     {
         //erzeuge erste Zeile mit ProjektNamen und Anzahl der verwendeten Werkzeuge
-        list_ToolDescription.append(QString(projectData.name + "_" +
-                                            projectData.state+ "_" +
-                                            projectData.tension + "  %1 Werkzeuge").arg(int_Projects_Size));
+        list_ToolDescription.append(QString(projectData->name + "_" +
+                                            projectData->state+ "_" +
+                                            projectData->tension + "  %1 Werkzeuge").arg(int_Projects_Size));
         list_ToolNumber.append(" ");
         list_GageLength.append(" ");
         list_ToolLength.append(" ");
@@ -214,6 +215,7 @@ void ToolSheet::showTable(ProjectData pd, bool bool_Print)
                                   list_TipLength,
                                   list_Counter);
 
+    projectData->toolList_IN = toolList_IN;
     if(!bool_Print)
     {
         ui->tableView_ToolSheet->setModel(toolSheet_Model);

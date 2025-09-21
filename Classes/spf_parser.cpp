@@ -7,6 +7,7 @@ SPF_Parser::SPF_Parser(QObject *parent, QString string_PD, Logging* l, DataBase*
     log = l;
     dataBase = db;
     mfile = new MFile(this,log);
+    loadBruch();
 }
 
 void SPF_Parser::insert_Tool(QString str, ToolList* toolList)
@@ -441,3 +442,343 @@ bool SPF_Parser::sort_Programms()
     return true;
 }
 
+void SPF_Parser::finish(QString stringFile, Programm programm)
+{
+    QString string_ToolID;
+    QString str;
+    QString string_Temp;
+    QString string_GageLength;
+    int int_GageLength;
+
+    bool_ersterBruch = false;
+    bool_Messerkopf = false;
+    bool_EinlippenBohrer = false;
+    marker = kein_Marker;
+
+    mfile->setFileName(stringFile);
+    if(!mfile->read_Content())
+        return;
+
+    /*Geh durch stringList_Lines.
+     * Wenn ein String die Zeichenfolge T=" enthält, filter mir die Nummer raus
+     * Beispiel: N34 T="90_063_00"
+     * setze den marker auf neuesWerkzeug
+     * Wenn zum ersten mal call auftaucht ändere es in ;call
+     * Wenn marker gleich neuesWerkzeug und call auftaucht dann
+     * geh durch map_Bruch und vergleiche string_ToolID mit dem Key
+     * wenn da was passt ersetze call"BRUCH" mit dem Value */
+    stringList_Content = mfile->get_Content();
+
+    for(int i = 0; i < stringList_Content.size(); i++)
+    {
+        str = stringList_Content.at(i);
+        //Wenn str die Zeichfolge T=" beinhaltet
+        if(str.contains("T=\""))
+        {
+            //Kopiere str nach string_ToolID
+            string_ToolID = str;
+
+            //schneide solange das erste Zeichen von string_ToolID ab bis
+            //string_ToolID mit " beginnt
+            while(!string_ToolID.startsWith("\"") && string_ToolID.length()>0)
+            {
+                string_ToolID = string_ToolID.right(string_ToolID.length()-1);
+            }
+            //schneide solange das letzte Zeichen von string_ToolID ab bis
+            //string_ToolID mit " endet
+            while(!string_ToolID.endsWith("\"") && string_ToolID.length()>0)
+            {
+                string_ToolID = string_ToolID.left(string_ToolID.length()-1);
+            }
+
+            string_ToolID = string_ToolID.remove("\"");
+
+            marker = neuesWerkzeug;
+        }
+
+        //Wenn es noch keine erstern Aufruf der Bruchkontrolle gab
+        // ersteze die Zeilen
+        // N20 call"BRUCH"
+        // N21 IF R199==1 GOTOF UP_ENDE
+        // in
+        // N20 ;call"BRUCH"
+        // N21 ;IF R199==1 GOTOF UP_ENDE
+        if(!bool_ersterBruch && str.contains("call"))
+        {
+            if(!str.contains(";"))
+            {
+                str = str.replace("call", ";call");
+                stringList_Content.removeAt(i);
+                stringList_Content.insert(i,str);
+            }
+
+            //gehe in die nächste Zeile
+            i++;
+            str = stringList_Content.at(i);
+            if(!str.contains(";"))
+            {
+                str = str.replace("IF", ";IF");
+                stringList_Content.removeAt(i);
+                stringList_Content.insert(i,str);
+            }
+            bool_ersterBruch = true;
+        }
+
+
+        if(marker == neuesWerkzeug && str.contains("call"))
+        {
+            QMapIterator<QString, QString> iterator(map_Bruch);
+            while (iterator.hasNext())
+            {
+                iterator.next();
+                if(string_ToolID.first(iterator.key().length()) == iterator.key())
+                {
+                    str = str.replace("call\"BRUCH\"", iterator.value());
+                    stringList_Content.removeAt(i);
+                    stringList_Content.insert(i,str);
+                }
+            }
+            marker = kein_Marker;
+        }
+    }
+
+    //Wenn für das Programm NoXY gesetzt ist
+    if(programm.NoXY)
+    {
+        log->log(programm.ProgrammName + " NoXY " + " ☑");
+
+        for(int i = 0; i < stringList_Content.size(); i++)
+        {
+            str = stringList_Content.at(i);
+            if(str.contains("T=\""))
+            {
+                string_ToolID = str;
+                while(!string_ToolID.startsWith("\"") && string_ToolID.length()>0)
+                {
+                    string_ToolID = string_ToolID.right(string_ToolID.length()-1);
+                }
+
+                while(!string_ToolID.endsWith("\"") && string_ToolID.length()>0)
+                {
+                    string_ToolID = string_ToolID.left(string_ToolID.length()-1);
+                }
+
+                string_ToolID = string_ToolID.remove("\"");
+                string_GageLength = dataBase->get_GageLength(string_ToolID);
+
+
+                if(!string_GageLength.isEmpty())
+                {
+                    int_GageLength = string_GageLength.toInt();
+                }
+                else
+                {
+                    int_GageLength = 9999;
+                }
+
+            }
+
+            if(str.contains("Reset - Cycle800") && int_GageLength <= 160)
+            {
+                //Ich möchte 6 Zeilen vorlesen
+                if(i+6 < stringList_Content.size())
+                {
+                    //Folgende Zeilen müssen so nach dem "Reset - Cycle800" kommen
+                    //N89 CYCLE800()
+                    //N90 D0
+                    //N91 G0 G153 Z499.9
+                    //N92 G0 G153 X325. Y640.
+                    //N93 D1
+                    //N94 CYCLE800 (0,"HERMLE",100000,57,0.,42.5,-30.265,-90.,0.,180.,0,0,0,-1,0,0)
+
+                    if(stringList_Content.at(i+1).contains("CYCLE800()") &&
+                        stringList_Content.at(i+2).contains("D0") &&
+                        stringList_Content.at(i+3).contains("G0 G153 Z499.9") &&
+                        stringList_Content.at(i+4).contains("G0 G153 X325. Y640.") &&
+                        stringList_Content.at(i+5).contains("D1") &&
+                        stringList_Content.at(i+6).contains("CYCLE800 (0,\"HERMLE\""))
+                    {
+                        log->log(string_ToolID + " : GageLength = " + QString("%1").arg(int_GageLength) +
+                                     " : setze NoXY");
+                        string_Temp = stringList_Content.at(i+4);
+                        string_Temp = string_Temp.replace("G0", ";G0");
+                        stringList_Content.removeAt(i+4);
+                        stringList_Content.insert(i+4,string_Temp);
+                    }
+                }
+            }
+        }
+    }
+
+
+    checkOptimiertesTieflochbohren();
+    compare(mfile->get_Content(), stringList_Content);
+    mfile->save(stringList_Content);
+
+    return;
+}
+
+void SPF_Parser::checkOptimiertesTieflochbohren()
+{
+    bool opt = false;
+    bool first_F;
+    QString str;
+    QRegularExpression re(QStringLiteral("F\\d+"));
+    //QRegularExpressionMatchIterator matchIterator;
+    QRegularExpressionMatch match;
+    for(int i = 0; i < stringList_Content.size(); i++)
+    {
+        str = stringList_Content.at(i);
+        //N30 ;( T29_033_00  FID=22 Optimiertes Tieflochbohren  D03.3  OPERATION 102 )
+        //Wenn so eine Zeile kommt sind wir im Optimierten Tieflochbohren
+        //und setzen opt und first_F auf true
+        if(str.contains("Optimiertes Tieflochbohren"))
+        {
+            opt = true;
+            first_F = true;
+        }
+
+        //N58 ;( END  OPERATION 102 )
+        //Wenn diese Zeile kommt ist das Optimierte Tieflochbohren beendet
+        if(str.contains("END") && str.contains("OPERATION"))
+        {
+            opt = false;
+        }
+
+        match = re.match(str);
+        if (match.hasMatch() && opt == true)
+        {
+            /* Wenn wir das erste mal auf einen Vorschub treffen soll kein STOPRE
+             * eingefügt werden. */
+            if(first_F == true)
+            {
+                first_F = false;
+                continue;
+            }
+
+            /* STOPRE soll nur eingefügt werden wenn in der Programmzeile kein G4 und kein G04
+             * vorkommt. Der Vorschub darf nicht grösser als 1000 sein */
+            if(!str.contains("G04") && !str.contains("G4") && match.captured(0).length() < 5)
+            {
+                //qDebug() << Q_FUNC_INFO << match.captured(0);
+                stringList_Content.insert(i, "STOPRE");
+                i++;
+            }
+        }
+    }
+}
+
+void SPF_Parser::compare(QStringList stringList_Orginal, QStringList stringList_Copy)
+{
+    QString string_Orginal;
+    QString string_Copy;
+    bool firstLog = false;
+    int count_Copy = 0;
+
+    stringList_Log.clear();
+    for(int i = 0; i< stringList_Orginal.size(); i++)
+    {
+        string_Orginal = stringList_Orginal.at(i);
+        string_Copy = stringList_Copy.at(count_Copy);
+
+        if(string_Orginal != string_Copy)
+        {
+            if(!firstLog)
+            {
+                stringList_Log.append(mfile->fileName());
+                firstLog = true;
+            }
+
+            if(string_Orginal == stringList_Copy.at(count_Copy+1))
+            {
+                stringList_Log.append("-- " + string_Orginal);
+                stringList_Log.append("++ " + string_Copy);
+                stringList_Log.append("++ " + stringList_Copy.at(count_Copy+1));
+                //stringList_Log.append(" ");
+                count_Copy++;
+            }
+            else
+            {
+                stringList_Log.append("-- " + string_Orginal);
+                stringList_Log.append("++ " + string_Copy);
+                //stringList_Log.append(" ");
+            }
+        }
+        count_Copy++;
+    }
+
+    foreach (QString string_Log, stringList_Log)
+    {
+        log->log(string_Log);
+    }
+
+    //if(!stringList_Log.isEmpty())
+    //    log->frame_Warning(stringList_Log);
+    //qDebug() << Q_FUNC_INFO;
+}
+
+void SPF_Parser::loadBruch()
+{
+    /*Öffne das File "/CamHelper/config/Bruch.txt" und lies es
+     * in die stringList_Lines ein.
+     * Geh durch stringList_Lines und splitte jede Zeile.
+     * Füge die ersten zwei Strings in QMap map_Bruch */
+    qDebug() << Q_FUNC_INFO;
+    map_Bruch.clear();
+    QStringList stringList_Bruch;
+    mfile->setFileName(QDir::homePath() + "/CamHelper/config/Bruch.txt");
+    if(!mfile->read_Content())
+        return;
+
+    foreach(string_Line, mfile->get_Content())
+    {
+        if(string_Line.contains(" || "))
+        {
+            stringList_Bruch = string_Line.split(" || ");
+            if(stringList_Bruch.size()>1)
+            {
+                map_Bruch.insert(stringList_Bruch.at(0), stringList_Bruch.at(1));
+            }
+        }
+    }
+    return;
+}
+
+QStringList SPF_Parser::replace_Wildcard(QStringList stringList)
+{
+    QStringList stringList_ReturnList;
+
+    foreach(QString string_Line, stringList)
+    {
+        if(string_Line.startsWith("#"))
+            continue;
+
+        //Rohteil
+        string_Line = string_Line.replace("$RX$", projectData->rawPart.x_Length);
+        string_Line = string_Line.replace("$RY$", projectData->rawPart.y_Width);
+        string_Line = string_Line.replace("$RZ$", projectData->rawPart.z_Height);
+        string_Line = string_Line.replace("$ZRT$", projectData->rawPart.z_RawPart);
+
+        //Fertigteil
+        string_Line = string_Line.replace("$BX$", projectData->finishPart.x_Length);
+        string_Line = string_Line.replace("$BY$", projectData->finishPart.y_Width);
+        string_Line = string_Line.replace("$BZ$", projectData->finishPart.z_Height);
+
+        //Aufmasse Max
+        string_Line = string_Line.replace("$Aufmass_Xplus_Max$", projectData->offset_RawPart.string_Max_XPlus_RawpartInspection);
+        string_Line = string_Line.replace("$Aufmass_Xminus_Max$", projectData->offset_RawPart.string_Max_XMinus_RawpartInspection);
+        string_Line = string_Line.replace("$Aufmass_Yplus_Max$", projectData->offset_RawPart.string_Max_YPlus_RawpartInspection);
+        string_Line = string_Line.replace("$Aufmass_Yminus_Max$", projectData->offset_RawPart.string_Max_YMinus_RawpartInspection);
+        string_Line = string_Line.replace("$Aufmass_Zplus_Max$", projectData->offset_RawPart.string_Max_ZPlus_RawpartInspection);
+
+        //Aufmasse Min
+        string_Line = string_Line.replace("$Aufmass_Xplus_Min$", projectData->offset_RawPart.string_Min_XPlus);
+        string_Line = string_Line.replace("$Aufmass_Xminus_Min$", projectData->offset_RawPart.string_Min_XMinus);
+        string_Line = string_Line.replace("$Aufmass_Yplus_Min$", projectData->offset_RawPart.string_Min_YPlus);
+        string_Line = string_Line.replace("$Aufmass_Yminus_Min$", projectData->offset_RawPart.string_Min_YMinus);
+        string_Line = string_Line.replace("$Aufmass_Zplus_Min$", projectData->offset_RawPart.string_Min_ZPlus);
+        stringList_ReturnList.append(string_Line);
+    }
+
+    return stringList_ReturnList;
+}

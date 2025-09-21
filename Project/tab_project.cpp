@@ -62,14 +62,16 @@ Tab_Project::~Tab_Project()
 
 void Tab_Project::slot_Export()
 {
-    if(!update_ProjectData())
-        stackedWidget->setCurrentWidget(log);
+    if(!update_ProjectData())                               //Schreibe den Inhalt der Eingabefelder in ProjectData
+    {
+        stackedWidget->setCurrentWidget(log);               //Wenn die Felder Unfollständig sind schalte auf Tab_Log
+        return;                                             //brich den Export ab
+    }
 
     mainProgramm->set_ProjectData(*projectData);            //Erzeuge das Hauptprogramm im Tab_MainProgramm
     projectExport->set_ContentMainProgramm(mainProgramm);   //Übergebe das Hauptprogramm an projectExport
 
-    projectExport->exportProject(projectData);
-
+    projectExport->exportProject(projectData, true);        //Starte den Export, die Werkzeuge werden um eins hochgezählt
 }
 
 bool Tab_Project::check_InputFields()
@@ -218,23 +220,43 @@ bool Tab_Project::update_ProjectData()
 
     string = QString("%1").arg(ui->doubleSpinBox_Offset_RawPart_XPlus->value());
     string = string.replace(",",".");
-    projectData->offset_RawPart.string_XPlus = string;
+    projectData->offset_RawPart.string_Max_XPlus = string;
 
     string = QString("%1").arg(ui->doubleSpinBox_Offset_RawPart_XMinus->value());
     string = string.replace(",",".");
-    projectData->offset_RawPart.string_XMinus = string;
+    projectData->offset_RawPart.string_Max_XMinus = string;
 
     string = QString("%1").arg(ui->doubleSpinBox_Offset_RawPart_YPlus->value());
     string = string.replace(",",".");
-    projectData->offset_RawPart.string_YPlus = string;
+    projectData->offset_RawPart.string_Max_YPlus = string;
 
     string = QString("%1").arg(ui->doubleSpinBox_Offset_RawPart_YMinus->value());
     string = string.replace(",",".");
-    projectData->offset_RawPart.string_YMinus = string;
+    projectData->offset_RawPart.string_Max_YMinus = string;
 
     string = QString("%1").arg(ui->doubleSpinBox_Offset_RawPart_ZPlus->value());
     string = string.replace(",",".");
-    projectData->offset_RawPart.string_ZPlus = string;
+    projectData->offset_RawPart.string_Max_ZPlus = string;
+
+    //Aufmasse für die Rohteilkontrolle
+    double double_AufmassX = (ui->lineEdit_RawPartX->text().toDouble() -
+                              ui->lineEdit_FinishPartX->text().toDouble()) /2;
+    double double_AufmassY = (ui->lineEdit_RawPartY->text().toDouble() -
+                              ui->lineEdit_FinishPartY->text().toDouble()) /2;
+
+    projectData->offset_RawPart.string_Max_XPlus_RawpartInspection = QString("%1").arg(ui->doubleSpinBox_Offset_RawPart_XPlus->value() + double_AufmassX);
+    projectData->offset_RawPart.string_Max_XMinus_RawpartInspection = QString("%1").arg(ui->doubleSpinBox_Offset_RawPart_XMinus->value() + double_AufmassX);
+    projectData->offset_RawPart.string_Max_YPlus_RawpartInspection = QString("%1").arg(ui->doubleSpinBox_Offset_RawPart_YPlus->value() + double_AufmassY);
+    projectData->offset_RawPart.string_Max_YMinus_RawpartInspection = QString("%1").arg(ui->doubleSpinBox_Offset_RawPart_YMinus->value() + double_AufmassY);
+    projectData->offset_RawPart.string_Max_ZPlus_RawpartInspection = QString("%1").arg(ui->doubleSpinBox_Offset_RawPart_ZPlus->value() +
+                                                                                   ui->doubleSpinBox_ZRawPart->value());
+
+
+    projectData->offset_RawPart.string_Min_XPlus = QString("%1").arg(ui->doubleSpinBox_Offset_FinishPart_XPlus->value());
+    projectData->offset_RawPart.string_Min_XMinus = QString("%1").arg(ui->doubleSpinBox_Offset_FinishPart_XMinus->value());
+    projectData->offset_RawPart.string_Min_YPlus = QString("%1").arg(ui->doubleSpinBox_Offset_FinishPart_YPlus->value());
+    projectData->offset_RawPart.string_Min_YMinus = QString("%1").arg(ui->doubleSpinBox_Offset_FinishPart_YMinus->value());
+    projectData->offset_RawPart.string_Min_ZPlus = QString("%1").arg(ui->doubleSpinBox_Offset_FinishPart_ZPlus->value());
 
     //Lösche die Bilderliste und schreibe die Bilder in die Bilderliste
     projectData->listPictures.clear();
@@ -411,6 +433,7 @@ void Tab_Project::set_Logging(Logging *l)
 {
     log = l;
     mfile = new MFile(this, log);
+    projectExport->set_Logging(log);        //Übergebe projectExport das logging
 }
 
 void Tab_Project::set_ProjectData(ProjectData* pd)
@@ -461,11 +484,11 @@ void Tab_Project::set_ProjectData(ProjectData* pd)
         insert_Pixmap(pixmap);
 
     //Rohteil Aufmass
-    ui->doubleSpinBox_Offset_RawPart_XPlus->setValue(projectData->offset_RawPart.string_XPlus.toDouble());
-    ui->doubleSpinBox_Offset_RawPart_XMinus->setValue(projectData->offset_RawPart.string_XMinus.toDouble());
-    ui->doubleSpinBox_Offset_RawPart_YPlus->setValue(projectData->offset_RawPart.string_YPlus.toDouble());
-    ui->doubleSpinBox_Offset_RawPart_YMinus->setValue(projectData->offset_RawPart.string_YMinus.toDouble());
-    ui->doubleSpinBox_Offset_RawPart_ZPlus->setValue(projectData->offset_RawPart.string_ZPlus.toDouble());
+    ui->doubleSpinBox_Offset_RawPart_XPlus->setValue(projectData->offset_RawPart.string_Max_XPlus.toDouble());
+    ui->doubleSpinBox_Offset_RawPart_XMinus->setValue(projectData->offset_RawPart.string_Max_XMinus.toDouble());
+    ui->doubleSpinBox_Offset_RawPart_YPlus->setValue(projectData->offset_RawPart.string_Max_YPlus.toDouble());
+    ui->doubleSpinBox_Offset_RawPart_YMinus->setValue(projectData->offset_RawPart.string_Max_YMinus.toDouble());
+    ui->doubleSpinBox_Offset_RawPart_ZPlus->setValue(projectData->offset_RawPart.string_Max_ZPlus.toDouble());
 
     ui->widget_Offset_RawPart->hide();
     ui->checkBox_Offset_RawPart->setChecked(false);

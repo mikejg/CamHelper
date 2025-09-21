@@ -13,9 +13,9 @@ Dialog_Progress::~Dialog_Progress()
     delete ui;
 }
 
-void Dialog_Progress::init_Dialog(QList<Programm> list_Programm)
+void Dialog_Progress::init_Dialog(int size)
 {
-    ui->progressBar->setMaximum(list_Programm.size());
+    ui->progressBar->setMaximum(size);
 }
 
 void Dialog_Progress::set_Maximum(int i)
