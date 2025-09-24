@@ -39,8 +39,8 @@ public:
     QString             get_Description(QString);       //Hole mir die Beschreibung
     QList<ProjectData>  get_LastOpen();                 //Hole mir die letzten 10 Projekt aus der Datenbank
     QStringList         get_LastOpenList();             //Hole mir eine Liste mit den letzten 10 ProjectNamen
-    ProjectData*         get_Project(QString);           //Hole mir ein Project mit der ProjctId aus der Datenbank
-    ProjectData*         get_Project(QString, QString);
+    ProjectData*        get_Project(QString);           //Hole mir ein Project mit der ProjctId aus der Datenbank
+    ProjectData*        get_Project(QString, QString);
     QStringList         get_ProjectFromTag(QString);    //Hole mir eine Liste aller Projecte mit dem gleichen Tag
     QStringList         get_ProjectList();              //Hole mir eine Liste aller ProjectNamen
     QStringList         get_Tags();                     //Hole mir eine Liste mit den Tags

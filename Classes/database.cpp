@@ -18,6 +18,7 @@ DataBase::DataBase(QObject *parent, Logging* l)
 
 bool DataBase::delete_ProjectData(ProjectData* pd)
 {
+    qDebug() << Q_FUNC_INFO << "Project_ID:" << pd->id;
     QString string_ProjectID = pd->id;
     QSqlQuery query (main_DataBase);
 
@@ -476,15 +477,15 @@ QStringList DataBase::get_ProjectList()
 
 bool DataBase::save(ProjectData* pd)
 {
-    if(!delete_ProjectData(pd))
-        return false;
-
     QSqlQuery query (main_DataBase);
 
-    if(!get_ProjectID(pd))  //Suche nach dem Project in der Datenbank und
-        return false;       //schreibe die ID in ProjectData
+    if(!get_ProjectID(pd))          //Suche nach dem Project in der Datenbank und
+        return false;               //schreibe die ID in ProjectData
 
+    if(!delete_ProjectData(pd))     //Lösche das Project aus der Datenbank
+        return false;
 
+    //Schreibe das Projekt neu in die Datenbank
     query.prepare("INSERT INTO Project (Name, State, Material, Tension, "
                   "RawPartInspection, hyperMILL_File, Header, "
                   "Last_Production, Last_Open) "

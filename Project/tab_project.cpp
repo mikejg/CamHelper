@@ -78,68 +78,79 @@ bool Tab_Project::check_InputFields()
 {
     bool bool_Return = true;
 
-
-    if(!ui->lineEdit_ProjectName->check())
+    if(!ui->lineEdit_ProjectName->check())                      //Überprüfe Projektname
     {
         log->vailed("Eingabefeld Projektname ist leer");
         bool_Return = false;
     }
 
-    if(!ui->lineEdit_ProjectState->check())
+    if(!ui->lineEdit_ProjectState->check())                     //Überprüfe Projektstand E0 E1 etc
     {
         log->vailed("Eingabefeld Projektstand ist leer");
         bool_Return = false;
     }
 
-    if(!ui->lineEdit_Tension->check())
+    if(!ui->lineEdit_Tension->check())                          //Überprüfe Spannung Sp1 Sp2 etc
     {
         log->vailed("Eingabefeld Spannung ist fehlerhaft");
         bool_Return = false;
     }
 
-    if(ui->lineEdit_Tension->text() == "Sp1")
+    if(ui->lineEdit_Tension->text() == "Sp1")                       //Wird nur bei Sp1 Überprüft
     {
-        if(!ui->lineEdit_RawPartX->check())
+        if(!ui->lineEdit_RawPartX->check())                         //Rohteil X
         {
             log->vailed("Eingabefeld Rohteil X ist fehlerhaft");
             bool_Return = false;
         }
-        if(!ui->lineEdit_RawPartY->check())
+        if(!ui->lineEdit_RawPartY->check())                         //Rohteil Y
         {
             log->vailed("Eingabefeld Rohteil Y ist fehlerhaft");
             bool_Return = false;
         }
 
-        if(!ui->lineEdit_RawPartZ->check())
+        if(!ui->lineEdit_RawPartZ->check())                         //Rohteil Z
         {
             log->vailed("Eingabefeld Rohteil Z ist fehlerhaft");
             bool_Return = false;
         }
 
-        if(!ui->lineEdit_FinishPartX->check())
+        if(!ui->lineEdit_FinishPartX->check())                      //Fertigteil X
         {
             log->vailed(("Eingabefeld Bauteil X ist fehlerhat"));
             bool_Return = false;
         }
 
-        if(!ui->lineEdit_FinishPartY->check())
+        if(!ui->lineEdit_FinishPartY->check())                      //Fertigteil Y
         {
             log->vailed(("Eingabefeld Bauteil Y ist fehlerhat"));
             bool_Return = false;
         }
 
-        if(!ui->lineEdit_FinishPartZ->check())
+        if(!ui->lineEdit_FinishPartZ->check())                      //Ferigteil Z
         {
             log->vailed(("Eingabefeld Bauteil Z ist fehlerhat"));
             bool_Return = false;
         }
 
-        if(ui->doubleSpinBox_ZRawPart->value() == 0)
+        if(ui->doubleSpinBox_ZRawPart->value() == 0)                //Wert zum Antasten für Rohteil Z
         {
             log->vailed("Z Rohteil auf 0");
             ui->doubleSpinBox_ZRawPart->set_Null();
             bool_Return = false;
         }
+
+        if(ui->label_RawPartInspection->text().isEmpty() ||         //Rohteilkontrolle
+            ui->label_RawPartInspection->text() == "Rohteil")
+        {
+            log->vailed("Keine Rohteilkontrolle ausgewählt");
+            ui->label_RawPartInspection->setText("Rohteil");
+            ui->label_RawPartInspection->setStyleSheet("color:rgb(255,0,0);");
+            bool_Return = false;
+        }
+        else
+            ui->label_RawPartInspection->setStyleSheet("color:rgb(192,192,192);");
+
     }
 
     if(!ui->lineEdit_ZeroPointG->check())
@@ -172,18 +183,6 @@ bool Tab_Project::check_InputFields()
         ui->comboBox_Material->set_Empty();
         bool_Return = false;
     }
-
-    if(ui->label_RawPartInspection->text().isEmpty() ||
-       ui->label_RawPartInspection->text() == "Rohteil")
-    {
-        log->vailed("Keine Rohteilkontrolle ausgewählt");
-        ui->label_RawPartInspection->setText("Rohteil");
-        ui->label_RawPartInspection->setStyleSheet("color:rgb(255,0,0);");
-        bool_Return = false;
-    }
-    else
-        ui->label_RawPartInspection->setStyleSheet("color:rgb(192,192,192);");
-
 
     return bool_Return;
 }

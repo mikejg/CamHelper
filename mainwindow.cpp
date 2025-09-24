@@ -146,6 +146,8 @@ void MainWindow::slot_InitApp()
 
 void MainWindow::slot_NewProject()
 {
+    ProjectData* database_ProjectData;
+
     projectData = new ProjectData;
     projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
 
@@ -167,6 +169,7 @@ void MainWindow::slot_NewProject()
 
     if(projectData->tension == "Sp4")
         projectData->zeroPoint.string_G = "G508";
+
     // Scanne SPF Files nach Werkzeugen
     // wenn das fehlschlägt brich die Funktion ab
     if(!spf_Parser->scann_ForTools())
@@ -196,6 +199,14 @@ void MainWindow::slot_NewProject()
         projectData->header = projectData->header + str + "\n";
     }
 
+    //Wenn es NICHT Sp1 ist, suche in der Datenbank nach Sp1
+    //und übernehme das Material von Sp1
+    if(projectData->tension != "Sp1")
+    {
+        database_ProjectData = dataBase->get_Project(projectData->name, "Sp1");
+        projectData->material = database_ProjectData->material;
+    }
+
     ui->tab_Project->set_ProjectData(projectData);
     ui->tab_ToolSheet->showTable(projectData);
     ui->tab_Touchprobe->set_ProjectData(projectData);
@@ -210,25 +221,19 @@ void MainWindow::slot_NewToolList()
 
 void MainWindow::slot_OpenProject(QString string_ProjectId)
 {
-    //currentProject = new Project(this);                     //Erstelle einen Zeiger für das aktuelle Projekt
-    projectData = dataBase->get_Project(string_ProjectId);  //Lade die Projekdaten aus der DatenBank
+    projectData = dataBase->get_Project(string_ProjectId);                  //Lade die Projekdaten aus der DatenBank
     projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
-    //currentProject->set_ProjectData(projectData);           //Übergebe die Projektdaten an das aktuelle Projekt
-    ui->tab_Project->set_ProjectData(projectData);         //Zeige die Projektaten im Tab Projekt an
+    ui->tab_Project->set_ProjectData(projectData);                          //Zeige die Projektaten im Tab Projekt an
     ui->tab_ToolSheet->showTable(projectData);
     ui->tab_Touchprobe->set_ProjectData(projectData);
     ui->tab_Touchprobe->insert_Item(projectData->list_TouchProbe);
-    ui->stackedWidget->setCurrentWidget(ui->tab_Project);   //Zeige Tab_Projekt an
+    ui->stackedWidget->setCurrentWidget(ui->tab_Project);                   //Zeige Tab_Projekt an
 }
 
 void MainWindow::slot_OpenProject(QString string_Name, QString string_Tension)
 {
-    //projectData =  new ProjectData();
-
-    //currentProject = new Project(this);                                       //Erstelle einen Zeiger für das aktuelle Projekt
     projectData = dataBase->get_Project(string_Name, string_Tension);       //Lade die Projekdaten aus der DatenBank
     projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
-    //currentProject->set_ProjectData(projectData);                             //Übergebe die Projektdaten an das aktuelle Projekt
     ui->tab_Project->set_ProjectData(projectData);                          //Zeige die Projektaten im Tab Projekt an
     ui->tab_ToolSheet->showTable(projectData);
     ui->tab_Touchprobe->set_ProjectData(projectData);
@@ -238,9 +243,6 @@ void MainWindow::slot_OpenProject(QString string_Name, QString string_Tension)
 
 void MainWindow::slot_ToolButtonClicked()
 {
-    //bool_IgnoreToggle = true;                                   //Ignoriere das Umschalten
-    //ui->toolButton_ToolList->setCheckable(true);                //Schalte den ToolButton wieder ein
-    //ui->toolButton_ToolList->setChecked(true);                  //Schalte auf das Icon ToolList um
 
     if(sender() == ui->toolButton_ToolList)
     {
