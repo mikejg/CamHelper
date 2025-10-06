@@ -11,6 +11,7 @@ Tab_Project::Tab_Project(QWidget *parent)
     settings = new QSettings("Gareiss", "CamHelper");
     clipboard = QApplication::clipboard();
     projectExport = new Project_Export(this);
+    dialog_Repetition = new Dialog_Repetition();
 
     ui->scrollArea->set_Layout(ui->verticalLayout_Pictures);
     ui->scrollArea->set_Spacer(ui->verticalSpacer_Pictures);
@@ -53,11 +54,14 @@ Tab_Project::Tab_Project(QWidget *parent)
     connect(ui->toolButton_Selector, SIGNAL(released()), this, SLOT(slot_NewSelector()));
     connect(ui->toolButton_Paste,SIGNAL(released()), this, SLOT(slot_NPPaste()));
     connect(ui->toolButton_Export, SIGNAL(released()), this, SLOT(slot_Export()));
+    connect(dialog_Repetition, SIGNAL(accepted()), this, SLOT(slot_RepetitionAccepted()));
+    connect(projectExport, SIGNAL(sig_Export_TouchProbe()), this, SIGNAL(sig_ExportTouchprobe()));
 }
 
 Tab_Project::~Tab_Project()
 {
     delete ui;
+    delete dialog_Repetition;
 }
 
 void Tab_Project::slot_Export()
@@ -71,7 +75,11 @@ void Tab_Project::slot_Export()
     mainProgramm->set_ProjectData(*projectData);            //Erzeuge das Hauptprogramm im Tab_MainProgramm
     projectExport->set_ContentMainProgramm(mainProgramm);   //Übergebe das Hauptprogramm an projectExport
 
-    projectExport->exportProject(projectData, true);        //Starte den Export, die Werkzeuge werden um eins hochgezählt
+    if(!dataBase->check_ProjectID(projectData->name,
+                               projectData->tension))       //Überprüfe ob es das Project in der Datenbank gibt
+        projectExport->exportProject(projectData, true);    //Starte den Export, die Werkzeuge werden um eins hochgezählt
+    else
+        dialog_Repetition->show();
 }
 
 bool Tab_Project::check_InputFields()
@@ -256,6 +264,8 @@ bool Tab_Project::update_ProjectData()
     projectData->offset_RawPart.string_Min_YPlus = QString("%1").arg(ui->doubleSpinBox_Offset_FinishPart_YPlus->value());
     projectData->offset_RawPart.string_Min_YMinus = QString("%1").arg(ui->doubleSpinBox_Offset_FinishPart_YMinus->value());
     projectData->offset_RawPart.string_Min_ZPlus = QString("%1").arg(ui->doubleSpinBox_Offset_FinishPart_ZPlus->value());
+
+    projectData->header = ui->textEdit_Header->toPlainText();
 
     //Lösche die Bilderliste und schreibe die Bilder in die Bilderliste
     projectData->listPictures.clear();
@@ -577,4 +587,16 @@ void Tab_Project::slot_NewSelector()
 void Tab_Project::slot_NewPixmap(QPixmap pixmap)
 {
     ui->scrollArea->insert_Pixmap(pixmap);
+}
+
+void Tab_Project::slot_RepetitionAccepted()
+{
+    if(dialog_Repetition->radioButton_Repetition->isChecked())
+    {
+        projectExport->exportProject(projectData, true);    //Starte den Export, die Werkzeuge werden um eins hochgezählt
+    }
+    else
+    {
+        projectExport->exportProject(projectData, false);    //Starte den Export
+    }
 }

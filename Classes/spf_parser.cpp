@@ -335,6 +335,7 @@ QString SPF_Parser::parse_PostProcessor(QString stringFile)
 
 bool SPF_Parser::parse_Tool(QString stringFile, ToolList* toolList)
 {
+    qDebug() << Q_FUNC_INFO;
     mfile->setFileName(stringFile);
 
     if(!mfile->read_Content())
@@ -781,4 +782,39 @@ QStringList SPF_Parser::replace_Wildcard(QStringList stringList)
     }
 
     return stringList_ReturnList;
+}
+
+QString SPF_Parser::get_ProjectName(QString stringFile)
+{
+    mfile->setFileName(stringFile);
+    QString returnString;
+    QString string_TMP;
+    QStringList stringList_Split;
+
+    // lies das File ein
+    if(!mfile->read_Content())
+    {
+        return returnString;
+    }
+
+    // suche in dem File nach einer Zeile die ";Project:" enthält
+    foreach(QString string_Line, mfile->get_Content())
+    {
+        if(string_Line.contains(";Projekt:"))
+        {
+            string_TMP = string_Line;
+        }
+    }
+
+    // wenn was gefunden wurde, splitte den String nach " || " auf
+    // und gib den zweiten Teil zurück
+    if(!string_TMP.isEmpty())
+    {
+        stringList_Split = string_TMP.split(" || ");
+        if (stringList_Split.size() >1)
+        {
+            returnString = stringList_Split.at(1);
+        }
+    }
+    return returnString;
 }

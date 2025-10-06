@@ -25,15 +25,14 @@ private:
     QString string_ToolDB;
     QString string_MainDB;
 
-    bool delete_FromTable(QString, QString);
-    bool get_ProjectID(ProjectData*);
+
 
 public:
     explicit DataBase(QObject *parent = nullptr, Logging* l = nullptr);
 
     bool open();
     bool                delete_ProjectData(ProjectData* );
-
+    bool                delete_FromTable(QString, QString);
     int                 get_Counter(QString);           //Hole mir den Zähler für das Werkzeug aus der Datenbank
     QString             get_GageLength(QString);        //Hole mir die Gesamtlänge des Werkzeugs
     QString             get_Description(QString);       //Hole mir die Beschreibung
@@ -41,8 +40,13 @@ public:
     QStringList         get_LastOpenList();             //Hole mir eine Liste mit den letzten 10 ProjectNamen
     ProjectData*        get_Project(QString);           //Hole mir ein Project mit der ProjctId aus der Datenbank
     ProjectData*        get_Project(QString, QString);
+    bool                get_Project(ProjectData*);
+    bool                get_ProjectID(ProjectData*);
+    bool                check_ProjectID(QString, QString);
+    QString             get_ProjectID(QString, QString);
     QStringList         get_ProjectFromTag(QString);    //Hole mir eine Liste aller Projecte mit dem gleichen Tag
     QStringList         get_ProjectList();              //Hole mir eine Liste aller ProjectNamen
+    Programm            get_Programm(QString, QString);
     QStringList         get_Tags();                     //Hole mir eine Liste mit den Tags
     QStringList         get_Tags(QString);              //Hole mir die Tags eines Projects
     QStringList         get_ToolData(QString);          //Hole mir die Werkzeugdaten aus der hyperMILL Datenbank
@@ -70,6 +74,7 @@ public:
     void insert_OffsetRawPart(ProjectData*);           //Schreibt die Rohteil Aufmasse ins Projekt
     void insert_Programm(ProjectData*);
     void insert_TouchProbe(ProjectData*);
+    bool insert_Tool(Tool*, QString, QString);
 
     bool create_NCToolProject(Tool*, ProjectData*);         //Erstelle einen neuen Datensatz in NCTools_Project
     QString create_Tool(Tool*);                             //Erstelle einen neuen Werkzeug Datensatz
@@ -80,6 +85,8 @@ public:
     bool create_TPBohrung(Struct_Bohrung, QString);         //Erstelle einen neuen Datensatz in TP_Bohrung
     bool create_TPNut(Struct_Nut, QString);                 //Erstelle einen neuen Datensatz in TP_Nut
     bool inc_ToolCounter(ToolList* );                       //Zähle die Werkzeuge eins hoch
+
+    void fill_ToolList(QString, ToolList*);
 };
 
 #endif // DATABASE_H

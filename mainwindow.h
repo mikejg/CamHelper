@@ -41,6 +41,9 @@ private:
     QIcon *ico;
     SPF_Parser* spf_Parser;
     MFile* mfile;
+
+    bool load_Programme(QStringList&);
+
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
 
@@ -60,5 +63,6 @@ public slots:
     void slot_DialogPrintFinished(int);
     void slot_NewToolList();
     void slot_NewProject();
+    void slot_CheckFiles();
 };
 #endif // MAINWINDOW_H

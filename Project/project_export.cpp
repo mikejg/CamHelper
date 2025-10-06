@@ -35,10 +35,10 @@ void Project_Export::exportProject(ProjectData* pd, bool bool_IncToolCount)
 
     //Erzeuge das Verzeichenis Programme/E123456789.WDP/E123456789_E1_Sp1.WDP
     dir_Destination.mkpath(pd->string_ProgrammDir + "/" +
-                          pd->name + ".WDP/" +
+                          pd->name + ".WPD/" +
                           pd->name + "_" + pd->state + "_" + pd->tension + ".WPD");
     dir_Destination.setPath(pd->string_ProgrammDir + "/" +
-                           pd->name + ".WDP/" +
+                           pd->name + ".WPD/" +
                            pd->name + "_" + pd->state + "_" + pd->tension + ".WPD");
     //Erzeuge das Hauptprogramm 00_E123456789_E1_Sp1.MPF
     QFile file(pd->string_ProgrammDir + "/" + "00_" +  pd->name + "_" + pd->state + "_" + pd->tension + ".MPF");
@@ -157,6 +157,9 @@ void Project_Export::slot_NextProgramm()
             return;
 
         dialog_Progress->hide();
+
+        if(projectData->tension != "Sp1")
+            sig_Export_TouchProbe();
     }
 }
 

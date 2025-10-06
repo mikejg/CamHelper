@@ -89,5 +89,6 @@
         <file>Icons/Main/new.png</file>
         <file>Icons/Main/CheckBox_On.png</file>
         <file>Icons/Project/export.png</file>
+        <file>Icons/Main/checklist.png</file>
     </qresource>
 </RCC>

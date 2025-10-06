@@ -13,6 +13,7 @@
 #include "../Dialoge/dialog_rawpartinspection.h"
 #include "../Dialoge/dialog_programm.h"
 #include "../Dialoge/dialog_tools.h"
+#include "../Dialoge/dialog_repetition.h"
 
 #include "../Logging/logging.h"
 #include "../MainProgramm/mainprogramm.h"
@@ -37,6 +38,7 @@ private:
     Dialog_RawPartInspection* dialog_RawPartInspection;
     Dialog_Programm* dialog_Programm;
     Dialog_Tools* dialog_Tools;
+    Dialog_Repetition* dialog_Repetition;
     Logging* log;
     MFile* mfile; // wird in set_Logging erstellt
     ProjectData* projectData;
@@ -66,6 +68,7 @@ public:
 
 signals:
     void sig_NewToolList();
+    void sig_ExportTouchprobe();
 
 public slots:
     void slot_Export();
@@ -79,6 +82,8 @@ public slots:
     void slot_checkBox_Offset_FinishPart_stateChanged(int);
     void slot_NewSelector();
     void slot_NewPixmap(QPixmap);
+    void slot_RepetitionAccepted();
+
 };
 
 #endif // TAB_PROJECT_H

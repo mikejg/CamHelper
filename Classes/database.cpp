@@ -320,6 +320,54 @@ QStringList DataBase::get_ToolData(QString toolID)
     return returnList;
 }
 
+bool DataBase::get_Project(ProjectData* pd)
+{
+    QSqlQuery query(main_DataBase);
+
+    if(!get_ProjectID(pd))              //suche nach dem Project in der Datenbank
+        return false;
+
+    if(pd->id.isEmpty())                //wenn es das Project nicht gibt brich hier ab
+        return true;
+
+    query.exec("SELECT id, Name, State, Material, Tension, RawPartInspection, "
+               "hyperMILL_File, Header, Last_Production, Last_Open "
+               "FROM Project "
+               "WHERE id = '" + pd->id + "';");
+
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return false;
+    }
+
+    while (query.next())
+    {
+        pd->name                = query.value("Name").toString();
+        pd->id                  = query.value("id").toString();
+        pd->state               = query.value("State").toString();
+        pd->material            = query.value("Material").toString();
+        pd->tension             = query.value("Tension").toString();
+        pd->rawPart_Inspection  = query.value("RawPartInspection").toString();
+        pd->hyperMILL_File      = query.value("hyperMILL_File").toString();
+        pd->header              = query.value("Header").toString();
+        pd->lastProduction      = query.value("Last_Production").toString();
+        pd->lastOpen            = query.value("Last_Open").toString();
+
+        insert_FinishPart(pd);     //Schreib die Fertigteilmasse ins Projekt
+        insert_Picutres(pd);       //Schreib die Bilder ins Projekt
+        insert_RawPart(pd);        //Schreib die Rohteilmasse ins Projekt
+        insert_ToolList(pd);       //Schreib die Werkzeuge ins Projekt
+        insert_ZeroPoint(pd);      //Schreib den Nullpunkt ins Projekt
+        insert_OffsetRawPart(pd);  //Schreib die Rohteil Aufmasse ins Projekt
+        //insert_Programm(pd);       //Schreib die Programm ins Projekt
+        insert_TouchProbe(pd);     //Schreib die Antastzyklen in das Project
+    }
+
+    return true;
+}
+
 ProjectData* DataBase::get_Project(QString string_ProjectId)
 {
     ProjectData* projectData;
@@ -358,7 +406,7 @@ ProjectData* DataBase::get_Project(QString string_ProjectId)
         insert_ZeroPoint(projectData);      //Schreib den Nullpunkt ins Projekt
         insert_OffsetRawPart(projectData);  //Schreib die Rohteil Aufmasse ins Projekt
         insert_Programm(projectData);       //Schreib die Programm ins Projekt
-        insert_TouchProbe(projectData);
+        insert_TouchProbe(projectData);     //Schreib die Antastzyklen in das Project
     }
 
     return projectData;
@@ -411,6 +459,94 @@ bool DataBase::get_ProjectID(ProjectData* pd)
     }
 
     return true;
+}
+
+
+bool DataBase::check_ProjectID(QString string_Name, QString string_Tension)
+{
+    QSqlQuery query (main_DataBase);
+    QString string_ID;
+
+    //Suche nach dem Project in der Datenbank,
+    query.exec("SELECT id, Name, Tension from Project "
+               "where Name = '" + string_Name + "' "
+               "and Tension = '" + string_Tension + "';");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return false;
+    }
+
+    while (query.next())
+    {
+        string_ID = query.value("id").toString();
+    }
+
+    if(!string_ID.isEmpty())
+        return true;
+
+    return false;
+}
+
+QString DataBase::get_ProjectID(QString string_Name, QString string_Tension)
+{
+    qDebug(Q_FUNC_INFO);
+    QSqlQuery query (main_DataBase);
+    QString string_ID;
+
+    //Suche nach dem Project in der Datenbank,
+    query.exec("SELECT id, Name, Tension from Project "
+               "where Name = '" + string_Name + "' "
+                               "and Tension = '" + string_Tension + "';");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+    }
+
+    while (query.next())
+    {
+        string_ID = query.value("id").toString();
+    }
+
+    return string_ID;
+}
+
+Programm DataBase::get_Programm(QString string_ProjectID, QString string_Programm)
+{
+    qDebug() << Q_FUNC_INFO;
+    QSqlQuery query (main_DataBase);
+    Programm programm;
+    programm.ProgrammName = string_Programm;
+
+    query.exec("SELECT * from Programm_Project "
+               "WHERE Project_ID = '" + string_ProjectID + "' "
+               "AND Programm = '" + string_Programm + "';");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        log->vailed(query.lastQuery());
+    }
+    while(query.next())
+    {
+        programm.id = query.value("id").toString();
+        programm.ProgrammName = query.value("Programm").toString();
+        programm.Project_ID = query.value("project_id").toString();
+        programm.Offset_X = query.value("Offset_X").toBool();
+        programm.Offset_Y = query.value("Offset_Y").toBool();
+        programm.Offset_Z = query.value("Offset_Z").toBool();
+        programm.TOFFL = query.value("TOFFL").toBool();
+        programm.NoXY = query.value("NoXY").toBool();
+    }
+    return programm;
 }
 
 QStringList DataBase::get_ProjectFromTag(QString string_Tag)
@@ -1754,4 +1890,87 @@ bool DataBase::inc_ToolCounter(ToolList* toolList)
         }
     }
     return true;
+}
+
+bool DataBase::insert_Tool(Tool* tool, QString string_ProjectID, QString string_ProjectFullName)
+{
+    QString string_ToolID;
+    QString string_NCToolsProjectID;
+    int int_ToolLife  = int(tool->get_ToolLife());
+
+    QSqlQuery queryAdd (main_DataBase);
+
+    // Trage das Tool in die Datenbank ein
+    // Wenn das Fehlschlägt gib FALSE zurück
+    string_ToolID = create_Tool(tool);
+    if(string_ToolID.isEmpty())
+        return false;
+
+    // Hol dir die ID aus NCTools-Project
+    // Wenn es eine ID gibt, brech mit TRUE ab
+    // Ansonsten trage eine neue Verbindung zwischen Werkzeug und Projekt ein
+    string_NCToolsProjectID = get_NCToolProjectID(string_ToolID, string_ProjectID);
+
+    if(string_NCToolsProjectID != "-1")
+    {
+        return true;
+    }
+
+    queryAdd.prepare("INSERT INTO NCTools_Project (nctool_id, T_Number, Project_ID, "
+                     "Project, ToolLife, Parts) "
+                     "VALUES (:nctool_id, "
+                     ":T_Number, "
+                     ":Project_ID, "
+                     ":Project, "
+                     ":ToolLife,"
+                     ":Parts)");
+    queryAdd.bindValue(":nctool_id", string_ToolID);
+    queryAdd.bindValue(":T_Number", tool->get_Number());
+    queryAdd.bindValue(":Project_ID", string_ProjectID);
+    queryAdd.bindValue(":Project", string_ProjectFullName);
+    queryAdd.bindValue(":ToolLife", int_ToolLife);
+    queryAdd.bindValue(":Parts", tool->get_Parts());
+    if(!queryAdd.exec())
+    {
+        log->vailed(queryAdd.lastError().text());
+        return false;
+    }
+    return true;
+}
+
+void DataBase::fill_ToolList(QString string_ProjectFullName, ToolList* toolList)
+{
+    qDebug() << Q_FUNC_INFO;
+    QSqlQuery query (main_DataBase);
+    //QString string_FullName = string_FullName + "_" + string_Clamping;
+    Tool* tool;
+
+    query.exec("SELECT * "
+               "FROM NCTools_Project "
+               "INNER JOIN NCTool on "
+               "NCTool.id = nctool_id "
+               "WHERE Project = '" + string_ProjectFullName + "';");
+
+    qDebug() << query.lastQuery();
+
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return;
+    }
+
+    while(query.next())
+    {
+        tool = new Tool(this);
+        tool->set_Number(query.value("T_Number").toString());
+        tool->set_GageLength(query.value("Gage_Length").toString());
+        tool->set_ToolLength(query.value("Tool_Length").toString());
+        tool->set_TipLength(query.value("Tip_Length").toString());
+        tool->set_Counter(query.value("Counter").toInt());
+        tool->set_Description(query.value("Description").toString());
+        tool->set_ToolLife(query.value("ToolLife").toBool());
+        tool->set_Parts(query.value("Parts").toInt());
+        toolList->insert_Tool(tool);
+    }
 }

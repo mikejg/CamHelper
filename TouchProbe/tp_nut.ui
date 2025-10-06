@@ -19,6 +19,19 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QLineEdit{color:rgb(192,192,192);
+                  background-color: rgba(255, 255, 255,32);
+                  border-radius:3px;}
+QLineEdit:focus{color:rgb(192,192,192);
+                             border: 1px solid;
+                             border-color: rgb(0, 128, 0);
+                            selection-background-color: rgb(40, 76, 117);}
+
+QComboBox{color:rgb(192,192,192);
+                        background-color: rgba(255, 255, 255,32);
+                         border-radius:3px;}</string>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>0</number>
@@ -624,7 +637,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normalon>:/Icons/paste.png</normalon>
+         <normalon>:/Icons/Main/paste.png</normalon>
         </iconset>
        </property>
       </widget>

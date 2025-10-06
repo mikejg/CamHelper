@@ -35,7 +35,7 @@ private:
     void insert_Tool(QString, ToolList*);
     QString parse_ProjectName(QString);
     QString parse_PostProcessor(QString);
-    bool parse_Tool(QString, ToolList*);
+
     bool sort_Programms();
     void loadBruch();
     void compare(QStringList, QStringList);
@@ -50,7 +50,8 @@ public:
     bool scann_ForNoXY();
     void set_ProjectData(ProjectData* pd) {projectData = pd;}
     void finish(QString, Programm);
-
+    QString get_ProjectName(QString);
+    bool parse_Tool(QString, ToolList*);
     QStringList replace_Wildcard(QStringList);
 signals:
 };

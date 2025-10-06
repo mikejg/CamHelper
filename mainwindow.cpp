@@ -55,9 +55,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->toolButton_MainProgramm, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_TouchProbe, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_New, SIGNAL(clicked()), this, SLOT(slot_NewProject()));
+    connect(ui->toolButton_Check, SIGNAL(clicked()), this, SLOT(slot_CheckFiles()));
 
     //Wenn im tab_Init auf ein Bild gecklict wird, soll das Projekt geöffnet werden
     connect(ui->tab_Init, SIGNAL(sig_Clicked(QString)), this, SLOT(slot_OpenProject(QString)));
+    connect(ui->tab_Project, SIGNAL(sig_ExportTouchprobe()),
+            ui->tab_Touchprobe, SLOT(slot_ExportTouchprobe()));
 
     QTimer::singleShot(500, this, SLOT(slot_InitApp()));
 }
@@ -151,8 +154,8 @@ void MainWindow::slot_NewProject()
     projectData = new ProjectData;
     projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
 
-    spf_Parser->set_ProjectData(projectData);   //übergib den Parser projectData
-    if(!spf_Parser->scann_ForData())            //Suche in den SPF Files nach Project Name_Stand_Spannung
+    spf_Parser->set_ProjectData(projectData);           //übergib den Parser projectData
+    if(!spf_Parser->scann_ForData())                    //Suche in den SPF Files nach Project Name_Stand_Spannung
         return;
 
     if(projectData->tension == "Sp0")
@@ -170,10 +173,8 @@ void MainWindow::slot_NewProject()
     if(projectData->tension == "Sp4")
         projectData->zeroPoint.string_G = "G508";
 
-    // Scanne SPF Files nach Werkzeugen
-    // wenn das fehlschlägt brich die Funktion ab
-    if(!spf_Parser->scann_ForTools())
-        return;
+    if(!spf_Parser->scann_ForTools())                   // Scanne SPF Files nach Werkzeugen
+        return;                                         // wenn das fehlschlägt brich die Funktion ab
 
     if(!spf_Parser->scann_ForNoXY())
         return;
@@ -206,6 +207,8 @@ void MainWindow::slot_NewProject()
         database_ProjectData = dataBase->get_Project(projectData->name, "Sp1");
         projectData->material = database_ProjectData->material;
     }
+
+    dataBase->get_Project(projectData);
 
     ui->tab_Project->set_ProjectData(projectData);
     ui->tab_ToolSheet->showTable(projectData);
@@ -310,3 +313,168 @@ void MainWindow::slot_ToolListToggled(bool bool_Toggle)
     }
 }
 
+void MainWindow::slot_CheckFiles()
+{
+    QStringList stringList_Programme;
+    Programm programm;
+    QStringList stringList_Project;
+    QString string_Project;
+    QString string_ProjectFullName;
+    QString string_Tension;
+    QString string_ProjectID;
+    ToolList* toolList;
+    ToolList* toolList_Project;
+    int int_Before;
+    int int_After;
+
+    toolList = new ToolList(this);
+
+    //Lese die Programme aus dem Verzeichnis ein
+    if(!load_Programme(stringList_Programme))
+        return;
+
+    //Schalte auf den Tab Log um
+    //ui->tabWidget->setCurrentWidget(ui->tab_Logging);
+
+
+    foreach (QString string_Programm, stringList_Programme)
+    {
+        programm.ProgrammName = string_Programm;
+
+        //zieh aus dem Programm den ProjectNamen und entferne am Ende ||
+        //es bleibt der string E28994006_E0_Sp1 übrig
+        string_ProjectFullName = spf_Parser->get_ProjectName(dialog_Settings->get_ProgrammDir() + "/" + string_Programm);
+        string_ProjectFullName = string_ProjectFullName.remove(" ||");
+
+        //splitte E28994006_E0_Sp1 nach '_'
+        stringList_Project = string_ProjectFullName.split("_");
+
+        if(stringList_Project.size() > 2)
+        {
+            //string_Project wird E28994006
+            string_Project = stringList_Project.at(0);
+
+            //string_Clamping wird Sp1
+            string_Tension = stringList_Project.at(2);
+
+            //hol mir die ProjectID aus der Datenbank
+            string_ProjectID = dataBase->get_ProjectID(string_Project, string_Tension);
+
+            //hole mir die Daten für Item_Programm aus der Datenbank
+            programm = dataBase->get_Programm(string_ProjectID, string_Programm);
+
+            //Hole alle Werkzeuge für das Projekt aus der Datenbank
+            toolList_Project = new ToolList(this);
+            dataBase->fill_ToolList(string_ProjectFullName, toolList_Project);
+
+            int_Before = toolList_Project->get_Size();
+            qDebug() << Q_FUNC_INFO;
+            qDebug() << "Vorher:" << int_Before;
+
+            //Suche alle Werkzeuge aus dem Programm
+            spf_Parser->parse_Tool(dialog_Settings->get_ProgrammDir()+ "/" + string_Programm, toolList);
+
+            //Schreibe alle Werkzeuge aus toolList in toolList_Project, vorhandene werden
+            //ignoriert, neue werden hinzugefugt
+            foreach (Tool* tool, toolList->get_List())
+            {
+                toolList_Project->insert_Tool(tool);
+            }
+
+            int_After = toolList_Project->get_Size();
+
+            //Wenn es Anderung an der Werkzeugliste gab wird sie neu abgespeichert
+            if(int_Before != int_After)
+            {
+                qDebug() << Q_FUNC_INFO;
+                qDebug() << "Vorher:" << int_Before;
+                qDebug() << "Nacher:" << int_After;
+
+                dataBase->delete_FromTable("NCTools_Project", string_ProjectID);
+                foreach (Tool* tool, toolList_Project->get_List())
+                {
+                    dataBase->insert_Tool(tool, string_ProjectID, string_ProjectFullName);
+                }
+            }
+        }
+
+        spf_Parser->finish(dialog_Settings->get_ProgrammDir()+ "/" + string_Programm, programm);
+        qDebug() << Q_FUNC_INFO;
+
+        //Wenn es das gleiche Projekt ist wie das aktuelle Projekt werde die die Listen aktualisiert
+        /*if(string_ProjectFullName == projectData->name + "_" + projectData->state + "_" + projectData->tension)
+        {
+            project->set_NCTools();
+            showTable_Rustplan(false);
+            ui->tab_Project->slot_RefreshTools();
+        }*/
+    }
+}
+
+bool MainWindow::load_Programme(QStringList &stringList_Programme)
+{
+    /* Erzeuge dir und setze den Pfad auf string_ProgrammDir
+     * setz den Filter auf SPF-Dateien */
+    QDir dir;
+    QStringList filters;
+    dir.setPath(dialog_Settings->get_ProgrammDir());
+    filters << "*.spf";
+    dir.setNameFilters(filters);
+
+    /* Variable die ich später noch brauche */
+    QString string_shortName;
+    bool bool_OK;
+    int int_I;  Q_UNUSED(int_I);
+
+    /* Lösche alle Programme aus stringList_Programme */
+    stringList_Programme.clear();
+
+    stringList_Programme = dir.entryList(QDir::Files);
+
+    /*Erzeuge eine temporäre StringList tmp
+     * geh durch stringList_Programme
+     * wenn der Eintrag mit 1_ - 9_ stratet setze eine 0 davor
+     * Überprüfe die länge des Progammnamens abhängig ob
+     *  eine Nummerierung vorgesehen ist oder nicht
+     * schreibe den Eintrag in tmp*/
+    QStringList tmp;
+    foreach(QString str, stringList_Programme)
+    {
+        if (str.startsWith("1_") || str.startsWith("2_") || str.startsWith("3_") ||
+            str.startsWith("4_") || str.startsWith("5_") || str.startsWith("6_") ||
+            str.startsWith("7_") || str.startsWith("8_") || str.startsWith("9_") )
+        {
+            dir.rename(str, "0"+str);
+            str = "0" + str;
+        }
+
+        if(str.length() > 28)
+        {
+            qDebug() << str << ": " << str.length();
+            if(str.startsWith("0"))
+            {
+                str = str.right(str.length()-1);
+                dir.rename("0"+ str, str);
+            }
+            logging->vailed("Dateiname zu lang");
+            logging->vailed(str);
+            return false;
+        }
+
+        tmp.append(str);
+    }
+
+    /* Sortiere tmp
+     * Lösche alle Einträge in stringList_Programme
+     * geht durch tmp
+     * Schreibe alle Einträge von tmp in stringListProgramme*/
+    tmp.sort();
+    stringList_Programme.clear();
+
+    foreach(QString str, tmp)
+    {
+        /* trage str in d stringList_Programme ein */
+        stringList_Programme.append(str);
+    }
+    return true;
+}

@@ -14,6 +14,7 @@
 #include "../Classes/mfile.h"
 #include "../Classes/spf_parser.h"
 #include "../Logging/logging.h"
+#include "../TouchProbe/tp_item.h"
 
 class Project_Export : public QObject
 {
@@ -30,8 +31,10 @@ private:
     SPF_Parser* spf_Parser;
     QDir dir_Destination;
     QMap<QString, QString> map_Bruch;
+    QStringList stringList_Touchprobe;
 
     bool loadBruch();
+
 public:
     explicit Project_Export(QObject *parent = nullptr);
     void set_ContentMainProgramm(QTextEdit*);
@@ -43,6 +46,7 @@ public:
     bool finish_Load();
 
 signals:
+    void sig_Export_TouchProbe();
 
 public slots:
     void slot_NextProgramm();

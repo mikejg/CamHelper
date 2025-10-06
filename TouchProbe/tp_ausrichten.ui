@@ -928,7 +928,7 @@ QLineEdit:focus{color:rgb(192,192,192);
        </property>
        <property name="icon">
         <iconset>
-         <normalon>:/Icons/paste.png</normalon>
+         <normalon>:/Icons/Main/paste.png</normalon>
         </iconset>
        </property>
       </widget>

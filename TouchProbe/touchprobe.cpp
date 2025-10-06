@@ -47,7 +47,7 @@ void TouchProbe::set_Logging(Logging *l)
 
 void TouchProbe::slot_Create()
 {
-    qDebug() << Q_FUNC_INFO << sender();
+    //qDebug() << Q_FUNC_INFO << sender();
 
     // Wenn der ToolButton_Edit geklickt wurde und somit der Editor sichtbar
     // wird, setze bool_Create auf TRUE und erstelle das Antastprogramm neu.
@@ -65,7 +65,7 @@ void TouchProbe::slot_Create()
 void TouchProbe::createTouchprobe()
 {
     int_CounterEbenheit = 0;
-    int pos = 1;
+    //int pos = 1;
     //Loesche alles im Editor und schalte auf den Editor um
     ui->textEdit->clear();
     ui->label_Pix->hide();
@@ -182,15 +182,13 @@ void TouchProbe::slot_ExportTouchprobe()
 
 void TouchProbe::exportTouchprobe()
 {
-    /* Muss noch umgeschrieben werden */
-     /*
     QString str;
     QDir dir;
-    // Wenn es ProjecName oder ProjectFullName leer sind wird nur in das Programmverzeichnis geschrieben
+    // Wenn es ProjecName oder Spannung leer sind wird nur in das Programmverzeichnis geschrieben
     // Programme\_Antasten.SPF
-    if(project->get_ProjectName().isEmpty() || project->get_ProjectFullName().isEmpty())
+    if(projectData->name.isEmpty() || projectData->tension.isEmpty())
     {
-        str = project->get_ProgrammDir() + "_Antasten.SPF";
+        str = projectData->string_ProgrammDir + "_Antasten.SPF";
     }
 
     // Ansonsten wird in die Datei
@@ -198,22 +196,28 @@ void TouchProbe::exportTouchprobe()
     // geschrieben
     else
     {
-        str = project->get_ProgrammDir() + "/"
-              + project->get_ProjectName() + ".WPD/"
-              + project->get_ProjectFullName() + ".WPD/_Antasten.SPF";
+        str = projectData->string_ProgrammDir + "/"
+              + projectData->name + ".WPD/"
+              + projectData->name + "_"
+              + projectData->state + "_"
+              + projectData->tension + ".WPD/_Antasten.SPF";
 
         // Wenn es das Verzeichnis
         // Programme\E12345678.WPD\E12345678_E01_Sp2.WPD
         // noch nicht gibt dann erstelle es
-        dir.setPath(project->get_ProgrammDir() + "/"
-                    + project->get_ProjectName() + ".WPD/"
-                    + project->get_ProjectFullName() + ".WPD");
+        dir.setPath(projectData->string_ProgrammDir + "/"
+                        + projectData->name + ".WPD/"
+                        + projectData->name + "_"
+                        + projectData->state + "_"
+                        + projectData->tension + ".WPD");
 
         if(!dir.exists())
         {
-            dir.mkpath(project->get_ProgrammDir() + "/"
-                       + project->get_ProjectName() + ".WPD/"
-                       + project->get_ProjectFullName() + ".WPD");
+            dir.mkpath(projectData->string_ProgrammDir + "/"
+                     + projectData->name + ".WPD/"
+                     + projectData->name + "_"
+                     + projectData->state + "_"
+                     + projectData->tension + ".WPD");
         }
     }
 
@@ -233,13 +237,12 @@ void TouchProbe::exportTouchprobe()
     }
 
     export_Ebenheit();
-    */
 }
 
 void TouchProbe::export_Ebenheit()
 {
     /* Muss noch umgeschrieben werden */
-    /*
+
     QString str;
     QDir dir;
     int_CounterEbenheit = 0;
@@ -267,9 +270,9 @@ void TouchProbe::export_Ebenheit()
 
             // Wenn es ProjecName oder ProjectFullName leer sind wird nur in das Programmverzeichnis geschrieben
             // Programme\_C_Ausrichten.SPF
-            if(project->get_ProjectName().isEmpty() || project->get_ProjectFullName().isEmpty())
+            if(projectData->name.isEmpty())
             {
-                str = project->get_ProgrammDir() + "_Ebenheit_" + QString("%1").arg(int_CounterEbenheit) + ".SPF";
+                str = projectData->string_ProgrammDir + "/_Ebenheit_" + QString("%1").arg(int_CounterEbenheit) + ".SPF";
             }
 
             // Ansonsten wird in die Datei
@@ -277,23 +280,29 @@ void TouchProbe::export_Ebenheit()
             // geschrieben
             else
             {
-                str = project->get_ProgrammDir() + "/"
-                      + project->get_ProjectName() + ".WPD/"
-                      + project->get_ProjectFullName() + ".WPD/_Ebenheit_"
+                str =  projectData->string_ProgrammDir + "/"
+                      + projectData->name + ".WPD/"
+                      + projectData->name + "_"
+                      + projectData->state + "_"
+                      + projectData->tension + ".WPD/_Ebenheit_"
                       + QString("%1").arg(int_CounterEbenheit) + ".SPF";
 
                 // Wenn es das Verzeichnis
                 // Programme\E12345678.WPD\E12345678_E01_Sp2.WPD
                 // noch nicht gibt dann erstelle es
-                dir.setPath(project->get_ProgrammDir() + "/"
-                            + project->get_ProjectName() + ".WPD/"
-                            + project->get_ProjectFullName() + ".WPD");
+                dir.setPath(projectData->string_ProgrammDir + "/"
+                            + projectData->name + ".WPD/"
+                            + projectData->name + "_"
+                            + projectData->state + "_"
+                            + projectData->tension + ".WPD");
 
                 if(!dir.exists())
                 {
-                    dir.mkpath(project->get_ProgrammDir() + "/"
-                               + project->get_ProjectName() + ".WPD/"
-                               + project->get_ProjectFullName() + ".WPD");
+                    dir.mkpath(projectData->string_ProgrammDir + "/"
+                               + projectData->name + ".WPD/"
+                               + projectData->name + "_"
+                               + projectData->state + "_"
+                               + projectData->tension + ".WPD");
                 }
             }
 
@@ -314,7 +323,6 @@ void TouchProbe::export_Ebenheit()
             int_CounterEbenheit++;
         }
     }
-    */
 }
 
 QList<TP_Item*> TouchProbe::get_ItemList()

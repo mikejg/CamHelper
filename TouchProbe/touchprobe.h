@@ -33,7 +33,6 @@ private:
     bool   bool_Create;
     void export_Ebenheit();
 
-    Project* project;
     ProjectData* projectData;
 
 public:
@@ -44,7 +43,7 @@ public:
     void exportTouchprobe();
     void insert_Item();
     void insert_Item(QList<Item_TouchProbe>);
-    void set_Project(Project* p) { project = p;}
+    //void set_Project(Project* p) { project = p;}
     void set_ProjectData(ProjectData* pd) {projectData = pd;}
     void set_Logging(Logging* l);
     QList<TP_Item*> get_ItemList();
@@ -55,11 +54,8 @@ public slots:
     void slot_ShowPix();
     void slot_Export();
     void slot_ExportTouchprobe();
-    //void slot_NewTextCursor(QTextCursor);
 
 signals:
-    //void sig_Err(QString);
-    //void sig_Log(QString);
 };
 
 #endif // TOUCHPROBE_H
