@@ -208,6 +208,21 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
          </widget>
         </item>
         <item>
+         <widget class="QToolButton" name="toolButton_MainProgramm">
+          <property name="toolTip">
+           <string>Hauptprogramm</string>
+          </property>
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normalon>:/Icons/Project/MainProgramm.png</normalon>
+           </iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer_7">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -510,7 +525,7 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
              </property>
              <property name="icon">
               <iconset>
-               <normalon>:/Icons/Main/File_Open.png</normalon>
+               <normalon>:/Icons/Project/File_Open.png</normalon>
               </iconset>
              </property>
              <property name="iconSize">

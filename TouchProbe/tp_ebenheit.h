@@ -23,7 +23,7 @@ private:
 
 
 protected:
-    bool eventFilter(QObject *obj, QEvent *ev) override;
+    //bool eventFilter(QObject *obj, QEvent *ev) override;
 
 public:
     explicit TP_Ebenheit(QWidget *parent = nullptr);

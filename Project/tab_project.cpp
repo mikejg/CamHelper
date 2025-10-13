@@ -8,6 +8,9 @@ Tab_Project::Tab_Project(QWidget *parent)
 {
     ui->setupUi(this);
 
+    fileDialog = new QFileDialog(this);
+    fileDialog->setFilter(QDir::Files);
+
     settings = new QSettings("Gareiss", "CamHelper");
     clipboard = QApplication::clipboard();
     projectExport = new Project_Export(this);
@@ -44,6 +47,8 @@ Tab_Project::Tab_Project(QWidget *parent)
     ui->lineEdit_ZeroPointZ->set_TextNecessary(true);
     ui->lineEdit_ZeroPointZ->state = MLineEdit::Digi;
 
+    ui->doubleSpinBox_ZRawPart->set_Zero(false);
+
     connect(ui->checkBox_Offset_RawPart,SIGNAL(stateChanged(int)), this, SLOT(slot_checkBox_Offset_RawPart_stateChanged(int)));
     connect(ui->checkBox_Offset_FinishPart,SIGNAL(stateChanged(int)), this, SLOT(slot_checkBox_Offset_FinishPart_stateChanged(int)));
 
@@ -54,6 +59,10 @@ Tab_Project::Tab_Project(QWidget *parent)
     connect(ui->toolButton_Selector, SIGNAL(released()), this, SLOT(slot_NewSelector()));
     connect(ui->toolButton_Paste,SIGNAL(released()), this, SLOT(slot_NPPaste()));
     connect(ui->toolButton_Export, SIGNAL(released()), this, SLOT(slot_Export()));
+    connect(ui->toolButton_OpenFile, SIGNAL(released()), this, SLOT(slot_NewHyperMILLFile()));
+    connect(ui->toolButton_ExecFile, SIGNAL(released()), this, SLOT(slot_ExecFile()));
+    connect(ui->toolButton_MainProgramm, SIGNAL(released()), this, SIGNAL(sig_ShowMainProgramm()));
+
     connect(dialog_Repetition, SIGNAL(accepted()), this, SLOT(slot_RepetitionAccepted()));
     connect(projectExport, SIGNAL(sig_Export_TouchProbe()), this, SIGNAL(sig_ExportTouchprobe()));
 }
@@ -141,7 +150,7 @@ bool Tab_Project::check_InputFields()
             bool_Return = false;
         }
 
-        if(ui->doubleSpinBox_ZRawPart->value() == 0)                //Wert zum Antasten für Rohteil Z
+        if(!ui->doubleSpinBox_ZRawPart->check())                //Wert zum Antasten für Rohteil Z
         {
             log->vailed("Z Rohteil auf 0");
             ui->doubleSpinBox_ZRawPart->set_Null();
@@ -465,6 +474,31 @@ void Tab_Project::set_ProjectData(ProjectData* pd)
     dialog_Tools = new Dialog_Tools(this, projectData);
     connect(dialog_Tools, SIGNAL(sig_NewToolList()), this, SIGNAL(sig_NewToolList()));
 
+    if(projectData->tension != "Sp1")
+    {
+        ui->lineEdit_RawPartX->set_TextNecessary(false);
+        ui->lineEdit_RawPartY->set_TextNecessary(false);
+        ui->lineEdit_RawPartZ->set_TextNecessary(false);
+
+        ui->lineEdit_FinishPartX->set_TextNecessary(false);
+        ui->lineEdit_FinishPartY->set_TextNecessary(false);
+        ui->lineEdit_FinishPartZ->set_TextNecessary(false);
+
+        ui->doubleSpinBox_ZRawPart->set_Zero(true);             //Die Spinbox darf den Wert 0 enthalten
+    }
+    else
+    {
+        ui->lineEdit_RawPartX->set_TextNecessary(true);
+        ui->lineEdit_RawPartY->set_TextNecessary(true);
+        ui->lineEdit_RawPartZ->set_TextNecessary(true);
+
+        ui->lineEdit_FinishPartX->set_TextNecessary(true);
+        ui->lineEdit_FinishPartY->set_TextNecessary(true);
+        ui->lineEdit_FinishPartZ->set_TextNecessary(true);
+
+        ui->doubleSpinBox_ZRawPart->set_Zero(false);
+    }
+
     //Befülle die Felder mit Daten
     ui->lineEdit_ProjectName->setText(projectData->name);                            //Name des Projects
     ui->lineEdit_ProjectState->setText(projectData->state);                          //Der Modellstand des Projekts
@@ -599,4 +633,19 @@ void Tab_Project::slot_RepetitionAccepted()
     {
         projectExport->exportProject(projectData, false);    //Starte den Export
     }
+}
+
+void Tab_Project::slot_NewHyperMILLFile()
+{
+    fileDialog->setNameFilter(tr("HyperMILL (*.hmc)"));
+    ui->lineEdit_hyperMILL_File->setText(fileDialog->getOpenFileName());
+}
+
+void Tab_Project::slot_ExecFile()
+{
+    QString url = ui->lineEdit_hyperMILL_File->text();
+    if(url.isEmpty())
+        return;
+
+    QDesktopServices::openUrl(QUrl::fromLocalFile(url)); //(url, QUrl::TolerantMode));
 }

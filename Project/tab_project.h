@@ -5,6 +5,8 @@
 #include <QSettings>
 #include <QClipboard>
 #include <QStackedWidget>
+#include <QFileDialog>
+#include <QDesktopServices>
 
 #include "../Classes/database.h"
 #include "../Classes/mfile.h"
@@ -49,6 +51,8 @@ private:
     Project_Export* projectExport;
     TouchProbe* touchProbe;
     MainProgramm* mainProgramm;
+    QFileDialog*           fileDialog;
+
     float filter_Value(QString);
     void insert_Pixmap(QPixmap p);
 
@@ -69,6 +73,7 @@ public:
 signals:
     void sig_NewToolList();
     void sig_ExportTouchprobe();
+    void sig_ShowMainProgramm();
 
 public slots:
     void slot_Export();
@@ -83,7 +88,8 @@ public slots:
     void slot_NewSelector();
     void slot_NewPixmap(QPixmap);
     void slot_RepetitionAccepted();
-
+    void slot_NewHyperMILLFile();
+    void slot_ExecFile();
 };
 
 #endif // TAB_PROJECT_H

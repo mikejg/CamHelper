@@ -111,6 +111,9 @@ QComboBox{color:rgb(192,192,192);
      <property name="spacing">
       <number>0</number>
      </property>
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
      <item>
       <spacer name="horizontalSpacer_Nullpunktverschiebung">
        <property name="orientation">
@@ -261,6 +264,9 @@ QComboBox{color:rgb(192,192,192);
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Messrichtung">
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
      <item>
       <widget class="QLabel" name="label_2">
        <property name="maximumSize">
@@ -348,6 +354,9 @@ QComboBox{color:rgb(192,192,192);
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Wert">
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
      <item>
       <widget class="QLabel" name="label_Wert">
        <property name="minimumSize">
@@ -374,7 +383,7 @@ QComboBox{color:rgb(192,192,192);
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_Wert">
+      <widget class="MLineEdit" name="lineEdit_Wert">
        <property name="maximumSize">
         <size>
          <width>75</width>
@@ -412,6 +421,9 @@ QComboBox{color:rgb(192,192,192);
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_DFA">
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
      <item>
       <widget class="QLabel" name="label_DFA">
        <property name="minimumSize">
@@ -432,7 +444,7 @@ QComboBox{color:rgb(192,192,192);
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_DFA">
+      <widget class="MLineEdit" name="lineEdit_DFA">
        <property name="maximumSize">
         <size>
          <width>75</width>
@@ -464,6 +476,9 @@ QComboBox{color:rgb(192,192,192);
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_TSA">
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
      <item>
       <widget class="QLabel" name="label_TSA">
        <property name="minimumSize">
@@ -484,7 +499,7 @@ QComboBox{color:rgb(192,192,192);
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_TSA">
+      <widget class="MLineEdit" name="lineEdit_TSA">
        <property name="maximumSize">
         <size>
          <width>75</width>
@@ -551,9 +566,14 @@ QComboBox{color:rgb(192,192,192);
  </widget>
  <customwidgets>
   <customwidget>
+   <class>MLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">Classes/mlineedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>MComboBox</class>
    <extends>QComboBox</extends>
-   <header location="global">Classes/mcombobox.h</header>
+   <header>Classes/mcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

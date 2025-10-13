@@ -51,7 +51,7 @@ void TP_Base::check_Clipboard(QString string_Text)
 
 }
 
-void TP_Base::check_LineEdit(QLineEdit* lineEdit, bool bool_Unsigned)
+/*void TP_Base::check_LineEdit(QLineEdit* lineEdit, bool bool_Unsigned)
 {
     double double_Value;
     QString string_Text = lineEdit->text();
@@ -79,7 +79,7 @@ void TP_Base::check_LineEdit(QLineEdit* lineEdit, bool bool_Unsigned)
         palette.setColor(QPalette::Base, Qt::darkRed);
     }
     lineEdit->setPalette(palette);
-}
+}*/
 
 QString TP_Base::filter_Value(QString string)
 {

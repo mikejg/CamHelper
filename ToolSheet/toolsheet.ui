@@ -13,13 +13,19 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QTableView" name="tableView_ToolSheet">
      <property name="styleSheet">
-      <string notr="true">QTableView{ border: 1px  solid;
+      <string notr="true">QTableView{background:rgba(0,0,0,168); 
+                     border: 1px  solid;
                       border-color: rgb(128, 128, 192);
 					  border-radius: 10px;}
+
+QHeaderView::section:first {border-top-left-radius: 8px;} /* Obere linke Ecke abrunden */
 
 QScrollBar:vertical {
     border: 1px solid #999999;
@@ -43,7 +49,21 @@ QScrollBar::add-line:vertical {
 QScrollBar::sub-line:vertical {
     border: none;
     background: none;
-}</string>
+}
+
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+    border: none;
+    background: none;
+    color: none;
+}
+
+QLineEdit{color:rgb(160,160,160);
+                  background-color: rgba(255, 255, 255,32);
+                  border-radius:3px;}
+QLineEdit:focus{color:rgb(192,192,192);
+                             border: 1px solid;
+                             border-color: rgb(0, 128, 0);
+                            selection-background-color: rgb(40, 76, 117);}</string>
      </property>
      <attribute name="horizontalHeaderStretchLastSection">
       <bool>true</bool>

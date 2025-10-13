@@ -8,10 +8,22 @@ TP_Kante::TP_Kante(QWidget *parent) :
     ui->setupUi(this);
     clipboard = QApplication::clipboard();
 
-    palette = ui->lineEdit_Wert->palette();
+    /*palette = ui->lineEdit_Wert->palette();
     backroundColor = palette.color(QPalette::Base);
     palette.setColor(QPalette::Base, Qt::darkRed);
-    ui->lineEdit_Wert->setPalette(palette);
+    ui->lineEdit_Wert->setPalette(palette);*/
+
+    ui->lineEdit_Wert->set_TextNecessary(true);
+    ui->lineEdit_Wert->state = MLineEdit::Digi;
+    ui->lineEdit_Wert->check();
+
+    ui->lineEdit_DFA->set_TextNecessary(true);
+    ui->lineEdit_DFA->state = MLineEdit::Digi;
+    ui->lineEdit_DFA->check();
+
+    ui->lineEdit_TSA->set_TextNecessary(true);
+    ui->lineEdit_TSA->state = MLineEdit::Digi;
+    ui->lineEdit_TSA->check();
 
     ui->lineEdit_Wert->installEventFilter(this);
     ui->lineEdit_DFA->installEventFilter(this);
@@ -108,14 +120,14 @@ void TP_Kante::slot_AxesSignsChanged(QString str)
 
 bool TP_Kante::eventFilter(QObject *object, QEvent *ev)
 {   
-    if(object == ui->lineEdit_DFA)
+    /*if(object == ui->lineEdit_DFA)
         check_LineEdit(ui->lineEdit_DFA, true);
 
     if(object == ui->lineEdit_Wert)
        check_LineEdit(ui->lineEdit_Wert);
 
     if(object == ui->lineEdit_TSA)
-        check_LineEdit(ui->lineEdit_TSA, true);
+        check_LineEdit(ui->lineEdit_TSA, true);*/
 
     if(object == ui->lineEdit_Wert)
         eventFilter_Wert(ev);

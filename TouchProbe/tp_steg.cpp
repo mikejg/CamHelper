@@ -8,13 +8,28 @@ TP_Steg::TP_Steg(QWidget *parent) :
     ui->setupUi(this);
     ui->lineEdit_W->installEventFilter(this);
     ui->lineEdit_DFA->installEventFilter(this);
-    ui->lineEdit_TSA->installEventFilter(this);
     ui->lineEdit_DZ->installEventFilter(this);
 
-    palette = ui->lineEdit_W->palette();
+    ui->lineEdit_W->set_TextNecessary(true);
+    ui->lineEdit_W->state = MLineEdit::Digi;
+    ui->lineEdit_W->check();
+
+    ui->lineEdit_DFA->set_TextNecessary(true);
+    ui->lineEdit_DFA->state = MLineEdit::Digi;
+    ui->lineEdit_DFA->check();
+
+    ui->lineEdit_TSA->set_TextNecessary(true);
+    ui->lineEdit_TSA->state = MLineEdit::Digi;
+    ui->lineEdit_TSA->check();
+
+    ui->lineEdit_DZ->set_TextNecessary(true);
+    ui->lineEdit_DZ->state = MLineEdit::Digi;
+    ui->lineEdit_DZ->check();
+
+    /*palette = ui->lineEdit_W->palette();
     backroundColor = palette.color(QPalette::Base);
     palette.setColor(QPalette::Base, Qt::darkRed);
-    ui->lineEdit_W->setPalette(palette);
+    ui->lineEdit_W->setPalette(palette);*/
 
     tp_HighLighter = new TP_HighLighter(ui->textEdit_Anfahren->document());
     tp_HighLighter->set_TextEdit(ui->textEdit_Anfahren);
@@ -92,26 +107,12 @@ void TP_Steg::slot_AxesChanged(QString str)
 
 bool TP_Steg::eventFilter(QObject *object, QEvent *ev)
 {
-    //Überprüfe ob sich der Inhalt von LineEdit_W in ein double konvertieren läss.
-    //Wenn das fehlschlägt setze den Hintergrund rot
-
-    if(object == ui->lineEdit_DFA)
-        check_LineEdit(ui->lineEdit_DFA, true);
-
-    if(object == ui->lineEdit_TSA)
-        check_LineEdit(ui->lineEdit_TSA, true);
-
-    if(object == ui->lineEdit_DZ)
-        check_LineEdit(ui->lineEdit_DZ, true);
-
-    if(object == ui->lineEdit_W)
-       check_LineEdit(ui->lineEdit_W, true);
-
     if(object == ui->lineEdit_W)
         eventFilter_Wert(ev);
 
     if(object == ui->lineEdit_DFA)
         eventFilter_DFA(ev);
+
     if(object == ui->lineEdit_DZ)
         eventFilter_DZ(ev);
     return false;

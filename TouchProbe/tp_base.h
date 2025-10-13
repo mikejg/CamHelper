@@ -27,12 +27,12 @@ protected:
     QString  string_X;
     QString  string_Y;
     QString  string_Z;
-    QPalette palette;
+    //QPalette palette;
     QColor backroundColor;
 
     QStringList frame_HeaderLine();
     QString     filter_Value(QString);
-    void check_LineEdit(QLineEdit*, bool bool_Unsigned = false);
+    //void check_LineEdit(QLineEdit*, bool bool_Unsigned = false);
 
 public:
     explicit TP_Base(QWidget *parent = nullptr);

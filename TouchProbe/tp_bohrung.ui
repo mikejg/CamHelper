@@ -117,6 +117,9 @@ QComboBox{color:rgb(192,192,192);
      <property name="spacing">
       <number>0</number>
      </property>
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
      <item>
       <spacer name="horizontalSpacer_Nullpunktverschiebung">
        <property name="orientation">
@@ -164,6 +167,9 @@ QComboBox{color:rgb(192,192,192);
     <layout class="QHBoxLayout" name="horizontalLayout_Aktive_NPV">
      <property name="spacing">
       <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
      </property>
      <item>
       <spacer name="horizontalSpacer">
@@ -270,6 +276,9 @@ QComboBox{color:rgb(192,192,192);
      <property name="spacing">
       <number>0</number>
      </property>
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
      <item>
       <widget class="QLabel" name="label_Durchmesser">
        <property name="enabled">
@@ -293,7 +302,7 @@ QComboBox{color:rgb(192,192,192);
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_Durchmesser">
+      <widget class="MLineEdit" name="lineEdit_Durchmesser">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -335,7 +344,10 @@ QComboBox{color:rgb(192,192,192);
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Alpha">
      <property name="spacing">
-      <number>0</number>
+      <number>1</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
      </property>
      <item>
       <widget class="QLabel" name="label_Alpha">
@@ -403,6 +415,9 @@ QComboBox{color:rgb(192,192,192);
     <layout class="QHBoxLayout" name="horizontalLayout_Schutzzone">
      <property name="spacing">
       <number>2</number>
+     </property>
+     <property name="bottomMargin">
+      <number>1</number>
      </property>
      <item>
       <widget class="QLabel" name="label_Schutzzone">
@@ -487,6 +502,9 @@ QComboBox{color:rgb(192,192,192);
      <property name="spacing">
       <number>0</number>
      </property>
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
      <item>
       <widget class="QLabel" name="label_DFA">
        <property name="enabled">
@@ -554,6 +572,9 @@ QComboBox{color:rgb(192,192,192);
      <property name="spacing">
       <number>0</number>
      </property>
+     <property name="bottomMargin">
+      <number>1</number>
+     </property>
      <item>
       <widget class="QLabel" name="label_TSA">
        <property name="enabled">
@@ -580,7 +601,7 @@ QComboBox{color:rgb(192,192,192);
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_TSA">
+      <widget class="MLineEdit" name="lineEdit_TSA">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -662,9 +683,14 @@ QComboBox{color:rgb(192,192,192);
  </widget>
  <customwidgets>
   <customwidget>
+   <class>MLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">Classes/mlineedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>MComboBox</class>
    <extends>QComboBox</extends>
-   <header location="global">Classes/mcombobox.h</header>
+   <header>Classes/mcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

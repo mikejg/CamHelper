@@ -5,6 +5,15 @@ MDoubleSpinBox::MDoubleSpinBox(QWidget *parent) : QDoubleSpinBox(parent)
     connect(this, SIGNAL(valueChanged(double)), this, SLOT(slot_ValueChanged(double)));
 }
 
+bool MDoubleSpinBox::check()
+{
+    //Wenn der Wert 0 ist und bool_Zero auf false gesetzt ist
+    //gibe false zurück.
+    if(this->value() == 0 && !bool_Zero)
+        return false;
+    return true;
+}
+
 void MDoubleSpinBox::set_Null()
 {
     setStyleSheet("color:rgb(255,0,0);");
@@ -13,7 +22,9 @@ void MDoubleSpinBox::set_Null()
 
 void MDoubleSpinBox::slot_ValueChanged(double d)
 {
-    if(d == 0)
+    //Wenn der Wert 0 ist und bool_Zero auf false gesetzt ist
+    //färbe die Spinbox Rot ein
+    if(d == 0 && !bool_Zero)
         setStyleSheet("QDoubleSpinBox{color:rgb(255,0,0);}\n"
                       "QDoubleSpinBox:focus{color:rgb(255,0,0);"
                       "border: 1px solid;"

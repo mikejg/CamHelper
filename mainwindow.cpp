@@ -52,7 +52,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->toolButton_Open, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_ToolList, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_ToolMagazin, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
-    connect(ui->toolButton_MainProgramm, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_TouchProbe, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_New, SIGNAL(clicked()), this, SLOT(slot_NewProject()));
     connect(ui->toolButton_Check, SIGNAL(clicked()), this, SLOT(slot_CheckFiles()));
@@ -61,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->tab_Init, SIGNAL(sig_Clicked(QString)), this, SLOT(slot_OpenProject(QString)));
     connect(ui->tab_Project, SIGNAL(sig_ExportTouchprobe()),
             ui->tab_Touchprobe, SLOT(slot_ExportTouchprobe()));
+    connect(ui->tab_Project, SIGNAL(sig_ShowMainProgramm()), this, SLOT(slot_ShowMainProgramm()));
 
     QTimer::singleShot(500, this, SLOT(slot_InitApp()));
 }
@@ -92,9 +92,8 @@ void MainWindow::slot_DialogPrintFinished(int result)
 void MainWindow::slot_InitApp()
 {
     ui->toolButton_Project->setEnabled(false);
-    ui->toolButton_MainProgramm->setEnabled(false);
     ui->toolButton_ToolList->setEnabled(false);
-    ui->toolButton_ToolMagazin->setEnabled(false);
+    ui->toolButton_TouchProbe->setEnabled(false);
 
     if(dialog_Settings->checkSettings())
         logging->successful("Settings OK");
@@ -140,11 +139,6 @@ void MainWindow::slot_InitApp()
 
     ui->tab_Touchprobe->set_Logging(logging);
     ui->tab_Touchprobe->insert_Item();
-
-    ui->toolButton_Project->setEnabled(true);
-    ui->toolButton_MainProgramm->setEnabled(true);
-    ui->toolButton_ToolList->setEnabled(true);
-    ui->toolButton_ToolMagazin->setEnabled(true);
 }
 
 void MainWindow::slot_NewProject()
@@ -215,6 +209,9 @@ void MainWindow::slot_NewProject()
     ui->tab_Touchprobe->set_ProjectData(projectData);
     ui->tab_Touchprobe->insert_Item(projectData->list_TouchProbe);
     ui->stackedWidget->setCurrentWidget(ui->tab_Project);
+    ui->toolButton_Project->setEnabled(true);
+    ui->toolButton_ToolList->setEnabled(true);
+    ui->toolButton_TouchProbe->setEnabled(true);
 }
 
 void MainWindow::slot_NewToolList()
@@ -231,6 +228,9 @@ void MainWindow::slot_OpenProject(QString string_ProjectId)
     ui->tab_Touchprobe->set_ProjectData(projectData);
     ui->tab_Touchprobe->insert_Item(projectData->list_TouchProbe);
     ui->stackedWidget->setCurrentWidget(ui->tab_Project);                   //Zeige Tab_Projekt an
+    ui->toolButton_Project->setEnabled(true);
+    ui->toolButton_ToolList->setEnabled(true);
+    ui->toolButton_TouchProbe->setEnabled(true);
 }
 
 void MainWindow::slot_OpenProject(QString string_Name, QString string_Tension)
@@ -242,6 +242,9 @@ void MainWindow::slot_OpenProject(QString string_Name, QString string_Tension)
     ui->tab_Touchprobe->set_ProjectData(projectData);
     ui->tab_Touchprobe->insert_Item(projectData->list_TouchProbe);
     ui->stackedWidget->setCurrentWidget(ui->tab_Project);                   //Zeige Tab_Projekt an
+    ui->toolButton_Project->setEnabled(true);
+    ui->toolButton_ToolList->setEnabled(true);
+    ui->toolButton_TouchProbe->setEnabled(true);
 }
 
 void MainWindow::slot_ToolButtonClicked()
@@ -290,13 +293,14 @@ void MainWindow::slot_ToolButtonClicked()
     if(sender() == ui->toolButton_ToolMagazin)
         ui->stackedWidget->setCurrentWidget(ui->tab_Magazin);
 
-    if(sender() == ui->toolButton_MainProgramm)
-        ui->stackedWidget->setCurrentWidget(ui->tab_MainProgramm);
-
     if(sender() == ui->toolButton_TouchProbe)
         ui->stackedWidget->setCurrentWidget(ui->tab_Touchprobe);
 }
 
+void MainWindow::slot_ShowMainProgramm()
+{
+    ui->stackedWidget->setCurrentWidget(ui->tab_MainProgramm);
+}
 void MainWindow::slot_ToolListToggled(bool bool_Toggle)
 {
     //if(bool_IgnoreToggle) return;   //Ignoriere das Umschalten

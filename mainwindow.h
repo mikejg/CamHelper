@@ -64,5 +64,6 @@ public slots:
     void slot_NewToolList();
     void slot_NewProject();
     void slot_CheckFiles();
+    void slot_ShowMainProgramm();
 };
 #endif // MAINWINDOW_H

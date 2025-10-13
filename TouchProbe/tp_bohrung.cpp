@@ -7,13 +7,20 @@ TP_Bohrung::TP_Bohrung(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    palette = ui->lineEdit_Durchmesser->palette();
+    ui->lineEdit_Durchmesser->set_TextNecessary(true);
+    ui->lineEdit_Durchmesser->state = MLineEdit::Digi;
+    ui->lineEdit_Durchmesser->check();
+
+    ui->lineEdit_TSA->set_TextNecessary(true);
+    ui->lineEdit_TSA->state = MLineEdit::Digi;
+    ui->lineEdit_TSA->check();
+
+    /*palette = ui->lineEdit_Durchmesser->palette();
     backroundColor = palette.color(QPalette::Base);
     palette.setColor(QPalette::Base, Qt::darkRed);
-    ui->lineEdit_Durchmesser->setPalette(palette);
+    ui->lineEdit_Durchmesser->setPalette(palette);*/
 
     ui->lineEdit_Durchmesser->installEventFilter(this);
-     ui->lineEdit_TSA->installEventFilter(this);
 
     clipboard = QApplication::clipboard();
     tp_HighLighter = new TP_HighLighter(ui->textEdit_Anfahren->document());
@@ -35,9 +42,6 @@ void TP_Bohrung::setPixmap()
 
 bool TP_Bohrung::eventFilter(QObject *object, QEvent *ev)
 {
-    if(object == ui->lineEdit_TSA)
-        check_LineEdit(ui->lineEdit_TSA, true);
-
     if(object == ui->lineEdit_Durchmesser)
         eventFilter_Durchmesser(ev);
     return false;
@@ -45,8 +49,6 @@ bool TP_Bohrung::eventFilter(QObject *object, QEvent *ev)
 
 void TP_Bohrung::eventFilter_Durchmesser(QEvent* event)
 {
-    check_LineEdit(ui->lineEdit_Durchmesser, true);
-
     if (event->type() == QEvent::FocusIn)
     {
         emit sig_NewPixmap(QPixmap(":/Icons/TouchProbe/Bohrung/Bohrung02.png"));

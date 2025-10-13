@@ -492,6 +492,9 @@
            <height>85</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <layout class="QHBoxLayout" name="horizontalLayout_Cyclus">
           <item>
            <widget class="QToolButton" name="toolButton_Ausrichten">

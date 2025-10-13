@@ -8,17 +8,53 @@ TP_Ebenheit::TP_Ebenheit(QWidget *parent) :
     ui->setupUi(this);
     clipboard = QApplication::clipboard();
 
-    palette = ui->lineEdit_Vertrauensbereich->palette();
+    ui->lineEdit_ZEbene->set_TextNecessary(true);
+    ui->lineEdit_ZEbene->state = MLineEdit::Digi;
+    ui->lineEdit_ZEbene->check();
+
+    ui->lineEdit_Vertrauensbereich->set_TextNecessary(true);
+    ui->lineEdit_Vertrauensbereich->state = MLineEdit::Digi;
+    ui->lineEdit_Vertrauensbereich->check();
+
+    ui->lineEdit_Punkt1X->set_TextNecessary(true);
+    ui->lineEdit_Punkt1X->state = MLineEdit::Digi;
+    ui->lineEdit_Punkt1X->check();
+
+    ui->lineEdit_Punkt1Y->set_TextNecessary(true);
+    ui->lineEdit_Punkt1Y->state = MLineEdit::Digi;
+    ui->lineEdit_Punkt1Y->check();
+
+    ui->lineEdit_Punkt2X->set_TextNecessary(true);
+    ui->lineEdit_Punkt2X->state = MLineEdit::Digi;
+    ui->lineEdit_Punkt2X->check();
+
+    ui->lineEdit_Punkt2Y->set_TextNecessary(true);
+    ui->lineEdit_Punkt2Y->state = MLineEdit::Digi;
+    ui->lineEdit_Punkt2Y->check();
+
+    ui->lineEdit_Punkt3X->state = MLineEdit::Digi;
+    ui->lineEdit_Punkt3X->check();
+
+    ui->lineEdit_Punkt3Y->state = MLineEdit::Digi;
+    ui->lineEdit_Punkt3Y->check();
+
+    ui->lineEdit_Punkt4X->state = MLineEdit::Digi;
+    ui->lineEdit_Punkt4X->check();
+
+    ui->lineEdit_Punkt4Y->state = MLineEdit::Digi;
+    ui->lineEdit_Punkt4Y->check();
+
+    /*palette = ui->lineEdit_Vertrauensbereich->palette();
     backroundColor = palette.color(QPalette::Base);
     palette.setColor(QPalette::Base, Qt::darkRed);
-    ui->lineEdit_Vertrauensbereich->setPalette(palette);
+    ui->lineEdit_Vertrauensbereich->setPalette(palette);*/
 
-    ui->lineEdit_ZEbene->installEventFilter(this);
+    /*ui->lineEdit_ZEbene->installEventFilter(this);
     ui->lineEdit_Vertrauensbereich->installEventFilter(this);
     ui->lineEdit_Punkt1X->installEventFilter(this);
     ui->lineEdit_Punkt1Y->installEventFilter(this);
     ui->lineEdit_Punkt2X->installEventFilter(this);
-    ui->lineEdit_Punkt2Y->installEventFilter(this);
+    ui->lineEdit_Punkt2Y->installEventFilter(this);*/
 
     connect(ui->toolButton_Paste, SIGNAL(released()),this, SLOT(slot_setTextFromCilpBoard()));
     connect(ui->toolButton_PasteP1, SIGNAL(released()),this, SLOT(slot_setTextFromCilpBoard()));
@@ -34,7 +70,7 @@ TP_Ebenheit::~TP_Ebenheit()
 
 
 
-bool TP_Ebenheit::eventFilter(QObject *object, QEvent *event)
+/*bool TP_Ebenheit::eventFilter(QObject *object, QEvent *event)
 {
     if(object == ui->lineEdit_Vertrauensbereich)
         check_LineEdit(ui->lineEdit_Vertrauensbereich);
@@ -61,7 +97,7 @@ bool TP_Ebenheit::eventFilter(QObject *object, QEvent *event)
     {}
 
     return false;
-}
+}*/
 
 Struct_Ebenheit TP_Ebenheit::get_Data()
 {

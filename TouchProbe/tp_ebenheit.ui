@@ -30,7 +30,27 @@ QLineEdit:focus{color:rgb(192,192,192);
 
 QComboBox{color:rgb(192,192,192);
                         background-color: rgba(255, 255, 255,32);
-                         border-radius:3px;}</string>
+                         border-radius:3px;}
+
+QCheckBox{color:rgb(192,192,192);
+                      background-color: rgba(255, 255, 255,0);}
+
+QCheckBox::indicator {
+    width: 10px; /* Adjust size as needed */
+    height: 10px; /* Adjust size as needed */
+    border-radius: 3px; /* Makes it round (half of width/height) */
+	border: 3px solid #808080;
+   background-color: rgb(128,128,128);
+}
+
+QCheckBox::indicator:checked {
+	background-color: #80FF80; /* Hintergrundfarbe wenn gecheckt (Beispiel: Grün) */
+    border-radius:3px;
+	border: 3px solid #808080;
+   /*background-image: url(:/Icons/Main/CheckBox_On.png);*/
+	/*background-color: rgb(128, 128, 192);
+    border: 1px solid gray; /* Blue border when checked */
+}</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -96,7 +116,13 @@ QComboBox{color:rgb(192,192,192);
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_ZEbene">
      <property name="spacing">
+      <number>5</number>
+     </property>
+     <property name="rightMargin">
       <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
      </property>
      <item>
       <widget class="QLabel" name="label_ZEbene">
@@ -125,7 +151,7 @@ QComboBox{color:rgb(192,192,192);
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_ZEbene">
+      <widget class="MLineEdit" name="lineEdit_ZEbene">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -166,6 +192,9 @@ QComboBox{color:rgb(192,192,192);
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_V_Bereich">
      <property name="spacing">
+      <number>5</number>
+     </property>
+     <property name="rightMargin">
       <number>0</number>
      </property>
      <item>
@@ -195,7 +224,7 @@ QComboBox{color:rgb(192,192,192);
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_Vertrauensbereich">
+      <widget class="MLineEdit" name="lineEdit_Vertrauensbereich">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -256,7 +285,13 @@ QComboBox{color:rgb(192,192,192);
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Punkt1X">
      <property name="spacing">
+      <number>5</number>
+     </property>
+     <property name="rightMargin">
       <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
      </property>
      <item>
       <widget class="QLabel" name="label_Punkt1X">
@@ -285,7 +320,7 @@ QComboBox{color:rgb(192,192,192);
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_Punkt1X">
+      <widget class="MLineEdit" name="lineEdit_Punkt1X">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -326,7 +361,13 @@ QComboBox{color:rgb(192,192,192);
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Punkt1Y">
      <property name="spacing">
+      <number>5</number>
+     </property>
+     <property name="rightMargin">
       <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
      </property>
      <item>
       <widget class="QLabel" name="label_Punkt1Y">
@@ -346,16 +387,19 @@ QComboBox{color:rgb(192,192,192);
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Expanding</enum>
+       </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
+         <width>130</width>
          <height>20</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_Punkt1Y">
+      <widget class="MLineEdit" name="lineEdit_Punkt1Y">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -389,7 +433,7 @@ QComboBox{color:rgb(192,192,192);
        </property>
        <property name="minimumSize">
         <size>
-         <width>24</width>
+         <width>18</width>
          <height>1</height>
         </size>
        </property>
@@ -404,6 +448,11 @@ QComboBox{color:rgb(192,192,192);
          <width>0</width>
          <height>0</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <kerning>false</kerning>
+        </font>
        </property>
        <property name="text">
         <string/>
@@ -437,7 +486,10 @@ QComboBox{color:rgb(192,192,192);
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Punkt2X">
      <property name="spacing">
-      <number>0</number>
+      <number>5</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
      </property>
      <item>
       <widget class="QLabel" name="label_Punkt2X">
@@ -466,7 +518,7 @@ QComboBox{color:rgb(192,192,192);
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_Punkt2X">
+      <widget class="MLineEdit" name="lineEdit_Punkt2X">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -507,7 +559,7 @@ QComboBox{color:rgb(192,192,192);
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Punkt2Y">
      <property name="spacing">
-      <number>0</number>
+      <number>5</number>
      </property>
      <item>
       <widget class="QLabel" name="label_Punkt2Y">
@@ -529,14 +581,14 @@ QComboBox{color:rgb(192,192,192);
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
+         <width>130</width>
          <height>20</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_Punkt2Y">
+      <widget class="MLineEdit" name="lineEdit_Punkt2Y">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -564,7 +616,7 @@ QComboBox{color:rgb(192,192,192);
       <widget class="QCheckBox" name="checkBox_Jump2">
        <property name="minimumSize">
         <size>
-         <width>24</width>
+         <width>18</width>
          <height>0</height>
         </size>
        </property>
@@ -594,7 +646,10 @@ QComboBox{color:rgb(192,192,192);
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Punkt3X">
      <property name="spacing">
-      <number>0</number>
+      <number>5</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
      </property>
      <item>
       <widget class="QLabel" name="label_Punkt3X">
@@ -623,7 +678,7 @@ QComboBox{color:rgb(192,192,192);
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_Punkt3X">
+      <widget class="MLineEdit" name="lineEdit_Punkt3X">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -664,7 +719,7 @@ QComboBox{color:rgb(192,192,192);
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Punkt3Y">
      <property name="spacing">
-      <number>0</number>
+      <number>5</number>
      </property>
      <item>
       <widget class="QLabel" name="label_Punkt3Y">
@@ -686,14 +741,14 @@ QComboBox{color:rgb(192,192,192);
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
+         <width>130</width>
          <height>20</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_Punkt3Y">
+      <widget class="MLineEdit" name="lineEdit_Punkt3Y">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -721,7 +776,7 @@ QComboBox{color:rgb(192,192,192);
       <widget class="QCheckBox" name="checkBox_Jump3">
        <property name="minimumSize">
         <size>
-         <width>24</width>
+         <width>18</width>
          <height>0</height>
         </size>
        </property>
@@ -751,7 +806,10 @@ QComboBox{color:rgb(192,192,192);
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Punkt4X">
      <property name="spacing">
-      <number>0</number>
+      <number>5</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
      </property>
      <item>
       <widget class="QLabel" name="label_Punkt4X">
@@ -780,7 +838,7 @@ QComboBox{color:rgb(192,192,192);
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_Punkt4X">
+      <widget class="MLineEdit" name="lineEdit_Punkt4X">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -821,7 +879,7 @@ QComboBox{color:rgb(192,192,192);
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_Punkt4Y">
      <property name="spacing">
-      <number>0</number>
+      <number>5</number>
      </property>
      <item>
       <widget class="QLabel" name="label_Punkt4Y">
@@ -850,7 +908,7 @@ QComboBox{color:rgb(192,192,192);
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_Punkt4Y">
+      <widget class="MLineEdit" name="lineEdit_Punkt4Y">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -896,9 +954,14 @@ QComboBox{color:rgb(192,192,192);
  </widget>
  <customwidgets>
   <customwidget>
+   <class>MLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">Classes/mlineedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>MComboBox</class>
    <extends>QComboBox</extends>
-   <header location="global">Classes/mcombobox.h</header>
+   <header>Classes/mcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

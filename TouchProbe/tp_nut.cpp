@@ -9,12 +9,23 @@ TP_Nut::TP_Nut(QWidget *parent) :
 
     ui->lineEdit_W->installEventFilter(this);
     ui->lineEdit_TSA->installEventFilter(this);
-    ui->lineEdit_DFA->installEventFilter(this);
 
-    palette = ui->lineEdit_W->palette();
+    /*palette = ui->lineEdit_W->palette();
     backroundColor = palette.color(QPalette::Base);
     palette.setColor(QPalette::Base, Qt::darkRed);
-    ui->lineEdit_W->setPalette(palette);
+    ui->lineEdit_W->setPalette(palette);*/
+
+    ui->lineEdit_W->set_TextNecessary(true);
+    ui->lineEdit_W->state = MLineEdit::Digi;
+    ui->lineEdit_W->check();
+
+    ui->lineEdit_DFA->set_TextNecessary(true);
+    ui->lineEdit_DFA->state = MLineEdit::Digi;
+    ui->lineEdit_DFA->check();
+
+    ui->lineEdit_TSA->set_TextNecessary(true);
+    ui->lineEdit_TSA->state = MLineEdit::Digi;
+    ui->lineEdit_TSA->check();
 
     tp_HighLighter = new TP_HighLighter(ui->textEdit_Anfahren->document());
     tp_HighLighter->set_TextEdit(ui->textEdit_Anfahren);
@@ -55,23 +66,6 @@ void TP_Nut::set_Data(Struct_Nut struct_Nut)
 
 bool TP_Nut::eventFilter(QObject *object, QEvent *ev)
 {
-    //Überprüfe ob sich der Inhalt von LineEdit_W in ein double konvertieren läss.
-    //Wenn das fehlschlägt setze den Hintergrund rot
-    /*bool bool_ok;
-    ui->lineEdit_W->text().toDouble(&bool_ok);
-    if(bool_ok)
-        palette_W.setColor(QPalette::Base, backroundColor);
-    else
-        palette_W.setColor(QPalette::Base, Qt::darkRed);
-    ui->lineEdit_W->setPalette(palette_W);*/
-
-    if(object == ui->lineEdit_W)
-        check_LineEdit(ui->lineEdit_W, true);
-    if(object == ui->lineEdit_DFA)
-        check_LineEdit(ui->lineEdit_DFA, true);
-    if(object == ui->lineEdit_TSA)
-        check_LineEdit(ui->lineEdit_TSA, true);
-
     if(object == ui->lineEdit_W && ev->type() == QEvent::FocusIn)
         emit sig_NewPixmap(QPixmap(":/Icons/TouchProbe/Nut/Nut_W.png"));
 
@@ -80,20 +74,6 @@ bool TP_Nut::eventFilter(QObject *object, QEvent *ev)
 
     return false;
 }
-
-/*
-void TP_Nut::eventFilter_Wert(QEvent* event)
-{
-    if (event->type() == QEvent::FocusIn)
-    {
-        if(ui->comboBox_Messachse->currentText() == "X")
-            emit sig_NewPixmap(QPixmap(":/Icons/TouchProbe/Nut/Nut_X.png"));
-
-        if(ui->comboBox_Messachse->currentText() == "Y")
-            emit sig_NewPixmap(QPixmap(":/Icons/TouchProbe/Nut/Steg_Y.png"));
-    }
-}
-*/
 
 void TP_Nut::eventFilter_TSA(QEvent* event)
 {
