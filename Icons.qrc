@@ -92,5 +92,6 @@
         <file>Icons/Main/checklist.png</file>
         <file>Icons/Project/MainProgramm.png</file>
         <file>Icons/Project/File_Open.png</file>
+        <file>Icons/Project/save.png</file>
     </qresource>
 </RCC>

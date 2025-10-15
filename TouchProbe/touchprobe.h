@@ -6,7 +6,7 @@
 
 #include "tp_highlighter.h"
 #include "tp_item.h"
-#include "../classes/struct.h"
+#include "../Classes/struct.h"
 #include "../Classes/mfile.h"
 #include "../Logging/logging.h"
 #include "../Project/project.h"

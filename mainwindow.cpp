@@ -207,6 +207,7 @@ void MainWindow::slot_NewProject()
     ui->tab_Project->set_ProjectData(projectData);
     ui->tab_ToolSheet->showTable(projectData);
     ui->tab_Touchprobe->set_ProjectData(projectData);
+    ui->tab_Touchprobe->clear();
     ui->tab_Touchprobe->insert_Item(projectData->list_TouchProbe);
     ui->stackedWidget->setCurrentWidget(ui->tab_Project);
     ui->toolButton_Project->setEnabled(true);
@@ -225,6 +226,7 @@ void MainWindow::slot_OpenProject(QString string_ProjectId)
     projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
     ui->tab_Project->set_ProjectData(projectData);                          //Zeige die Projektaten im Tab Projekt an
     ui->tab_ToolSheet->showTable(projectData);
+    ui->tab_Touchprobe->clear();
     ui->tab_Touchprobe->set_ProjectData(projectData);
     ui->tab_Touchprobe->insert_Item(projectData->list_TouchProbe);
     ui->stackedWidget->setCurrentWidget(ui->tab_Project);                   //Zeige Tab_Projekt an
@@ -239,6 +241,7 @@ void MainWindow::slot_OpenProject(QString string_Name, QString string_Tension)
     projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
     ui->tab_Project->set_ProjectData(projectData);                          //Zeige die Projektaten im Tab Projekt an
     ui->tab_ToolSheet->showTable(projectData);
+    ui->tab_Touchprobe->clear();
     ui->tab_Touchprobe->set_ProjectData(projectData);
     ui->tab_Touchprobe->insert_Item(projectData->list_TouchProbe);
     ui->stackedWidget->setCurrentWidget(ui->tab_Project);                   //Zeige Tab_Projekt an
