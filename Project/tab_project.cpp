@@ -62,6 +62,7 @@ Tab_Project::Tab_Project(QWidget *parent)
     connect(ui->toolButton_OpenFile, SIGNAL(released()), this, SLOT(slot_NewHyperMILLFile()));
     connect(ui->toolButton_ExecFile, SIGNAL(released()), this, SLOT(slot_ExecFile()));
     connect(ui->toolButton_MainProgramm, SIGNAL(released()), this, SIGNAL(sig_ShowMainProgramm()));
+    connect(ui->toolButton_Save, SIGNAL(released()), this, SLOT(slot_Save()));
 
     connect(dialog_Repetition, SIGNAL(accepted()), this, SLOT(slot_RepetitionAccepted()));
     connect(projectExport, SIGNAL(sig_Export_TouchProbe()), this, SIGNAL(sig_ExportTouchprobe()));
@@ -648,4 +649,23 @@ void Tab_Project::slot_ExecFile()
         return;
 
     QDesktopServices::openUrl(QUrl::fromLocalFile(url)); //(url, QUrl::TolerantMode));
+}
+
+void Tab_Project::slot_Save()
+{
+    if(!update_ProjectData())                               //Schreibe den Inhalt der Eingabefelder in ProjectData
+    {
+        stackedWidget->setCurrentWidget(log);               //Wenn die Felder Unfollständig sind schalte auf Tab_Log
+        return;                                             //brich den Export ab
+    }
+    if(dataBase->save(projectData))
+        log->successful("Project: " +
+                        projectData->name + "_" +
+                        projectData->state + "_" +
+                        projectData->tension + " erfolgreich gespeichert");
+    else
+        log->vailed("Project: " +
+                        projectData->name + "_" +
+                        projectData->state + "_" +
+                        projectData->tension + "konnte nicht gespeichert werden");
 }

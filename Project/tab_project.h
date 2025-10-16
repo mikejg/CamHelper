@@ -90,6 +90,8 @@ public slots:
     void slot_RepetitionAccepted();
     void slot_NewHyperMILLFile();
     void slot_ExecFile();
+    void slot_Save();
+
 };
 
 #endif // TAB_PROJECT_H

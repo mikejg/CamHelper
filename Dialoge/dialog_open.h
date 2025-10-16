@@ -40,7 +40,7 @@ public slots:
     void slot_NewProjectList(QStringList);
     void slot_NoTagsSelected();
 signals:
-    sig_OpenProject(QString, QString);
+    void sig_OpenProject(QString, QString);
 
 };
 
