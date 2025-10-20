@@ -242,7 +242,7 @@ void MainWindow::slot_OpenProject(QString string_Name, QString string_Tension)
     ui->tab_Project->set_ProjectData(projectData);                          //Zeige die Projektaten im Tab Projekt an
     ui->tab_ToolSheet->showTable(projectData);
     ui->tab_Touchprobe->clear();
-    ui->tab_Touchprobe->set_ProjectData(projectData);
+    ui->tab_Touchprobe->set_ProjectData(projectData);                       //Übergebe die Antastzyklen
     ui->tab_Touchprobe->insert_Item(projectData->list_TouchProbe);
     ui->stackedWidget->setCurrentWidget(ui->tab_Project);                   //Zeige Tab_Projekt an
     ui->toolButton_Project->setEnabled(true);
@@ -429,9 +429,9 @@ bool MainWindow::load_Programme(QStringList &stringList_Programme)
     dir.setNameFilters(filters);
 
     /* Variable die ich später noch brauche */
-    QString string_shortName;
-    bool bool_OK;
-    int int_I;  Q_UNUSED(int_I);
+    //QString string_shortName;
+    //bool bool_OK;
+    //int int_I;  Q_UNUSED(int_I);
 
     /* Lösche alle Programme aus stringList_Programme */
     stringList_Programme.clear();

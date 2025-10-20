@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog_ToolSearch</class>
+ <widget class="QDialog" name="Dialog_ToolSearch">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>268</width>
+    <height>401</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog#Dialog_ToolSearch{border-image: url(:/Icons/Main/Wallpaper5_klein.png) 0 0 0 0 stretch stretch;}
+QListWidget::indicator {
+    width: 12px; /* Größe der Checkbox anpassen */
+    height: 12px; /* Größe der Checkbox anpassen */
+    border-radius: 6px; /* Macht die Checkbox rund (die Hälfte von Breite/Höhe) */
+    border: 1px solid gray; /* Rahmen, wenn nicht angewählt */
+    background-color:rgba(0,0,0,0); /* Hintergrund, wenn nicht angewählt */
+}
+
+QListWidget::indicator:checked {
+    background-color: rgb(128,128,192); /* Blauer Punkt, wenn angewählt */
+    border: 3px solid gray; /* Blauer Rahmen, wenn angewählt */
+}
+
+QListWidget::indicator:hover {
+    border: 3px solid darkgray; /* Leichte Rahmenänderung beim Hovern */
+	background-color: rgb(128, 192, 128);
+    color:(255,0,0);
+}
+
+QListWidget::item {
+    color: rgb(160,160,160); /* Standard-Schriftfarbe für Listenelemente */
+}
+QListWidget::item:selected {
+	 background: rgba(0,0,0,0);
+    /*border: 1px solid #6a6ea9;*/
+}
+QListWidget::item:hover {
+    color:rgb(255,255,255);
+    background: rgb(128,192,128);
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QListWidget" name="listWidget_Tools">
+     <property name="styleSheet">
+      <string notr="true">QListWidget {color:rgb(224,224,224);
+                  background-color: rgb(80,80,112);
+                  border-radius:5px;
+      			 /*show-decoration-selected: 1; /* make the selection span the entire width of the view */
+}</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="lineEdit"/>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QStringListModel>
-
+#include "dialog_toolsearch.h"
 #include "dialog_tag.h"
 #include "../Classes/database.h"
 #include "../Classes/struct.h"
@@ -21,6 +21,7 @@ private:
     Ui::Dialog_Open *ui;
     DataBase* dataBase;
     Dialog_Tag* dialog_Tag;
+    Dialog_ToolSearch* dialog_ToolSearch;
     //Logging* logging;
     QStringList stringList_Projects;
     QStringList stringList_Model;

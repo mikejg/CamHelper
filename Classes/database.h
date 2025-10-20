@@ -46,10 +46,12 @@ public:
     QString             get_ProjectID(QString, QString);
     QStringList         get_ProjectFromTag(QString);    //Hole mir eine Liste aller Projecte mit dem gleichen Tag
     QStringList         get_ProjectList();              //Hole mir eine Liste aller ProjectNamen
+    QStringList         get_ProjectList(QString);       //Hole alle ProjectNamen mit dem Werkzeug
     Programm            get_Programm(QString, QString);
     QStringList         get_Tags();                     //Hole mir eine Liste mit den Tags
     QStringList         get_Tags(QString);              //Hole mir die Tags eines Projects
     QStringList         get_ToolData(QString);          //Hole mir die Werkzeugdaten aus der hyperMILL Datenbank
+    QStringList         get_Tools();
     void                get_Top100(ToolList*);          //Hole mir die 100 meist benutzten Werkzeuge
     QString             get_ToolLength(QString);        //Hole mir die Werkzeuglänge
     QString             get_TipLength(QString);         //Hole die Freistellänge

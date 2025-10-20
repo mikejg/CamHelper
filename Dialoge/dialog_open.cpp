@@ -9,12 +9,15 @@ Dialog_Open::Dialog_Open(QWidget *parent, DataBase* db) :
     dataBase = db;
 
     dialog_Tag = new Dialog_Tag(this, db);
+    dialog_ToolSearch = new Dialog_ToolSearch(this,db);
 
     connect(this, SIGNAL(accepted()), this, SLOT(slot_accepted()));
     connect(ui->lineEdit_Project, SIGNAL(textChanged(QString)), this, SLOT(slot_TextChanged(QString)));
     connect(ui->listView_Project, SIGNAL(clicked(QModelIndex)), this, SLOT(slot_Clicked(QModelIndex)));
     connect(ui->toolButton_Tags, SIGNAL(released()), this, SLOT(slot_TagsClicked()));
+    connect(ui->toolButton_Tool, SIGNAL(released()), dialog_ToolSearch, SLOT(show()));
     connect(dialog_Tag, SIGNAL(sig_NewProjectList(QStringList)), this, SLOT(slot_NewProjectList(QStringList)));
+    connect(dialog_ToolSearch, SIGNAL(sig_NewProjectList(QStringList)), this, SLOT(slot_NewProjectList(QStringList)));
     connect(dialog_Tag, SIGNAL(sig_NoTagsSelected()), this, SLOT(slot_NoTagsSelected()));
 }
 

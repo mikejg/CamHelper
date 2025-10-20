@@ -26,6 +26,7 @@ SOURCES += \
     Dialoge/dialog_settings.cpp \
     Dialoge/dialog_tag.cpp \
     Dialoge/dialog_tools.cpp \
+    Dialoge/dialog_toolsearch.cpp \
     Logging/logging.cpp \
     Logging/mhighlighter.cpp \
     Magazin/magazin.cpp \
@@ -81,6 +82,7 @@ HEADERS += \
     Dialoge/dialog_settings.h \
     Dialoge/dialog_tag.h \
     Dialoge/dialog_tools.h \
+    Dialoge/dialog_toolsearch.h \
     Logging/logging.h \
     Logging/mhighlighter.h \
     Magazin/magazin.h \
@@ -129,6 +131,7 @@ FORMS += \
     Dialoge/dialog_settings.ui \
     Dialoge/dialog_tag.ui \
     Dialoge/dialog_tools.ui \
+    Dialoge/dialog_toolsearch.ui \
     Magazin/magazin.ui \
     Project/pix_scrollarea.ui \
     Project/pix_scrollcontent.ui \

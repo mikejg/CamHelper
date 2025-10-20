@@ -10,7 +10,7 @@ class MComboBox : public QComboBox
 public:
     MComboBox(QWidget *parent = nullptr);
 
-    void wheelEvent(QWheelEvent *e) override;
+    //void wheelEvent(QWheelEvent *e) override;
     void set_Empty();
 public slots:
     void slot_CurrentTextChanged(QString);

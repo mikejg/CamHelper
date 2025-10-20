@@ -6,16 +6,16 @@ MComboBox::MComboBox(QWidget *parent) : QComboBox(parent)
     connect(this,SIGNAL(currentTextChanged(QString)), this, SLOT(slot_CurrentTextChanged(QString)));
 }
 
-void MComboBox::wheelEvent(QWheelEvent *e)
+/*void MComboBox::wheelEvent(QWheelEvent *e)
 {
     // Mausrad komplett ignorieren
-    /*
+
     if (this->hasFocus())
     {
         QComboBox::wheelEvent(e);
     }
-    */
-}
+
+}*/
 
 void MComboBox::set_Empty()
 {

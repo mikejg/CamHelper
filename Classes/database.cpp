@@ -611,6 +611,39 @@ QStringList DataBase::get_ProjectList()
     return stringList;
 }
 
+QStringList DataBase::get_ProjectList(QString string_TNumber)
+{
+    QStringList stringList;
+    QString string;
+    QSqlQuery query (main_DataBase);
+
+    //Suche nach dem Project in der Datenbank,
+    query.exec("SELECT Project.Name, Project.Tension "
+               "FROM NCTools_Project INNER JOIN Project "
+               "ON Project.id = Project_ID "
+               "WHERE T_Number = '" + string_TNumber + "';");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return stringList;
+    }
+
+    while (query.next())
+    {
+        string = query.value("Name").toString();
+        string = string + "_";
+        string = string + query.value("Tension").toString();
+
+        stringList.append(string);
+    }
+
+    return stringList;
+}
+
+
 bool DataBase::save(ProjectData* pd)
 {
     QSqlQuery query (main_DataBase);
@@ -1940,7 +1973,6 @@ bool DataBase::insert_Tool(Tool* tool, QString string_ProjectID, QString string_
 
 void DataBase::fill_ToolList(QString string_ProjectFullName, ToolList* toolList)
 {
-    qDebug() << Q_FUNC_INFO;
     QSqlQuery query (main_DataBase);
     //QString string_FullName = string_FullName + "_" + string_Clamping;
     Tool* tool;
@@ -1974,3 +2006,25 @@ void DataBase::fill_ToolList(QString string_ProjectFullName, ToolList* toolList)
         toolList->insert_Tool(tool);
     }
 }
+
+QStringList DataBase::get_Tools()
+{
+    qDebug() << Q_FUNC_INFO;
+    QStringList return_List;
+    QSqlQuery query (main_DataBase);
+
+    query.exec("SELECT T_Number FROM NCTool;");
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return return_List;
+    }
+
+    while(query.next())
+    {
+        return_List.append(query.value("T_Number").toString());
+    }
+    return return_List;
+}
+

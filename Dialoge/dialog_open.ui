@@ -125,6 +125,18 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QToolButton" name="toolButton_Tool">
+       <property name="text">
+        <string>...</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normalon>:/Icons/Project/tools.png</normalon>
+        </iconset>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

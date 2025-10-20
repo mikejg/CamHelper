@@ -14,6 +14,17 @@ struct RawPart
     QString y_Width;
     QString z_Height;
     QString z_RawPart;              //Z-Wert für Rohteil Oberkante
+
+    bool operator==(const RawPart& other) const {
+        return (x_Length  == other.x_Length &&
+                y_Width   == other.y_Width &&
+                z_Height  == other.z_Height &&
+                z_RawPart == other.z_RawPart);
+    }
+
+    bool operator!=(const RawPart& other) const {
+        return !(*this == other);
+    }
 };
 
 struct FinishPart
@@ -22,6 +33,16 @@ struct FinishPart
     QString x_Length;
     QString y_Width;
     QString z_Height;
+
+    bool operator==(const FinishPart& other) const {
+        return (x_Length  == other.x_Length &&
+                y_Width   == other.y_Width &&
+                z_Height  == other.z_Height);
+    }
+
+    bool operator!=(const FinishPart& other) const {
+        return !(*this == other);
+    }
 };
 
 struct ZeroPoint
@@ -31,6 +52,17 @@ struct ZeroPoint
     QString string_Y;
     QString string_Z;
     QString string_G;
+
+    bool operator==(const ZeroPoint& other) const {
+        return (string_X == other.string_X &&
+                string_Y == other.string_Y &&
+                string_Z == other.string_Z &&
+                string_G == other.string_G);
+    }
+
+    bool operator!=(const ZeroPoint& other) const {
+        return !(*this == other);
+    }
 };
 
 struct Offset_RawPart
@@ -54,6 +86,32 @@ struct Offset_RawPart
     QString string_Max_YPlus_RawpartInspection;
     QString string_Max_YMinus_RawpartInspection;
     QString string_Max_ZPlus_RawpartInspection;
+
+    bool operator==(const Offset_RawPart& other) const
+    {
+        return (string_Max_XPlus  == other.string_Max_XPlus &&
+                string_Max_XMinus == other.string_Max_XMinus &&
+                string_Max_YPlus  == other.string_Max_YPlus &&
+                string_Max_YMinus == other.string_Max_YMinus &&
+
+                string_Min_XMinus == other.string_Min_XMinus &&
+                string_Min_XPlus  == other.string_Min_XPlus &&
+                string_Min_YMinus == other.string_Min_YMinus &&
+                string_Min_YPlus  == other.string_Min_YPlus &&
+                string_Min_ZPlus  == other.string_Min_ZPlus &&
+
+                string_Max_XMinus_RawpartInspection == other.string_Max_XMinus_RawpartInspection &&
+                string_Max_XPlus_RawpartInspection  == other.string_Max_XPlus_RawpartInspection &&
+                string_Max_YMinus_RawpartInspection == other.string_Max_YMinus_RawpartInspection &&
+                string_Max_YPlus_RawpartInspection  == other.string_Max_YPlus_RawpartInspection &&
+                string_Max_ZPlus_RawpartInspection  == other.string_Max_ZPlus_RawpartInspection);
+    }
+
+    bool operator!=(const Offset_RawPart& other) const
+    {
+        return !(*this == other);
+    }
+
 };
 
 struct Programm
@@ -75,6 +133,21 @@ struct Programm
         TOFFL    = false;
         NoXY     = false;
     }
+
+    bool operator==(const Programm& other) const
+    {
+        return (ProgrammName == other.ProgrammName &&
+                Offset_X     == other.Offset_X &&
+                Offset_Y     == other.Offset_Y &&
+                Offset_Z     == other.Offset_Z &&
+                TOFFL        == other.TOFFL &&
+                NoXY         == other.NoXY);
+    }
+
+    bool operator!=(const Programm& other) const
+    {
+        return !(*this == other);
+    }
 };
 
 struct Item_TouchProbe
@@ -90,18 +163,21 @@ struct Item_TouchProbe
     Struct_Bohrung struct_Bohrung;
     Struct_Nut struct_Nut;
 
-    bool operator!=(const Item_TouchProbe& t) const
+    bool operator==(const Item_TouchProbe& other) const
     {
-        if(Pos != t.Pos) return true;
-        if(state != t.state) return true;
-        if(struct_Ausrichten != t.struct_Ausrichten) return true;
-        if(struct_Kante != t.struct_Kante) return true;
-        if(struct_Ebenheit != t.struct_Ebenheit) return true;
-        if(struct_Steg != t.struct_Steg) return true;
-        if(struct_Bohrung != t.struct_Bohrung) return true;
-        if(struct_Nut != t.struct_Nut) return true;
+        return (Pos                 == other.Pos &&
+                state               == other.state &&
+                struct_Ausrichten   == other.struct_Ausrichten &&
+                struct_Kante        == other.struct_Kante &&
+                struct_Ebenheit     == other.struct_Ebenheit &&
+                struct_Steg         == other.struct_Steg &&
+                struct_Bohrung      == other.struct_Bohrung &&
+                struct_Nut          == other.struct_Nut);
+    }
 
-        return false;
+    bool operator!=(const Item_TouchProbe& other) const
+    {
+        return !(*this == other);
     }
 };
 
@@ -130,6 +206,34 @@ struct ProjectData
     ToolList* toolList_IN;                  //Liste der Werkzeuge die Eingelagert werden müssen
     QList<Programm> list_Programm;          //Liste der Programme
     QList<Item_TouchProbe> list_TouchProbe; //Liste der Antastzyklen
+
+
+    bool operator==(const ProjectData& other) const
+    {
+        return (name == other.name &&
+                state               == other.state &&
+                tension             == other.tension &&
+                hyperMILL_File      == other.hyperMILL_File &&
+                material            == other.material &&
+                header              == other.header &&
+                rawPart_Inspection  == other.rawPart_Inspection &&
+                lastOpen            == other.lastOpen &&
+                lastProduction      == other.lastProduction &&
+                //listPictures        == other.listPictures &&
+                listTags            == other.listTags &&
+                string_ProgrammDir  == other.string_ProgrammDir &&
+                rawPart             == other.rawPart &&
+                finishPart          == other.finishPart &&
+                zeroPoint           == other.zeroPoint &&
+                //*toolList           == *other.toolList &&
+                list_Programm       == other.list_Programm &&
+                list_TouchProbe     == other.list_TouchProbe);
+    }
+
+    bool operator!=(const ProjectData& other) const
+    {
+        return !(*this == other);
+    }
 };
 
 #endif // STRUCT_H

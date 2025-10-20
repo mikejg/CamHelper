@@ -13,19 +13,20 @@ struct Struct_Ausrichten
     QString string_TSA;
     QString string_Anfahren;
 
-    bool operator!=(const Struct_Ausrichten& t) const
+    bool operator==(const Struct_Ausrichten& other) const
     {
-        if(string_Pos              == t.string_Pos &&
-           string_Frame            == t.string_Frame &&
-           string_Messrichtung     == t.string_Messrichtung &&
-           string_Messachse        == t.string_Messachse &&
-           string_Positionierachse == t.string_Positionierachse &&
-           string_L2               == t.string_L2 &&
-           string_TSA              == t.string_TSA &&
-           string_Anfahren         == t.string_Anfahren)
-            return false;
+        return (string_Pos               == other.string_Pos &&
+                string_Frame             == other.string_Frame &&
+                string_Messrichtung      == other.string_Messrichtung &&
+                string_Positionierachse  == other.string_Positionierachse &&
+                string_L2                == other.string_L2 &&
+                string_TSA               == other.string_TSA &&
+                string_Anfahren          == other.string_Anfahren);
+    }
 
-        return true;
+    bool operator!=(const Struct_Ausrichten& other) const
+    {
+        return !(*this == other);
     }
 };
 
@@ -40,21 +41,22 @@ struct Struct_Kante
     QString string_TSA;
     QString string_Anfahren;
 
-    bool operator!=(const Struct_Kante& t) const
+    bool operator==(const Struct_Kante& other) const
     {
-        if(string_Pos           == t.string_Pos &&
-            string_Frame        == t.string_Frame &&
-            string_Messrichtung == t.string_Messrichtung &&
-            string_Messachse    == t.string_Messachse &&
-            string_Wert         == t.string_Wert &&
-            string_DFA          == t.string_DFA &&
-            string_TSA          == t.string_TSA &&
-            string_Anfahren     == t.string_Anfahren)
-            return false;
-
-        return true;
+        return (string_Pos               == other.string_Pos &&
+                string_Frame             == other.string_Frame &&
+                string_Messrichtung      == other.string_Messrichtung &&
+                string_Messachse         == other.string_Messachse &&
+                string_Wert              == other.string_Wert &&
+                string_DFA               == other.string_DFA &&
+                string_TSA               == other.string_TSA &&
+                string_Anfahren          == other.string_Anfahren);
     }
 
+    bool operator!=(const Struct_Kante& other) const
+    {
+        return !(*this == other);
+    }
 };
 
 struct Struct_Ebenheit
@@ -82,26 +84,28 @@ struct Struct_Ebenheit
         bool_Jump3 = false;
     }
 
-    bool operator!=(const Struct_Ebenheit& t) const
+    bool operator==(const Struct_Ebenheit& other) const
     {
-        if(string_Pos               == t.string_Pos &&
-           string_Frame             == t.string_Frame &&
-           string_ZEbene            == t.string_ZEbene &&
-           string_Vertrauensbereich == t.string_Vertrauensbereich &&
-           string_Punkt1X           == t.string_Punkt1X &&
-           string_Punkt1Y           == t.string_Punkt1Y &&
-           string_Punkt2X           == t.string_Punkt2X &&
-           string_Punkt2Y           == t.string_Punkt2Y &&
-           string_Punkt3X           == t.string_Punkt3X &&
-           string_Punkt3Y           == t.string_Punkt3Y &&
-           string_Punkt4X           == t.string_Punkt4X &&
-           string_Punkt4Y           == t.string_Punkt4Y &&
-           bool_Jump1               == t.bool_Jump1 &&
-           bool_Jump2               == t.bool_Jump2 &&
-           bool_Jump3               == t.bool_Jump3)
-            return false;
+        return (string_Pos               == other.string_Pos &&
+                string_Frame             == other.string_Frame &&
+                string_ZEbene            == other.string_ZEbene &&
+                string_Vertrauensbereich == other.string_Vertrauensbereich &&
+                string_Punkt1X           == other.string_Punkt1X &&
+                string_Punkt1Y           == other.string_Punkt1Y &&
+                string_Punkt2X           == other.string_Punkt2X &&
+                string_Punkt2Y           == other.string_Punkt2Y &&
+                string_Punkt3X           == other.string_Punkt3X &&
+                string_Punkt3Y           == other.string_Punkt3Y &&
+                string_Punkt4X           == other.string_Punkt4X &&
+                string_Punkt4Y           == other.string_Punkt4Y &&
+                bool_Jump1               == other.bool_Jump1 &&
+                bool_Jump2               == other.bool_Jump2 &&
+                bool_Jump3               == other.bool_Jump3);
+    }
 
-        return true;
+    bool operator!=(const Struct_Ebenheit& other) const
+    {
+        return !(*this == other);
     }
 };
 
@@ -116,21 +120,22 @@ struct Struct_Steg
     QString string_TSA;
     QString string_Anfahren;
 
-    bool operator!=(const Struct_Steg& t) const
+    bool operator==(const Struct_Steg& other) const
     {
-        if(string_Pos           == t.string_Pos &&
-            string_Frame        == t.string_Frame &&
-            string_Messachse    == t.string_Messachse &&
-            string_W            == t.string_W &&
-            string_DZ           == t.string_DZ &&
-            string_DFA          == t.string_DFA &&
-            string_TSA          == t.string_TSA &&
-            string_Anfahren     == t.string_Anfahren)
-            return false;
-
-        return true;
+        return (string_Pos               == other.string_Pos &&
+                string_Frame             == other.string_Frame &&
+                string_Messachse         == other.string_Messachse &&
+                string_W                 == other.string_W &&
+                string_DZ                == other.string_DZ &&
+                string_DFA               == other.string_DFA &&
+                string_TSA               == other.string_TSA &&
+                string_Anfahren          == other.string_Anfahren);
     }
 
+    bool operator!=(const Struct_Steg& other) const
+    {
+        return !(*this == other);
+    }
 };
 
 struct Struct_Nut
@@ -143,18 +148,20 @@ struct Struct_Nut
     QString string_TSA;
     QString string_Anfahren;
 
-    bool operator!=(const Struct_Nut& t) const
+    bool operator==(const Struct_Nut& other) const
     {
-        if(string_Pos           == t.string_Pos &&
-            string_Frame        == t.string_Frame &&
-            string_Messachse    == t.string_Messachse &&
-            string_W            == t.string_W &&
-            string_DFA          == t.string_DFA &&
-            string_TSA          == t.string_TSA &&
-            string_Anfahren     == t.string_Anfahren)
-            return false;
+        return (string_Pos               == other.string_Pos &&
+                string_Frame             == other.string_Frame &&
+                string_Messachse         == other.string_Messachse &&
+                string_W                 == other.string_W &&
+                string_DFA               == other.string_DFA &&
+                string_TSA               == other.string_TSA &&
+                string_Anfahren          == other.string_Anfahren);
+    }
 
-        return true;
+    bool operator!=(const Struct_Nut& other) const
+    {
+        return !(*this == other);
     }
 };
 
@@ -166,16 +173,18 @@ struct Struct_Bohrung
     QString string_TSA;
     QString string_Anfahren;
 
-    bool operator!=(const Struct_Bohrung& t) const
+    bool operator==(const Struct_Bohrung& other) const
     {
-        if(string_Pos           == t.string_Pos &&
-            string_Frame        == t.string_Frame &&
-            string_Durchmesser  == t.string_Durchmesser &&
-            string_TSA          == t.string_TSA &&
-            string_Anfahren     == t.string_Anfahren)
-            return false;
+        return (string_Pos               == other.string_Pos &&
+                string_Frame             == other.string_Frame &&
+                string_Durchmesser       == other.string_Durchmesser &&
+                string_TSA               == other.string_TSA &&
+                string_Anfahren          == other.string_Anfahren);
+    }
 
-        return true;
+    bool operator!=(const Struct_Bohrung& other) const
+    {
+        return !(*this == other);
     }
 };
 #endif // TP_STRUCT_H

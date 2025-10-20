@@ -183,6 +183,8 @@ void TP_ScrollContent::insertItem(QList<Item_TouchProbe> list)
        layout->addItem(spacerItem);
        item_List.append(tp_Item);
    }
+   if(item_List.isEmpty())
+       slot_InsertItem();
 }
 
 void TP_ScrollContent::slot_InsertItem()
@@ -220,5 +222,5 @@ void TP_ScrollContent::clear()
     {
        slot_DeleteItem(item);
     }
-    slot_InsertItem();
+    //slot_InsertItem();
 }
