@@ -25,8 +25,8 @@ public:
     void         set_Description(ToolList* tl);
     void         sort_Counter();                        //Sortiere die Liste nach dem Counter (Wie oft wurde das Werkzeug verwendet)
     void         sort_Number();                         //Sortiere die Liste nach der Werkzeugnummer
-    //friend bool operator == (const ToolList&, const ToolList&);
-    //friend bool operator != (const ToolList&, const ToolList&);
+    friend bool operator == (const ToolList&, const ToolList&);
+    friend bool operator != (const ToolList&, const ToolList&);
 };
 
 #endif // TOOLLIST_H

@@ -225,7 +225,7 @@ struct ProjectData
                 rawPart             == other.rawPart &&
                 finishPart          == other.finishPart &&
                 zeroPoint           == other.zeroPoint &&
-                //*toolList           == *other.toolList &&
+                *toolList           == *other.toolList &&
                 list_Programm       == other.list_Programm &&
                 list_TouchProbe     == other.list_TouchProbe);
     }

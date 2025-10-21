@@ -117,14 +117,11 @@ void ToolList::sort_Counter()
         }
     }
 }
-/*bool operator == (const ToolList& lhs, const ToolList& rhs)
+bool operator == (const ToolList& tl1, const ToolList& tl2)
 {
-    if(lhs.list.size() != rhs.list.size())
-        return false;
-
-    for(int i = 0; i < lhs.list.size(); i++)
+    for(int i = 0; i < tl1.list.size(); i++)
     {
-        if(*lhs.list.at(i) != *rhs.list.at(i))
+        if(*tl1.list.at(i) != *tl2.list.at(i))
         {
             return false;
         }
@@ -132,8 +129,8 @@ void ToolList::sort_Counter()
     return true;
 }
 
-bool operator != (const ToolList& lhs, const ToolList& rhs)
+bool operator != (const ToolList& tl1, const ToolList& tl2)
 {
-    return !(lhs == rhs);
+    return !(tl1 == tl2);
 }
-*/
+

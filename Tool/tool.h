@@ -52,8 +52,8 @@ public:
 
     void clear();
 
-    //friend bool operator == (const Tool& lhs, const Tool& rhs);
-    //friend bool operator != (const Tool& lhs, const Tool& rhs);
+    friend bool operator == (const Tool &t1, const Tool &t2);
+    friend bool operator != (const Tool &t1, const Tool &t2);
 };
 
 #endif // TOOL_H

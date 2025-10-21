@@ -12,6 +12,18 @@ struct ToolData
     int counter;                    //Zähler, wie oft wurde das Werkzeug verwendet
     bool toolLife;
     int  parts;                     //Wieviele Teile schafft das Werkezug
+
+    bool operator==(const ToolData& other) const
+    {
+        return (number   == other.number &&
+                toolLife == other.toolLife &&
+                parts    == other.parts);
+    }
+
+    bool operator!=(const ToolData& other) const
+    {
+        return !(*this == other);
+    }
 };
 
 #endif // TOOL_STRUCT_H

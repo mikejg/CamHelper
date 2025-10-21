@@ -39,17 +39,12 @@ QString Tool::get_StateString()
     return string_Return;
 }
 
-/*bool operator == (const Tool& lhs, const Tool& rhs)
+bool operator == (const Tool &t1, const Tool &t2)
 {
-    if(lhs.number != rhs.number ||
-       lhs.toolLife != rhs.toolLife ||
-       lhs.parts != rhs.parts)
-        return false;
-
-    return true;
+    return (t1.toolData == t2.toolData);
 }
 
-bool operator != (const Tool& lhs, const Tool& rhs)
+bool operator != (const Tool &t1, const Tool &t2)
 {
-    return !(lhs == rhs);
-}*/
+    return !(t1 == t2);
+}

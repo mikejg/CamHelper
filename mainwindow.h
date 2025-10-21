@@ -35,7 +35,7 @@ private:
     Dialog_Init* dialog_Init;
     Logging* logging;
     Magazin* magazin;
-    Project* currentProject;
+    //Project* currentProject;
     ProjectData* projectData;
     bool bool_IgnoreToggle;
     QIcon *ico;
