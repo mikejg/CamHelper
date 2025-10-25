@@ -295,6 +295,7 @@ bool Tab_Project::update_ProjectData()
             item_TouchProbe.struct_Ausrichten = item->get_Ausrichten();             //Schreibe Ausrichten in item_Touchprobe
             item_TouchProbe.struct_Ausrichten.string_Pos = QString("%1").arg(pos);  //Schreibe die Position in Austrichten
             item_TouchProbe.state = Item_TouchProbe::Ausrichten;                    //setze den Status
+            item_TouchProbe.Pos = pos;                                             //Schreibe die Position
             projectData->list_TouchProbe.append(item_TouchProbe);                   //speicher item_TouchProbe in projecData
             pos++;
             continue;
@@ -304,6 +305,7 @@ bool Tab_Project::update_ProjectData()
             item_TouchProbe.struct_Kante = item->get_Kante();
             item_TouchProbe.struct_Kante.string_Pos = QString("%1").arg(pos);
             item_TouchProbe.state = Item_TouchProbe::Kante;
+            item_TouchProbe.Pos = pos;                                             //Schreibe die Position
             projectData->list_TouchProbe.append(item_TouchProbe);
             pos++;
             continue;
@@ -314,6 +316,7 @@ bool Tab_Project::update_ProjectData()
             item_TouchProbe.struct_Ebenheit = item->get_Ebenheit();
             item_TouchProbe.struct_Ebenheit.string_Pos = QString("%1").arg(pos);
             item_TouchProbe.state = Item_TouchProbe::Ebenheit;
+            item_TouchProbe.Pos = pos;                                             //Schreibe die Position
             projectData->list_TouchProbe.append(item_TouchProbe);
             pos++;
             continue;
@@ -324,6 +327,7 @@ bool Tab_Project::update_ProjectData()
             item_TouchProbe.struct_Steg = item->get_Steg();
             item_TouchProbe.struct_Steg.string_Pos = QString("%1").arg(pos);
             item_TouchProbe.state = Item_TouchProbe::Steg;
+            item_TouchProbe.Pos = pos;                                             //Schreibe die Position
             projectData->list_TouchProbe.append(item_TouchProbe);
             pos++;
             continue;
@@ -334,6 +338,7 @@ bool Tab_Project::update_ProjectData()
             item_TouchProbe.struct_Bohrung = item->get_Bohrung();
             item_TouchProbe.struct_Bohrung.string_Pos = QString("%1").arg(pos);
             item_TouchProbe.state = Item_TouchProbe::Bohrung;
+            item_TouchProbe.Pos = pos;                                             //Schreibe die Position
             projectData->list_TouchProbe.append(item_TouchProbe);
             pos++;
             continue;
@@ -344,11 +349,13 @@ bool Tab_Project::update_ProjectData()
             item_TouchProbe.struct_Nut = item->get_Nut();
             item_TouchProbe.struct_Nut.string_Pos = QString("%1").arg(pos);
             item_TouchProbe.state = Item_TouchProbe::Nut;
+            item_TouchProbe.Pos = pos;                                             //Schreibe die Position
             projectData->list_TouchProbe.append(item_TouchProbe);
             pos++;
             continue;
         }
     }
+
     return true;
 }
 

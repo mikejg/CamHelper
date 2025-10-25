@@ -210,18 +210,18 @@ struct ProjectData
 
     bool operator==(const ProjectData& other) const
     {
-        return (name == other.name &&
+        return (name                == other.name &&
                 state               == other.state &&
                 tension             == other.tension &&
                 hyperMILL_File      == other.hyperMILL_File &&
                 material            == other.material &&
                 header              == other.header &&
                 rawPart_Inspection  == other.rawPart_Inspection &&
-                lastOpen            == other.lastOpen &&
-                lastProduction      == other.lastProduction &&
+                //lastOpen            == other.lastOpen &&
+                //lastProduction      == other.lastProduction &&
                 //listPictures        == other.listPictures &&
                 listTags            == other.listTags &&
-                string_ProgrammDir  == other.string_ProgrammDir &&
+                //string_ProgrammDir  == other.string_ProgrammDir &&
                 rawPart             == other.rawPart &&
                 finishPart          == other.finishPart &&
                 zeroPoint           == other.zeroPoint &&

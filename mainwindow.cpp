@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->stackedWidget->setCurrentWidget(ui->tab_Init);
 
+    projectData = nullptr;
+
     logging = ui->tab_Logging;                              //übergebe den Zeiger für das Logging
     mfile = new MFile(this, logging);                       //Erstelle ein MFile
     dataBase = new DataBase(this, logging);                 //Erstelle die Datenbank
@@ -220,8 +222,26 @@ void MainWindow::slot_NewToolList()
     ui->tab_ToolSheet->showTable(projectData);
 }
 
+void MainWindow::slot_OpenProject()
+{
+    ProjectData* compareData;
+    if(projectData == nullptr)
+        return;
+
+    ui->tab_Project->update_ProjectData();
+
+    compareData = dataBase->get_Project(projectData->name, projectData->tension);
+    if(*projectData == *compareData)
+        qDebug() << "Projekte sind gleich";
+    else
+    {
+        qDebug() << "Projekte sind unterschiedlicht";
+    }
+}
+
 void MainWindow::slot_OpenProject(QString string_ProjectId)
 {
+    qDebug() << Q_FUNC_INFO;
     projectData = dataBase->get_Project(string_ProjectId);                  //Lade die Projekdaten aus der DatenBank
     projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
     ui->tab_Project->set_ProjectData(projectData);                          //Zeige die Projektaten im Tab Projekt an
@@ -252,7 +272,6 @@ void MainWindow::slot_OpenProject(QString string_Name, QString string_Tension)
 
 void MainWindow::slot_ToolButtonClicked()
 {
-
     if(sender() == ui->toolButton_ToolList)
     {
         if(ui->stackedWidget->currentWidget() != ui->tab_ToolSheet)
@@ -289,6 +308,7 @@ void MainWindow::slot_ToolButtonClicked()
 
     if(sender() == ui->toolButton_Open)
     {
+        slot_OpenProject();
         ui->stackedWidget->setCurrentWidget(ui->tab_Init);
         dialog_Open->slot_ShowDialog();
     }
@@ -304,6 +324,7 @@ void MainWindow::slot_ShowMainProgramm()
 {
     ui->stackedWidget->setCurrentWidget(ui->tab_MainProgramm);
 }
+
 void MainWindow::slot_ToolListToggled(bool bool_Toggle)
 {
     //if(bool_IgnoreToggle) return;   //Ignoriere das Umschalten
