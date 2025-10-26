@@ -7,6 +7,8 @@
 #include <QStackedWidget>
 #include <QFileDialog>
 #include <QDesktopServices>
+#include <QMessageBox>
+#include <QPushButton>
 
 #include "../Classes/database.h"
 #include "../Classes/mfile.h"
@@ -52,7 +54,7 @@ private:
     TouchProbe* touchProbe;
     MainProgramm* mainProgramm;
     QFileDialog*           fileDialog;
-
+    QMessageBox* msgBox;
     float filter_Value(QString);
     void insert_Pixmap(QPixmap p);
 

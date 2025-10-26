@@ -48,6 +48,8 @@ MainWindow::MainWindow(QWidget *parent)
     //Erstelle einen Parser für die Unterprogramme und übergib ihm das Verzeichnis für die Unterprogramme
     spf_Parser = new SPF_Parser(this, dialog_Settings->get_ProgrammDir(),logging, dataBase);
 
+    dialog_Save = new Dialog_Save(this);
+
     //Verbinde die ToolButtons an der Seite mit Slots
     connect(ui->toolButton_Log, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_Project, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
@@ -63,6 +65,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->tab_Project, SIGNAL(sig_ExportTouchprobe()),
             ui->tab_Touchprobe, SLOT(slot_ExportTouchprobe()));
     connect(ui->tab_Project, SIGNAL(sig_ShowMainProgramm()), this, SLOT(slot_ShowMainProgramm()));
+
+    //connect(dialog_Save, SIGNAL(accepted()), this, SLOT(slot_OpenProject()));
 
     QTimer::singleShot(500, this, SLOT(slot_InitApp()));
 }
@@ -222,23 +226,6 @@ void MainWindow::slot_NewToolList()
     ui->tab_ToolSheet->showTable(projectData);
 }
 
-void MainWindow::slot_OpenProject()
-{
-    ProjectData* compareData;
-    if(projectData == nullptr)
-        return;
-
-    ui->tab_Project->update_ProjectData();
-
-    compareData = dataBase->get_Project(projectData->name, projectData->tension);
-    if(*projectData == *compareData)
-        qDebug() << "Projekte sind gleich";
-    else
-    {
-        qDebug() << "Projekte sind unterschiedlicht";
-    }
-}
-
 void MainWindow::slot_OpenProject(QString string_ProjectId)
 {
     qDebug() << Q_FUNC_INFO;
@@ -308,9 +295,31 @@ void MainWindow::slot_ToolButtonClicked()
 
     if(sender() == ui->toolButton_Open)
     {
-        slot_OpenProject();
-        ui->stackedWidget->setCurrentWidget(ui->tab_Init);
-        dialog_Open->slot_ShowDialog();
+        if(projectData == nullptr)                                                  //Wenn projectData ein Nullzeiger ist
+        {
+            ui->stackedWidget->setCurrentWidget(ui->tab_Init);                      //zeige Dialog zum öffnen eines neue Projekts
+            dialog_Open->slot_ShowDialog();
+            return;
+        }
+
+        if(!ui->tab_Project->update_ProjectData())                                  //Wenn es fehlerhafte eingaben im Projekt gibt
+            return;                                                                 //beende die Funktion
+
+        ProjectData* compareData;
+        disconnect(dialog_Save, SIGNAL(accepted()));                                    //löse alle Verbindungen vom Signal accepted
+        disconnect(dialog_Save, SIGNAL(discard()));                                     //löse alle Verbindungen vom Signal discard
+
+        connect(dialog_Save, SIGNAL(accepted()), this, SLOT(slot_SaveOpenProject()));   //Verbbinde das Signal accepted neu
+        connect(dialog_Save, SIGNAL(discard()), this, SLOT(slot_OpenProject()));        //Verbinde das Signal discard neu
+        compareData = dataBase->get_Project(projectData->name, projectData->tension);   //Lade das Ursprüngliche Project aus der Datenbank
+
+        if(*projectData == *compareData)                                            //sind beide Projekt gleich
+        {
+            ui->stackedWidget->setCurrentWidget(ui->tab_Init);                      //zeige Dialog zum öffnen eines neue Projekts
+            dialog_Open->slot_ShowDialog();
+        }
+        else
+            dialog_Save->show();                                                    //Zeige Dialog zum Speichern des aktuellen Projekts
     }
 
     if(sender() == ui->toolButton_ToolMagazin)
@@ -505,4 +514,38 @@ bool MainWindow::load_Programme(QStringList &stringList_Programme)
         stringList_Programme.append(str);
     }
     return true;
+}
+
+void MainWindow::slot_SaveOpenProject()
+{
+    if(!ui->tab_Project->update_ProjectData())                  //Schreibe den Inhalt der Eingabefelder in ProjectData
+    {
+        ui->stackedWidget->setCurrentWidget(ui->tab_Logging);   //Wenn die Felder Unfollständig sind schalte auf Tab_Log
+        return;                                                 //brich hier ab
+    }
+
+    if(dataBase->save(projectData))
+        logging->successful("Project: " +
+                        projectData->name + "_" +
+                        projectData->state + "_" +
+                        projectData->tension + " erfolgreich gespeichert");
+    else
+    {
+        logging->vailed("Project: " +
+                    projectData->name + "_" +
+                    projectData->state + "_" +
+                    projectData->tension + "konnte nicht gespeichert werden");
+
+        ui->stackedWidget->setCurrentWidget(ui->tab_Logging);               //Wenn die Felder Unfollständig sind schalte auf Tab_Log
+        return;                                                             //brich hier ab
+    }
+
+    ui->stackedWidget->setCurrentWidget(ui->tab_Init);      //zeige Dialog zum öffnen eines neue Projekts
+    dialog_Open->slot_ShowDialog();
+}
+
+void MainWindow::slot_OpenProject()
+{
+    ui->stackedWidget->setCurrentWidget(ui->tab_Init);      //zeige Dialog zum öffnen eines neue Projekts
+    dialog_Open->slot_ShowDialog();
 }

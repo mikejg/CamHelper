@@ -13,6 +13,7 @@
 #include "Dialoge/dialog_settings.h"
 #include "Dialoge/dialog_init.h"
 #include "Dialoge/dialog_open.h"
+#include "Dialoge/dialog_save.h"
 #include "Logging/logging.h"
 #include "Magazin/magazin.h"
 #include "Project/project.h"
@@ -33,6 +34,7 @@ private:
     Dialog_Open* dialog_Open;
     Dialog_Settings* dialog_Settings;
     Dialog_Init* dialog_Init;
+    Dialog_Save* dialog_Save;
     Logging* logging;
     Magazin* magazin;
     //Project* currentProject;
@@ -65,6 +67,7 @@ public slots:
     void slot_NewProject();
     void slot_CheckFiles();
     void slot_ShowMainProgramm();
+    void slot_SaveOpenProject();
     void slot_OpenProject();
 };
 #endif // MAINWINDOW_H

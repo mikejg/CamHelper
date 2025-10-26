@@ -23,6 +23,7 @@ SOURCES += \
     Dialoge/dialog_progress.cpp \
     Dialoge/dialog_rawpartinspection.cpp \
     Dialoge/dialog_repetition.cpp \
+    Dialoge/dialog_save.cpp \
     Dialoge/dialog_settings.cpp \
     Dialoge/dialog_tag.cpp \
     Dialoge/dialog_tools.cpp \
@@ -79,6 +80,7 @@ HEADERS += \
     Dialoge/dialog_progress.h \
     Dialoge/dialog_rawpartinspection.h \
     Dialoge/dialog_repetition.h \
+    Dialoge/dialog_save.h \
     Dialoge/dialog_settings.h \
     Dialoge/dialog_tag.h \
     Dialoge/dialog_tools.h \
@@ -128,6 +130,7 @@ FORMS += \
     Dialoge/dialog_progress.ui \
     Dialoge/dialog_rawpartinspection.ui \
     Dialoge/dialog_repetition.ui \
+    Dialoge/dialog_save.ui \
     Dialoge/dialog_settings.ui \
     Dialoge/dialog_tag.ui \
     Dialoge/dialog_tools.ui \

@@ -1,3 +1,5 @@
+
+
 #include "tab_project.h"
 #include "ui_tab_project.h"
 #include "../Classes/mlineedit.h"
@@ -10,6 +12,9 @@ Tab_Project::Tab_Project(QWidget *parent)
 
     fileDialog = new QFileDialog(this);
     fileDialog->setFilter(QDir::Files);
+
+    msgBox = new QMessageBox(this);
+    msgBox->setIcon(QMessageBox::Warning);
 
     settings = new QSettings("Gareiss", "CamHelper");
     clipboard = QApplication::clipboard();
@@ -202,6 +207,15 @@ bool Tab_Project::check_InputFields()
         bool_Return = false;
     }
 
+    if(!bool_Return)
+    {
+        msgBox->setWindowTitle(QObject::tr("Fehlerhafte Eingabe"));
+        msgBox->setText(QObject::tr("Unvollständige oder fehlerhafte Eingabe im Projekt"));
+        msgBox->setStandardButtons(QMessageBox::Ok);
+        msgBox->setDefaultButton(QMessageBox::Ok);
+        msgBox->show();
+    }
+
     return bool_Return;
 }
 
@@ -211,8 +225,9 @@ bool Tab_Project::update_ProjectData()
 
     //Überprüfe die Eingabefelder
     if(!check_InputFields())
+    {
         return false;
-
+    }
     //Schreibe die Daten aus den Eingabefeldern in ProjectData
     projectData->name = ui->lineEdit_ProjectName->text();
     projectData->state = ui->lineEdit_ProjectState->text();
@@ -665,6 +680,7 @@ void Tab_Project::slot_Save()
         stackedWidget->setCurrentWidget(log);               //Wenn die Felder Unfollständig sind schalte auf Tab_Log
         return;                                             //brich den Export ab
     }
+
     if(dataBase->save(projectData))
         log->successful("Project: " +
                         projectData->name + "_" +
