@@ -500,7 +500,7 @@ QString DataBase::get_ProjectID(QString string_Name, QString string_Tension)
     //Suche nach dem Project in der Datenbank,
     query.exec("SELECT id, Name, Tension from Project "
                "where Name = '" + string_Name + "' "
-                               "and Tension = '" + string_Tension + "';");
+               "and Tension = '" + string_Tension + "';");
 
     // Wenn ein Fehler auftritt wird er gelogt
     if(!query.lastError().text().isEmpty())
