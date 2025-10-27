@@ -34,6 +34,7 @@ public:
     bool checkSettings();
     int     get_MagazinCapacity()   {return settings->get_ToolPlaces();}
     QString get_ProgrammDir()       {return settings->get_ProgrammDir();}
+    QString get_ToolDB()            {return settings->get_ToolDB();}
 
 signals:
     void settingsOK();

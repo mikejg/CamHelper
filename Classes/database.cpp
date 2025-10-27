@@ -81,7 +81,7 @@ bool DataBase::open()
     }
     else
     {
-        log->successful("main_DataBase geöffnet");
+        log->successful("main_DataBase " + string_MainDB + " geöffnet");
     }
 
     if(!tool_DataBase.open())
@@ -92,7 +92,7 @@ bool DataBase::open()
     }
     else
     {
-       log->successful("tool_DataBase geöffnet");
+       log->successful("tool_DataBase " + string_ToolDB + " geöffnet");
     }
 
     return true;

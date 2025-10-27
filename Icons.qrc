@@ -93,5 +93,6 @@
         <file>Icons/Project/MainProgramm.png</file>
         <file>Icons/Project/File_Open.png</file>
         <file>Icons/Project/save.png</file>
+        <file>Icons/Main/settings.png</file>
     </qresource>
 </RCC>

@@ -59,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->toolButton_TouchProbe, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_New, SIGNAL(clicked()), this, SLOT(slot_NewProject()));
     connect(ui->toolButton_Check, SIGNAL(clicked()), this, SLOT(slot_CheckFiles()));
+    connect(ui->toolButton_Settings, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
 
     //Wenn im tab_Init auf ein Bild gecklict wird, soll das Projekt geöffnet werden
     connect(ui->tab_Init, SIGNAL(sig_Clicked(QString)), this, SLOT(slot_OpenProject(QString)));
@@ -100,6 +101,10 @@ void MainWindow::slot_InitApp()
     ui->toolButton_Project->setEnabled(false);
     ui->toolButton_ToolList->setEnabled(false);
     ui->toolButton_TouchProbe->setEnabled(false);
+    ui->toolButton_Check->setEnabled(false);
+    ui->toolButton_Open->setEnabled(false);
+    ui->toolButton_New->setEnabled(false);
+    ui->toolButton_ToolMagazin->setEnabled(false);
 
     if(dialog_Settings->checkSettings())
         logging->successful("Settings OK");
@@ -110,6 +115,9 @@ void MainWindow::slot_InitApp()
         dialog_Settings->show();
         return;
     }
+
+    if(!copyWerkzeugDB())
+        return;
 
     //Öffne die Datenbanken
     if(!dataBase->open())
@@ -139,12 +147,16 @@ void MainWindow::slot_InitApp()
     magazin->set_DataBase(dataBase);
     magazin->set_Logging(logging);
 
-    //connect(magazin, SIGNAL(sig_NewMagazin()), this, SLOT(slot_NewMagazin()));
     if(!magazin->create_ToolList())
         return;
 
     ui->tab_Touchprobe->set_Logging(logging);
     ui->tab_Touchprobe->insert_Item();
+
+    ui->toolButton_Check->setEnabled(true);
+    ui->toolButton_Open->setEnabled(true);
+    ui->toolButton_New->setEnabled(true);
+    ui->toolButton_ToolMagazin->setEnabled(true);
 }
 
 void MainWindow::slot_NewProject()
@@ -327,6 +339,9 @@ void MainWindow::slot_ToolButtonClicked()
 
     if(sender() == ui->toolButton_TouchProbe)
         ui->stackedWidget->setCurrentWidget(ui->tab_Touchprobe);
+
+    if(sender() == ui->toolButton_Settings)
+        dialog_Settings->show();
 }
 
 void MainWindow::slot_ShowMainProgramm()
@@ -548,4 +563,36 @@ void MainWindow::slot_OpenProject()
 {
     ui->stackedWidget->setCurrentWidget(ui->tab_Init);      //zeige Dialog zum öffnen eines neue Projekts
     dialog_Open->slot_ShowDialog();
+}
+
+bool MainWindow::copyWerkzeugDB()
+{
+    QFileInfo fileInfo_WerkzeugDB;
+    QString string_WerkzeugDB = dialog_Settings->get_ToolDB();
+
+    /* Wenn das File WerkzeugDB.db schon existiert wird es erstmal gelöscht
+     * Wenn das fehlschlägt gib eine Fehlermeldung aus und verlasse die
+     * Funktion mit false*/
+    fileInfo_WerkzeugDB = QFileInfo(QDir::homePath() + "/CamHelper/WerkzeugDB/WerkzeugDB.db");
+    if(fileInfo_WerkzeugDB.exists())
+    {
+        if(!QFile::remove(fileInfo_WerkzeugDB.absoluteFilePath()))
+        {
+            logging->vailed(Q_FUNC_INFO + QString(" - konnte alte Sicherheitskopie von WerkzeugDB nicht loeschen"));
+            logging->vailed(fileInfo_WerkzeugDB.absoluteFilePath());
+            return false;
+        }
+    }
+
+    /* Kopiert die orginal Werkzeugdatenbank nach /MainGen/WerkzeugDB/WerkzeugDB.db
+     * Wenn das fehlschlägt gib eine Fehlermeldung aus und verlasse die
+     * Funktion mit false*/
+    if(!QFile::copy(string_WerkzeugDB, QDir::homePath() + "/CamHelper/WerkzeugDB/WerkzeugDB.db"))
+    {
+        logging->vailed(Q_FUNC_INFO + QString(" - konnte keine Sicherheitskopie von WerkzeugDB erstellen"));
+        return false;
+    }
+
+    logging->successful("Werkzeugdatenbank kopiert");
+    return true;
 }

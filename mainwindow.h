@@ -45,6 +45,7 @@ private:
     MFile* mfile;
 
     bool load_Programme(QStringList&);
+    bool copyWerkzeugDB();
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
