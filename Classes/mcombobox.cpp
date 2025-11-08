@@ -1,4 +1,6 @@
 #include "mcombobox.h"
+#include <QAbstractItemView>
+#include <QEvent>
 
 MComboBox::MComboBox(QWidget *parent) : QComboBox(parent)
 {

@@ -66,16 +66,18 @@ public:
     void set_DataBase(DataBase* db);
     void set_Logging(Logging* l); //Logging wird gesetzt und MFile mit Logging erstellt
     void set_ProjectData(ProjectData* );
-    bool check_InputFields();
+    bool check_InputFields(bool bool_Warning = true);
     void set_MainProgramm(MainProgramm* mp) {mainProgramm = mp;}
     void set_StackedWidget(QStackedWidget* sw) {stackedWidget = sw;}
     void set_TouchProbe(TouchProbe* tp) {touchProbe = tp;}
     bool update_ProjectData();
+    void refresh_DialogTools();
 
 signals:
     void sig_NewToolList();
     void sig_ExportTouchprobe();
     void sig_ShowMainProgramm();
+    void sig_PopupShown(bool);
 
 public slots:
     void slot_Export();

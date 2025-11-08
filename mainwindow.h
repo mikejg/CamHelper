@@ -43,12 +43,14 @@ private:
     QIcon *ico;
     SPF_Parser* spf_Parser;
     MFile* mfile;
-
+    bool forceClose;
     bool load_Programme(QStringList&);
     bool copyWerkzeugDB();
+    bool isPopupOpen = false;
 
 protected:
     bool eventFilter(QObject *obj, QEvent *ev) override;
+    void closeEvent(QCloseEvent *event);
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -71,5 +73,8 @@ public slots:
     void slot_SaveOpenProject();
     void slot_SaveNewProject();
     void slot_OpenProject();
+    void slot_SaveClose();
+    void slot_Close();
+    void slot_PopupOpen(bool);
 };
 #endif // MAINWINDOW_H

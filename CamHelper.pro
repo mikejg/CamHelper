@@ -17,6 +17,7 @@ SOURCES += \
     Classes/mlineedit.cpp \
     Classes/roundedlabel.cpp \
     Classes/spf_parser.cpp \
+    Classes/mtoolbutton.cpp \
     Dialoge/dialog_init.cpp \
     Dialoge/dialog_open.cpp \
     Dialoge/dialog_programm.cpp \
@@ -74,6 +75,7 @@ HEADERS += \
     Classes/roundedlabel.h \
     Classes/spf_parser.h \
     Classes/struct.h \
+    Classes/mtoolbutton.h \
     Dialoge/dialog_init.h \
     Dialoge/dialog_open.h \
     Dialoge/dialog_programm.h \

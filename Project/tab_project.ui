@@ -154,7 +154,7 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
          </widget>
         </item>
         <item>
-         <widget class="QToolButton" name="toolButton_Tag">
+         <widget class="MToolbutton" name="toolButton_Tag">
           <property name="toolTip">
            <string>Tags</string>
           </property>
@@ -1556,6 +1556,11 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
    <class>MDoubleSpinBox</class>
    <extends>QDoubleSpinBox</extends>
    <header>Classes/mdoublespinbox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MToolbutton</class>
+   <extends>QToolButton</extends>
+   <header>Classes/mtoolbutton.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

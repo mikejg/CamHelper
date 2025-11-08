@@ -9,9 +9,23 @@ class MComboBox : public QComboBox
     Q_OBJECT
 public:
     MComboBox(QWidget *parent = nullptr);
-
-    //void wheelEvent(QWheelEvent *e) override;
     void set_Empty();
+
+protected:
+    void showPopup() override
+    {
+        emit popupShown(true);
+        QComboBox::showPopup();
+    }
+
+    void hidePopup() override {
+        QComboBox::hidePopup();
+        emit popupShown(false);
+    }
+
+signals:
+    void popupShown(bool); // Signal, wenn das Dropdown angezeigt wird
+
 public slots:
     void slot_CurrentTextChanged(QString);
 };

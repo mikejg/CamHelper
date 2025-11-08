@@ -53,9 +53,11 @@ Tab_Project::Tab_Project(QWidget *parent)
     ui->lineEdit_ZeroPointZ->state = MLineEdit::Digi;
 
     ui->doubleSpinBox_ZRawPart->set_Zero(false);
+    ui->toolButton_Tag->setGifAnimation(":/Icons/Project/tag_gif.gif");
 
     connect(ui->checkBox_Offset_RawPart,SIGNAL(stateChanged(int)), this, SLOT(slot_checkBox_Offset_RawPart_stateChanged(int)));
     connect(ui->checkBox_Offset_FinishPart,SIGNAL(stateChanged(int)), this, SLOT(slot_checkBox_Offset_FinishPart_stateChanged(int)));
+    connect(ui->comboBox_Material, SIGNAL(popupShown(bool)), this, SIGNAL(sig_PopupShown(bool)));
 
     connect(ui->toolButton_RawPartInspection, SIGNAL(released()), this, SLOT(slot_ShowRawPartInspection()));
     connect(ui->toolButton_Tag, SIGNAL(released()), this, SLOT(slot_ShowTags()));
@@ -72,6 +74,7 @@ Tab_Project::Tab_Project(QWidget *parent)
     connect(dialog_Repetition, SIGNAL(accepted()), this, SLOT(slot_RepetitionAccepted()));
     connect(projectExport, SIGNAL(sig_Export_TouchProbe()), this, SIGNAL(sig_ExportTouchprobe()));
 }
+
 
 Tab_Project::~Tab_Project()
 {
@@ -97,9 +100,16 @@ void Tab_Project::slot_Export()
         dialog_Repetition->show();
 }
 
-bool Tab_Project::check_InputFields()
+bool Tab_Project::check_InputFields(bool bool_Warning)
 {
     bool bool_Return = true;
+
+    if(projectData->listTags.isEmpty() && projectData->tension == "Sp1")
+    {
+        log->vailed("Kein Eintrag in Tags");
+        ui->toolButton_Tag->startAnimation();
+        bool_Return = false;
+    }
 
     if(!ui->lineEdit_ProjectName->check())                      //Überprüfe Projektname
     {
@@ -207,7 +217,7 @@ bool Tab_Project::check_InputFields()
         bool_Return = false;
     }
 
-    if(!bool_Return)
+    if(!bool_Return && bool_Warning)
     {
         msgBox->setWindowTitle(QObject::tr("Fehlerhafte Eingabe"));
         msgBox->setText(QObject::tr("Unvollständige oder fehlerhafte Eingabe im Projekt"));
@@ -490,7 +500,7 @@ void Tab_Project::set_ProjectData(ProjectData* pd)
     connect(dialog_RawPartInspection, SIGNAL(sig_NewInspection(QString)),
             this,   SLOT(slot_NewInspection(QString)));
 
-    dialog_Tag = new Dialog_Tag(this, projectData, dataBase);
+    dialog_Tag = new Dialog_Tag(this, projectData, dataBase, ui->toolButton_Tag);
 
     dialog_Programm = new Dialog_Programm(this, projectData);                       //erzeuge den Dialog Progamm mit Zeiger auf die Daten
 
@@ -578,7 +588,7 @@ void Tab_Project::set_ProjectData(ProjectData* pd)
         ui->checkBox_Offset_FinishPart->setChecked(true);
     }
 
-    check_InputFields();
+    check_InputFields(false);
 }
 
 void Tab_Project::slot_checkBox_Offset_RawPart_stateChanged(int state)
@@ -692,3 +702,12 @@ void Tab_Project::slot_Save()
                         projectData->state + "_" +
                         projectData->tension + "konnte nicht gespeichert werden");
 }
+
+void Tab_Project::refresh_DialogTools()
+{
+    if(dialog_Tools != nullptr)
+    {
+        dialog_Tools->refresh();
+    }
+}
+

@@ -335,7 +335,6 @@ QString SPF_Parser::parse_PostProcessor(QString stringFile)
 
 bool SPF_Parser::parse_Tool(QString stringFile, ToolList* toolList)
 {
-    qDebug() << Q_FUNC_INFO;
     mfile->setFileName(stringFile);
 
     if(!mfile->read_Content())

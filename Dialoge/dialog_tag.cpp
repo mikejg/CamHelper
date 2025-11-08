@@ -2,12 +2,14 @@
 #include "ui_dialog_tag.h"
 
 
-Dialog_Tag::Dialog_Tag(QWidget *parent, ProjectData* pd, DataBase* db) :
+Dialog_Tag::Dialog_Tag(QWidget *parent, ProjectData* pd, DataBase* db, MToolbutton* tb) :
     QDialog(parent),
     ui(new Ui::Dialog_Tag)
 {
     projectData = pd;
     database = db;
+    toolButton = tb;
+
     ui->setupUi(this);
 
     create_Tags();
@@ -122,6 +124,10 @@ void Dialog_Tag::highlightChecked(QListWidgetItem* item)
         item->setForeground(Qt::gray);
         projectData->listTags.removeOne(item->text());
     }
+    if(projectData->listTags.isEmpty())
+        toolButton->startAnimation();
+    else
+        toolButton->stopAnimation();
 
     blockFunction = false;
 }
@@ -173,6 +179,10 @@ void Dialog_Tag::slot_TagHighlighted(QListWidgetItem* item)
         emit sig_NewProjectList(stringList_Projects);
     }
 
+    if(projectData->listTags.isEmpty())
+        toolButton->startAnimation();
+    else
+        toolButton->stopAnimation();
     blockFunction = false;
 
 }

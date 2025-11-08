@@ -2,10 +2,9 @@
 #define DIALOG_TAG_H
 
 #include <QDialog>
-//#include "../Project/project.h"
 #include "../Classes/database.h"
 #include "../Classes/struct.h"
-
+#include "../Classes/mtoolbutton.h"
 #include <QListWidgetItem>
 
 namespace Ui {
@@ -19,6 +18,7 @@ private:
     Ui::Dialog_Tag *ui;
     DataBase* database;
     ProjectData* projectData;
+    MToolbutton* toolButton;
 
     QString lastText;
     Qt::CheckState lastState;
@@ -29,7 +29,8 @@ private:
 public:
     explicit Dialog_Tag(QWidget *parent = nullptr,
                         ProjectData* pd = nullptr,
-                        DataBase* db = nullptr);
+                        DataBase* db = nullptr,
+                        MToolbutton* tb = nullptr);
 
     Dialog_Tag(QWidget *parent = nullptr,
                DataBase* db = nullptr);
