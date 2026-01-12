@@ -1,8 +1,7 @@
-
-
 #include "tab_project.h"
 #include "ui_tab_project.h"
 #include "../Classes/mlineedit.h"
+#include "../Dialoge/dialog_checkinout.h"
 
 Tab_Project::Tab_Project(QWidget *parent)
     : QWidget(parent)
@@ -28,6 +27,7 @@ Tab_Project::Tab_Project(QWidget *parent)
     ui->lineEdit_ProjectState->set_TextNecessary(true);
     ui->lineEdit_Tension->set_TextNecessary(true);
     ui->lineEdit_Tension->state = MLineEdit::Tension;
+    ui->lineEdit_hyperMILL_File->set_TextNecessary(true);
 
     ui->lineEdit_RawPartX->set_TextNecessary(true);
     ui->lineEdit_RawPartX->state = MLineEdit::Digi;
@@ -70,7 +70,7 @@ Tab_Project::Tab_Project(QWidget *parent)
     connect(ui->toolButton_ExecFile, SIGNAL(released()), this, SLOT(slot_ExecFile()));
     connect(ui->toolButton_MainProgramm, SIGNAL(released()), this, SIGNAL(sig_ShowMainProgramm()));
     connect(ui->toolButton_Save, SIGNAL(released()), this, SLOT(slot_Save()));
-
+    connect(ui->toolButton_upload, SIGNAL(released()), this, SLOT(slot_CheckInOut()));
     connect(dialog_Repetition, SIGNAL(accepted()), this, SLOT(slot_RepetitionAccepted()));
     connect(projectExport, SIGNAL(sig_Export_TouchProbe()), this, SIGNAL(sig_ExportTouchprobe()));
 }
@@ -214,6 +214,46 @@ bool Tab_Project::check_InputFields(bool bool_Warning)
     {
         log->vailed("Material fehlt");
         ui->comboBox_Material->set_Empty();
+        bool_Return = false;
+    }
+
+    QFile hyperMILL_File;
+    hyperMILL_File.setFileName(ui->lineEdit_hyperMILL_File->text());
+
+    if(!hyperMILL_File.exists())                                  //Wenn das hyperMILL File nicht vorhanden ist
+    {                                                               //Suche im LocalDir nach dem hyperMILL File
+        hyperMILL_File.setFileName(string_LocalDir + "/" +
+                         projectData->name + "/" +
+                         projectData->name + "_" +
+                         projectData->state + ".hmc");
+
+        if(hyperMILL_File.exists())                                 //Wenn das hyperMILL File im LocalDir vohand ist
+        {                                                           //schreibe den Pfad in lineEdit_hyperMILL_File
+            ui->lineEdit_hyperMILL_File->setText(hyperMILL_File.fileName());
+            projectData->hyperMILL_File = hyperMILL_File.fileName();
+        }
+        else                                                        //Wenn das hyperMILL File nicht im LocalDir ist
+        {                                                           //Suche im Remote Dir
+            hyperMILL_File.setFileName(string_RemoteDir + "/" +
+                                       projectData->name + "/" +
+                                       projectData->name + "_" +
+                                       projectData->state + ".hmc");
+
+            if(hyperMILL_File.exists())                                 //Wenn das hyperMILL File im RemoteDir vohand ist
+            {                                                           //schreibe den Pfad in lineEdit_hyperMILL_File
+                ui->lineEdit_hyperMILL_File->setText(hyperMILL_File.fileName());
+                projectData->hyperMILL_File = hyperMILL_File.fileName();
+            }
+            else                                                        //Wenn das hyperMILL File auch nicht im RemoteDir ist
+            {                                                           //lösche die Eingaben in RemoteDir
+                ui->lineEdit_hyperMILL_File->clear();
+            }
+        }
+    }
+
+    if(!ui->lineEdit_hyperMILL_File->check())
+    {
+        log->vailed("kein hyperMIll File gefunden");
         bool_Return = false;
     }
 
@@ -499,13 +539,17 @@ void Tab_Project::set_ProjectData(ProjectData* pd)
     dialog_RawPartInspection = new Dialog_RawPartInspection(this);
     connect(dialog_RawPartInspection, SIGNAL(sig_NewInspection(QString)),
             this,   SLOT(slot_NewInspection(QString)));
+    connect(dialog_RawPartInspection, SIGNAL(rejected()), this, SLOT(slot_PopupClosed()));
 
     dialog_Tag = new Dialog_Tag(this, projectData, dataBase, ui->toolButton_Tag);
+    connect(dialog_Tag, SIGNAL(rejected()), this, SLOT(slot_PopupClosed()));
 
     dialog_Programm = new Dialog_Programm(this, projectData);                       //erzeuge den Dialog Progamm mit Zeiger auf die Daten
+    connect(dialog_Programm, SIGNAL(rejected()), this, SLOT(slot_PopupClosed()));
 
     dialog_Tools = new Dialog_Tools(this, projectData);
     connect(dialog_Tools, SIGNAL(sig_NewToolList()), this, SIGNAL(sig_NewToolList()));
+    connect(dialog_Tools, SIGNAL(rejected()), this, SLOT(slot_PopupClosed()));
 
     if(projectData->tension != "Sp1")
     {
@@ -588,6 +632,9 @@ void Tab_Project::set_ProjectData(ProjectData* pd)
         ui->checkBox_Offset_FinishPart->setChecked(true);
     }
 
+    string_LocalDir = projectData->string_LocalDir;
+    string_RemoteDir = projectData->string_RemoteDir;
+
     check_InputFields(false);
 }
 
@@ -619,21 +666,31 @@ void Tab_Project::slot_checkBox_Offset_FinishPart_stateChanged(int state)
 
 void Tab_Project::slot_ShowRawPartInspection()
 {
+    emit sig_PopupShown(true);
     dialog_RawPartInspection->show();
 }
 
 void Tab_Project::slot_ShowTags()
 {
+    emit sig_PopupShown(true);
     dialog_Tag->show();
+}
+
+void Tab_Project::slot_PopupClosed()
+{
+    qDebug() << Q_FUNC_INFO;
+    emit sig_PopupShown(false);
 }
 
 void Tab_Project::slot_ShowProgramm()
 {
+    emit sig_PopupShown(true);
     dialog_Programm->show();
 }
 
 void Tab_Project::slot_ShowTools()
 {
+    emit sig_PopupShown(true);
     dialog_Tools->show();
 }
 
@@ -711,3 +768,96 @@ void Tab_Project::refresh_DialogTools()
     }
 }
 
+void Tab_Project::slot_CheckInOut()
+{
+    QString sourceDir;                                                          //Quell Verzeichnis
+    QString destDir;                                                            //Ziel Verzeichnis
+
+    qDebug() << Q_FUNC_INFO << projectData->string_LocalDir;
+    qDebug() << Q_FUNC_INFO << projectData->hyperMILL_File;
+    if(projectData->hyperMILL_File.contains(projectData->string_LocalDir))      //Überprüfe ob sich das hyperMILL File im
+    {                                                                           //lokalen Verzeichnis befindet
+        sourceDir = projectData->string_LocalDir + "/" + projectData->name;     //setze das Quellverzeichnis
+        destDir = projectData->string_RemoteDir + "/" + projectData->name;      //setze das Zielverzeichenis
+    }
+
+    if(projectData->hyperMILL_File.contains(projectData->string_RemoteDir))     //Überprüfe ob sich das hyperMILL File im
+    {                                                                           //remote Verzeichnis befindet
+        sourceDir = projectData->string_RemoteDir + "/" + projectData->name;    //setze das Quellverzeichnis
+        destDir = projectData->string_LocalDir + "/" + projectData->name;       //setze das Zielverzeichnis
+    }
+
+    QDir dir(sourceDir);
+    if(!dir.exists())                                                           //überprüfe ob das Quell Verzeichnis vorhanden ist
+    {
+        log->vailed("Konnte Verzeichnis nicht finden ");
+        log->vailed(sourceDir);
+        return;
+    }
+
+    // --- Copier-Thread einrichten ---
+    Copier* copier = new Copier(this);
+
+    // --- Fortschrittsdialog einrichten ---
+    Dialog_CheckInOut* progressDialog = new Dialog_CheckInOut(this);
+    progressDialog->set_Copier(copier);
+    progressDialog->show();
+
+    // Verbindung: Gesamtanzahl der Dateien setzen
+    //QObject::connect(copier, &Copier::fileCountReady, progressDialog, &QProgressDialog::setMaximum);
+    QObject::connect(copier, SIGNAL(fileCountReady(int)), progressDialog, SLOT(setMaximum(int)));
+
+    // Verbindung: Fortschritt aktualisieren und Abbrechen-Prüfung
+    connect(copier, SIGNAL(progress(int)), progressDialog, SLOT(slot_SetValue(int)));
+    connect(copier, SIGNAL(sig_FileName(QString)), progressDialog, SLOT(slot_FileName(QString)));
+
+    // Verbindung: Wenn der Thread beendet ist, sicherstellen, dass das Copier-Objekt aufgeräumt wird
+    connect(copier, SIGNAL(finishedCopy(bool)), progressDialog, SLOT(slot_Finished(bool)));
+    connect(copier, SIGNAL(finished()), copier, SLOT(deleteLater()));
+    connect(copier, SIGNAL(finished()), this, SLOT(slot_CheckInOut_Finished()));
+
+    // Kopier-Thread starten
+    qDebug() << Q_FUNC_INFO << sourceDir;
+    qDebug() << Q_FUNC_INFO << destDir;
+    copier->startCopy(sourceDir, destDir);
+}
+
+void Tab_Project::slot_CheckInOut_Finished()
+{
+    QFile hyperMILL_File;
+    hyperMILL_File.setFileName(ui->lineEdit_hyperMILL_File->text());
+
+    if(!hyperMILL_File.exists())                                  //Wenn das hyperMILL File nicht vorhanden ist
+    {                                                               //Suche im LocalDir nach dem hyperMILL File
+        hyperMILL_File.setFileName(string_LocalDir + "/" +
+                                   projectData->name + "/" +
+                                   projectData->name + "_" +
+                                   projectData->state + ".hmc");
+
+        if(hyperMILL_File.exists())                                 //Wenn das hyperMILL File im LocalDir vohand ist
+        {                                                           //schreibe den Pfad in lineEdit_hyperMILL_File
+            ui->lineEdit_hyperMILL_File->setText(hyperMILL_File.fileName());
+            projectData->hyperMILL_File = hyperMILL_File.fileName();
+        }
+        else                                                        //Wenn das hyperMILL File nicht im LocalDir ist
+        {                                                           //Suche im Remote Dir
+            hyperMILL_File.setFileName(string_RemoteDir + "/" +
+                                       projectData->name + "/" +
+                                       projectData->name + "_" +
+                                       projectData->state + ".hmc");
+
+            if(hyperMILL_File.exists())                                 //Wenn das hyperMILL File im RemoteDir vohand ist
+            {                                                           //schreibe den Pfad in lineEdit_hyperMILL_File
+                ui->lineEdit_hyperMILL_File->setText(hyperMILL_File.fileName());
+                projectData->hyperMILL_File = hyperMILL_File.fileName();
+            }
+            else                                                        //Wenn das hyperMILL File auch nicht im RemoteDir ist
+            {                                                           //lösche die Eingaben in RemoteDir
+                ui->lineEdit_hyperMILL_File->clear();
+            }
+        }
+    }
+
+    if(!ui->lineEdit_hyperMILL_File->check())
+        log->vailed("kein hyperMIll File gefunden");
+}

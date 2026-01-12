@@ -9,11 +9,14 @@
 #include "Classes/spf_parser.h"
 #include "Classes/struct.h"
 #include "Classes/mfile.h"
+#include "Classes/license.h"
 
 #include "Dialoge/dialog_settings.h"
 #include "Dialoge/dialog_init.h"
 #include "Dialoge/dialog_open.h"
 #include "Dialoge/dialog_save.h"
+#include "Dialoge/dialog_licensekey.h"
+
 #include "Logging/logging.h"
 #include "Magazin/magazin.h"
 #include "Project/project.h"
@@ -35,7 +38,10 @@ private:
     Dialog_Settings* dialog_Settings;
     Dialog_Init* dialog_Init;
     Dialog_Save* dialog_Save;
+    Dialog_LicenseKey* dialog_LicenseKey;
+
     Logging* logging;
+    License* license;
     Magazin* magazin;
     //Project* currentProject;
     ProjectData* projectData;
@@ -76,5 +82,6 @@ public slots:
     void slot_SaveClose();
     void slot_Close();
     void slot_PopupOpen(bool);
+    void slot_ValidLicense(bool);
 };
 #endif // MAINWINDOW_H

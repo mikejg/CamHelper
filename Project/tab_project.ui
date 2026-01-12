@@ -235,6 +235,18 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
          </widget>
         </item>
         <item>
+         <widget class="QToolButton" name="toolButton_upload">
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normalon>:/Icons/Project/upload.png</normalon>
+           </iconset>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer_7">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -310,7 +322,7 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_File">
            <item>
-            <widget class="QLineEdit" name="lineEdit_hyperMILL_File">
+            <widget class="MLineEdit" name="lineEdit_hyperMILL_File">
              <property name="palette">
               <palette>
                <active>
@@ -1537,15 +1549,15 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
  </widget>
  <customwidgets>
   <customwidget>
+   <class>MLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">Classes/mlineedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>Pix_ScrollArea</class>
    <extends>QScrollArea</extends>
    <header>Project/pix_scrollarea.h</header>
    <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>MLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header location="global">Classes/mlineedit.h</header>
   </customwidget>
   <customwidget>
    <class>MComboBox</class>

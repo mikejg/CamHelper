@@ -24,6 +24,14 @@ Dialog_Settings::Dialog_Settings(QWidget *parent, Logging* l) :
     ui->lineEdit_ToolMagazin->state = MLineEdit::File;
     ui->lineEdit_ToolMagazin->set_TextNecessary(true);
 
+    ui->lineEdit_LocalDir->setText(settings->get_LocalDir());
+    ui->lineEdit_LocalDir->state = MLineEdit::Dir;
+    ui->lineEdit_LocalDir->set_TextNecessary(true);
+
+    ui->lineEdit_RemoteDir->setText(settings->get_RemoteDir());
+    ui->lineEdit_RemoteDir->state = MLineEdit::Dir;
+    ui->lineEdit_RemoteDir->set_TextNecessary(true);
+
     ui->lineEdit_ToolDB->setText(settings->get_ToolDB());
     ui->lineEdit_ToolDB->set_TextNecessary(true);
     ui->lineEdit_ToolDB->state = MLineEdit::File;
@@ -44,6 +52,8 @@ Dialog_Settings::Dialog_Settings(QWidget *parent, Logging* l) :
 
     connect(ui->buttonBox,              SIGNAL(accepted()),    this, SLOT(writeSettings()));
     connect(ui->toolButton_ProgrammDir, SIGNAL(clicked(bool)), this, SLOT(toolButton_ProgrammDir_clicked(bool)));
+    connect(ui->toolButton_LokalDir,    SIGNAL(clicked(bool)), this, SLOT(toolButton_LocalDir_clicked(bool)));
+    connect(ui->toolButton_RemoteDir,   SIGNAL(clicked(bool)), this, SLOT(toolButton_RemoteDir_clicked(bool)));
     connect(ui->toolButton_ToolMagazin, SIGNAL(clicked(bool)), this, SLOT(toolButton_ToolMagazin_clicked(bool)));
     connect(ui->toolButton_ToolDB,      SIGNAL(clicked(bool)), this, SLOT(toolButton_ToolDB_clicked(bool)));
 }
@@ -52,20 +62,6 @@ Dialog_Settings::~Dialog_Settings()
 {
     delete ui;
 }
-
-/*void Dialog_Settings::set_Settings(Settings* s)
-{
-    settings = s;
-
-    // Befuelle die Eingabenfenster mit den settings
-    ui->lineEdit_ProgrammDir->setText(s->get_ProgrammDir());
-    ui->lineEdit_ToolMagazin->setText(s->get_MagazinDir());
-    ui->lineEdit_ToolDB->setText(s->get_ToolDB());
-    ui->spinBox_WerkzeugPlatze->setValue(s->get_ToolPlaces());
-    ui->lineEdit_X->setText(QString("%1").arg(s->get_OffsetX()));
-    ui->lineEdit_Y->setText(QString("%1").arg(s->get_OffsetY()));
-    ui->lineEdit_Z->setText(QString("%1").arg(s->get_OffsetZ()));
-}*/
 
 bool Dialog_Settings::checkSettings()
 {
@@ -77,6 +73,26 @@ bool Dialog_Settings::checkSettings()
     else
     {
         log->successful("Settings: Verzeichnis Programme");
+    }
+
+    if(!ui->lineEdit_LocalDir->check())
+    {
+        log->vailed("Settings: Lokales Verzeichnis");
+        return false;
+    }
+    else
+    {
+        log->successful("Settings: Lokales Verzeichnis");
+    }
+
+    if(!ui->lineEdit_RemoteDir->check())
+    {
+        log->vailed("Settings: Remote Verzeichnis");
+        return false;
+    }
+    else
+    {
+        log->successful("Settings: Remote Verzeichnis");
     }
 
     if(!ui->lineEdit_ToolMagazin->check())
@@ -122,6 +138,8 @@ void Dialog_Settings::writeSettings()
 
     //Speicher die settings
     settings->set_ProgrammDir(ui->lineEdit_ProgrammDir->text());
+    settings->set_LocalDir(ui->lineEdit_LocalDir->text());
+    settings->set_RemoteDir(ui->lineEdit_RemoteDir->text());
     settings->set_MagazinDir(ui->lineEdit_ToolMagazin->text());
     settings->set_ToolDB(ui->lineEdit_ToolDB->text());
     settings->set_ToolPlaces(ui->spinBox_WerkzeugPlatze->value());
@@ -139,6 +157,20 @@ void Dialog_Settings::toolButton_ProgrammDir_clicked(bool b)
     ui->lineEdit_ProgrammDir->setText( fileDialog->getExistingDirectory(this,tr("Verzeichnis Programme"), ""));
 }
 
+void Dialog_Settings::toolButton_LocalDir_clicked(bool b)
+{
+    // Öffne einen FileDialg um das Verzeichnis für die Programme auszuwählen
+    Q_UNUSED(b);
+    ui->lineEdit_LocalDir->setText( fileDialog->getExistingDirectory(this,tr("Lokales Verzeichnis"), ""));
+}
+
+void Dialog_Settings::toolButton_RemoteDir_clicked(bool b)
+{
+    // Öffne einen FileDialg um das Verzeichnis für die Programme auszuwählen
+    Q_UNUSED(b);
+    ui->lineEdit_RemoteDir->setText( fileDialog->getExistingDirectory(this,tr("Remote Verzeichnis"), ""));
+}
+
 void Dialog_Settings::toolButton_ToolMagazin_clicked(bool b)
 {
     Q_UNUSED(b);
@@ -150,3 +182,4 @@ void Dialog_Settings::toolButton_ToolDB_clicked(bool b)
     Q_UNUSED(b);
     ui->lineEdit_ToolDB->setText( fileDialog->getOpenFileName(this,"Werkzeug Datenbank",QDir::homePath(),tr("Main Programm File(*.db)")));
 }
+

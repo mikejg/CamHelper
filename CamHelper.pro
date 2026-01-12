@@ -1,4 +1,4 @@
-QT       += core gui sql printsupport
+QT       += core gui sql printsupport network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -9,7 +9,9 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Classes/copier.cpp \
     Classes/database.cpp \
+    Classes/license.cpp \
     Classes/mcellwidget.cpp \
     Classes/mcombobox.cpp \
     Classes/mdoublespinbox.cpp \
@@ -18,7 +20,9 @@ SOURCES += \
     Classes/roundedlabel.cpp \
     Classes/spf_parser.cpp \
     Classes/mtoolbutton.cpp \
+    Dialoge/dialog_checkinout.cpp \
     Dialoge/dialog_init.cpp \
+    Dialoge/dialog_licensekey.cpp \
     Dialoge/dialog_open.cpp \
     Dialoge/dialog_programm.cpp \
     Dialoge/dialog_progress.cpp \
@@ -66,7 +70,9 @@ SOURCES += \
     settings.cpp
 
 HEADERS += \
+    Classes/copier.h \
     Classes/database.h \
+    Classes/license.h \
     Classes/mcellwidget.h \
     Classes/mcombobox.h \
     Classes/mdoublespinbox.h \
@@ -76,7 +82,9 @@ HEADERS += \
     Classes/spf_parser.h \
     Classes/struct.h \
     Classes/mtoolbutton.h \
+    Dialoge/dialog_checkinout.h \
     Dialoge/dialog_init.h \
+    Dialoge/dialog_licensekey.h \
     Dialoge/dialog_open.h \
     Dialoge/dialog_programm.h \
     Dialoge/dialog_progress.h \
@@ -127,6 +135,7 @@ HEADERS += \
 FORMS += \
     Classes/mcellwidget.ui \
     Dialoge/dialog_init.ui \
+    Dialoge/dialog_licensekey.ui \
     Dialoge/dialog_open.ui \
     Dialoge/dialog_programm.ui \
     Dialoge/dialog_progress.ui \

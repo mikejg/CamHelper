@@ -3,6 +3,7 @@
 
 #include <QPixmap>
 #include <QList>
+#include <QDebug>
 
 #include "../Tool/toollist.h"
 #include "../TouchProbe/tp_struct.h"
@@ -196,8 +197,9 @@ struct ProjectData
     QString lastProduction;                 //Wann war das Project das letzte mal auf der Maschine
     QList<QPixmap> listPictures;            //Liste der Bilder;
     QStringList listTags;                   //Liste der Tags;
-    QString string_ProgrammDir;             //Pfad wo die Programme liegen
-
+    QString string_ProgrammDir;             //Pfad wo die NC-Programme liegen
+    QString string_LocalDir;                //Pfad der hyperMILL Projekte lokal
+    QString string_RemoteDir;               //Pfad der hyperMILL Projekte remote
     RawPart rawPart;                        //Struktur für Rohteilmasse
     FinishPart finishPart;                  //Struktur für Fertigteilmasse
     ZeroPoint zeroPoint;                    //Struktur für Nullpunkt
@@ -210,10 +212,55 @@ struct ProjectData
 
     bool operator==(const ProjectData& other) const
     {
+        qDebug() << Q_FUNC_INFO;
+
+        if(name != other.name)
+            qDebug() << Q_FUNC_INFO << name << other.name;
+
+        if(state != other.state)
+            qDebug() << Q_FUNC_INFO << state << other.state;
+
+        if(tension != other.tension)
+            qDebug() << Q_FUNC_INFO << tension << other.tension;
+
+        if(hyperMILL_File != other.hyperMILL_File)
+            qDebug() << Q_FUNC_INFO << hyperMILL_File << other.hyperMILL_File;
+
+        if(material != other.material)
+            qDebug() << Q_FUNC_INFO << material << other.material;
+
+        if(header != other.header)
+            qDebug() << Q_FUNC_INFO << header << other.header;
+
+        if(rawPart_Inspection != other.rawPart_Inspection)
+            qDebug() << Q_FUNC_INFO << rawPart_Inspection << other.rawPart_Inspection;
+
+        if(listTags != other.listTags)
+        {
+            qDebug() << Q_FUNC_INFO << "listTags";
+            qDebug() << Q_FUNC_INFO << "Liste: this";
+            foreach(QString str, listTags)
+                qDebug() << Q_FUNC_INFO << str;
+            qDebug() << Q_FUNC_INFO << "Liste: other";
+            foreach(QString str, other.listTags)
+                qDebug() << Q_FUNC_INFO << str;
+        }
+        if(rawPart != other.rawPart)
+            qDebug() << Q_FUNC_INFO << "rawPart";
+
+        if(finishPart != other.finishPart)
+            qDebug() << Q_FUNC_INFO << "finishPart";
+
+        if(zeroPoint != other.zeroPoint)
+            qDebug() << Q_FUNC_INFO << "zeroPoint";
+
+        if(*toolList != *other.toolList)
+            qDebug() << Q_FUNC_INFO << "toolList";
+
         return (name                == other.name &&
                 state               == other.state &&
                 tension             == other.tension &&
-                hyperMILL_File      == other.hyperMILL_File &&
+                //hyperMILL_File      == other.hyperMILL_File &&
                 material            == other.material &&
                 header              == other.header &&
                 rawPart_Inspection  == other.rawPart_Inspection &&
@@ -232,6 +279,7 @@ struct ProjectData
 
     bool operator!=(const ProjectData& other) const
     {
+        qDebug() << Q_FUNC_INFO;
         return !(*this == other);
     }
 };

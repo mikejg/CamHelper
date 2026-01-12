@@ -11,6 +11,8 @@ private:
     QSettings*  settings;
     QString     string_ProgrammDir;
     QString     string_MagazinDir;
+    QString     string_LocalDir;
+    QString     string_RemoteDir;
     QString     string_ToolDB;
     int         int_ToolPlaces;
     float       float_OffsetX;
@@ -23,6 +25,8 @@ public:
     //get Funktionen
     QString get_ProgrammDir()    {return settings->value("ProgrammDir", "").toString();}
     QString get_MagazinDir()     {return settings->value("MagazinDir", "").toString();}
+    QString get_LocalDir()       {return settings->value("LocalDir", "").toString();}
+    QString get_RemoteDir()      {return settings->value("RemoteDir", "").toString();}
     QString get_ToolDB()         {return settings->value("ToolDB", "").toString();}
     int     get_ToolPlaces()     {return settings->value("ToolPlaces").toInt();}
     QString get_NextCheck()      {return settings->value("NextCheck","").toString();}
@@ -33,6 +37,8 @@ public:
     //set Funktionen
     void set_ProgrammDir(QString str)   {settings->setValue("ProgrammDir", str);}
     void set_MagazinDir(QString str)    {settings->setValue("MagazinDir", str);}
+    void set_LocalDir(QString str)      {settings->setValue("LocalDir", str);}
+    void set_RemoteDir(QString str)     {settings->setValue("RemoteDir", str);}
     void set_ToolDB(QString str)        {settings->setValue("ToolDB", str);}
     void set_ToolPlaces(int p)          {settings->setValue("ToolPlaces",p);}
     void set_NextCheck(QString str)     {settings->setValue("NextCheck",str);}

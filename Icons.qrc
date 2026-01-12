@@ -95,5 +95,6 @@
         <file>Icons/Project/save.png</file>
         <file>Icons/Main/settings.png</file>
         <file>Icons/Project/tag_gif.gif</file>
+        <file>Icons/Project/upload.png</file>
     </qresource>
 </RCC>

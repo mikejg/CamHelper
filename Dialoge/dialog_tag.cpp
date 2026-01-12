@@ -24,9 +24,12 @@ Dialog_Tag::Dialog_Tag(QWidget *parent, DataBase *db) :
 {
     database = db;
     ui->setupUi(this);
-    ui->lineEdit->setEnabled(false);
-    ui->toolButton_Add->setEnabled(false);
+    //ui->lineEdit->setEnabled(false);
+    //ui->toolButton_Add->setEnabled(false);
+    ui->lineEdit->hide();
+    ui->toolButton_Add->hide();
 
+    toolButton = nullptr;
     delete ui->buttonBox;
 
     create_TagsForOpenFile();
@@ -65,7 +68,6 @@ void Dialog_Tag::create_Tags()
         {
             item->setCheckState(Qt::Checked);
             item->setForeground(Qt::darkYellow);
-            //project->add_Tag(item->text());
         }
     }
 
@@ -124,6 +126,7 @@ void Dialog_Tag::highlightChecked(QListWidgetItem* item)
         item->setForeground(Qt::gray);
         projectData->listTags.removeOne(item->text());
     }
+
     if(projectData->listTags.isEmpty())
         toolButton->startAnimation();
     else
@@ -134,12 +137,12 @@ void Dialog_Tag::highlightChecked(QListWidgetItem* item)
 
 void Dialog_Tag::slot_TagHighlighted(QListWidgetItem* item)
 {
-
     static bool blockFunction = false;
     if(blockFunction)
+    {
         return;
+    }
     blockFunction = true;
-
     QStringList stringList_Projects;
     QStringList stringList_Temp;
 
@@ -151,7 +154,6 @@ void Dialog_Tag::slot_TagHighlighted(QListWidgetItem* item)
     {
         item->setForeground(Qt::white);
     }
-
 
     //Gehe durch alle Items, wenn es angehakt ist lade alle Projecte zu dem Tag
     //und speicher sie in stringList_Temp;
@@ -167,7 +169,9 @@ void Dialog_Tag::slot_TagHighlighted(QListWidgetItem* item)
     foreach(QString str, stringList_Temp)
     {
         if(!stringList_Projects.contains(str))
+        {
             stringList_Projects.append(str);
+        }
     }
 
     if(stringList_Projects.isEmpty())
@@ -179,10 +183,18 @@ void Dialog_Tag::slot_TagHighlighted(QListWidgetItem* item)
         emit sig_NewProjectList(stringList_Projects);
     }
 
+    if(toolButton == nullptr)
+    {
+        blockFunction = false;
+        this->close();
+        return;
+    }
+
     if(projectData->listTags.isEmpty())
         toolButton->startAnimation();
     else
         toolButton->stopAnimation();
     blockFunction = false;
 
+    qDebug() << Q_FUNC_INFO << "End";
 }

@@ -9,9 +9,11 @@
 #include <QDesktopServices>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QProgressDialog>
 
 #include "../Classes/database.h"
 #include "../Classes/mfile.h"
+#include "../Classes/copier.h"
 
 #include "../Dialoge/dialog_tag.h"
 #include "../Dialoge/dialog_rawpartinspection.h"
@@ -57,6 +59,8 @@ private:
     QMessageBox* msgBox;
     float filter_Value(QString);
     void insert_Pixmap(QPixmap p);
+    QString string_LocalDir;
+    QString string_RemoteDir;
 
 public:
     explicit Tab_Project(QWidget *parent = nullptr);
@@ -85,6 +89,7 @@ public slots:
     void slot_NPPaste();
     void slot_ShowRawPartInspection();
     void slot_ShowTags();
+    void slot_PopupClosed();
     void slot_ShowProgramm();
     void slot_ShowTools();
     void slot_checkBox_Offset_RawPart_stateChanged(int);
@@ -95,6 +100,8 @@ public slots:
     void slot_NewHyperMILLFile();
     void slot_ExecFile();
     void slot_Save();
+    void slot_CheckInOut();
+    void slot_CheckInOut_Finished();
 
 };
 

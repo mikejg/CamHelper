@@ -18,18 +18,30 @@
     <normaloff>:/Icons/Project/tag.png</normaloff>:/Icons/Project/tag.png</iconset>
   </property>
   <property name="styleSheet">
-   <string notr="true">QDialog#Dialog_Tag {border-image: url(:/Icons/Main/Wallpaper5_klein.png) 0 0 0 0 stretch stretch;}
+   <string notr="true">/*QDialog#Dialog_Tag {border-image: url(:/Icons/Main/Wallpaper5_klein.png) 0 0 0 0 stretch stretch;}*/
+
+QListWidget{color:rgb(128,128,128);
+					 background:rgba(0,0,0,168); 
+                     border: 1px  solid;
+                      border-color: rgb(128, 128, 192);
+					  border-radius: 5px;}
+
 QListWidget::indicator {
-    width: 12px; /* Größe der Checkbox anpassen */
-    height: 12px; /* Größe der Checkbox anpassen */
-    border-radius: 6px; /* Macht die Checkbox rund (die Hälfte von Breite/Höhe) */
-    border: 1px solid gray; /* Rahmen, wenn nicht angewählt */
-    background-color:rgba(0,0,0,0); /* Hintergrund, wenn nicht angewählt */
+   border-radius: 3px;       /* Leichte Abrundung der Ecken */
+    width: 14px;              /* Breite des Indikators/der Checkbox */
+    height: 14px;             /* Höhe des Indikators/der Checkbox */
+    margin: 2px;              /* Abstand zum Inhalt des Items */
 }
 
 QListWidget::indicator:checked {
-    background-color: rgb(128,128,192); /* Blauer Punkt, wenn angewählt */
-    border: 3px solid gray; /* Blauer Rahmen, wenn angewählt */
+    background-color: #80FF80; /* Hintergrundfarbe wenn gecheckt (Beispiel: Grün) */
+   border-radius:3px;
+	border: 3px solid #808080;
+}
+
+QListWidget::indicator:unchecked {
+    background-color: #808080; /* Hintergrundfarbe wenn nicht gecheckt (Beispiel: Weiß) */
+    border-radius:3px
 }
 
 QListWidget::indicator:hover {
@@ -54,11 +66,7 @@ QListWidget::item:hover {
    <item>
     <widget class="QListWidget" name="listWidget_Tags">
      <property name="styleSheet">
-      <string notr="true">QListWidget {color:rgb(224,224,224);
-                  background-color: rgb(80,80,112);
-                  border-radius:5px;
-      			 /*show-decoration-selected: 1; /* make the selection span the entire width of the view */
-}</string>
+      <string notr="true"/>
      </property>
     </widget>
    </item>

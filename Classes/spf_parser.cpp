@@ -166,16 +166,6 @@ bool SPF_Parser::scann_ForTools()
     }
     projectData->toolList->sort_Number();
 
-    /*
-    stringList_Message.clear();
-    stringList_Message.append(Q_FUNC_INFO);
-    foreach(Tool* tool, toolList->get_List())
-    {
-        stringList_Message.append(tool->get_Number() + " " + tool->get_Description());
-    }
-    log->frame_Message(stringList_Message);
-    */
-
     return true;
 }
 

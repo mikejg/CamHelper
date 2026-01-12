@@ -363,6 +363,7 @@ bool DataBase::get_Project(ProjectData* pd)
         insert_OffsetRawPart(pd);  //Schreib die Rohteil Aufmasse ins Projekt
         //insert_Programm(pd);       //Schreib die Programm ins Projekt
         insert_TouchProbe(pd);     //Schreib die Antastzyklen in das Project
+        insert_Tags(pd);           //Schreib die Tags in das Project
     }
 
     return true;
@@ -407,6 +408,7 @@ ProjectData* DataBase::get_Project(QString string_ProjectId)
         insert_OffsetRawPart(projectData);  //Schreib die Rohteil Aufmasse ins Projekt
         insert_Programm(projectData);       //Schreib die Programm ins Projekt
         insert_TouchProbe(projectData);     //Schreib die Antastzyklen in das Project
+        insert_Tags(projectData);                    //Schreib die Tags in das Project
     }
 
     return projectData;
@@ -1574,6 +1576,33 @@ void DataBase::insert_Programm(ProjectData* projectData)
         projectData->list_Programm.append(programm);
     }
 
+    return;
+}
+
+void DataBase::insert_Tags(ProjectData* projectData)
+{
+    QString string_Tag;
+    QSqlQuery query (main_DataBase);
+    query.exec("SELECT * FROM Tags "
+               "WHERE Project_ID = '" + projectData->id +"' "
+               "ORDER BY tag;");
+
+    // Wenn ein Fehler auftritt wird er gelogt
+    if(!query.lastError().text().isEmpty())
+    {
+        log->vailed(Q_FUNC_INFO);
+        log->vailed(query.lastError().text());
+        return;
+    }
+
+    while(query.next())
+    {
+        string_Tag = query.value("tag").toString();
+        if(!projectData->listTags.contains(string_Tag))
+        {
+            projectData->listTags.append(string_Tag);
+        }
+    }
     return;
 }
 

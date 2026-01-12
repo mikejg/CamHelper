@@ -51,6 +51,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     dialog_Save = new Dialog_Save(this);
 
+    license = new License(this);
+    connect(license, SIGNAL(sig_ValidLicense(bool)), this, SLOT(slot_ValidLicense(bool)));
+
+    dialog_LicenseKey = new Dialog_LicenseKey(this);
+    connect(dialog_LicenseKey, SIGNAL(accepted()), this, SLOT(slot_InitApp()));
+
     //Verbinde die ToolButtons an der Seite mit Slots
     connect(ui->toolButton_Log, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_Project, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
@@ -69,7 +75,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->tab_Project, SIGNAL(sig_ShowMainProgramm()), this, SLOT(slot_ShowMainProgramm()));
 
     connect(ui->tab_Project, SIGNAL(sig_PopupShown(bool)), this, SLOT(slot_PopupOpen(bool)));
-    QTimer::singleShot(500, this, SLOT(slot_InitApp()));
+
+    license->checkRemoteFile();
+    //QTimer::singleShot(500, this, SLOT(slot_InitApp()));
 }
 
 MainWindow::~MainWindow()
@@ -157,6 +165,8 @@ void MainWindow::slot_InitApp()
     ui->toolButton_Open->setEnabled(true);
     ui->toolButton_New->setEnabled(true);
     ui->toolButton_ToolMagazin->setEnabled(true);
+    ui->toolButton_Settings->setEnabled(true);
+    ui->toolButton_Log->setEnabled(true);
 }
 
 
@@ -166,6 +176,8 @@ void MainWindow::slot_NewProject()
 
     projectData = new ProjectData;
     projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
+    projectData->string_LocalDir    = dialog_Settings->get_LocalDir();
+    projectData->string_RemoteDir   = dialog_Settings->get_RemoteDir();
 
     spf_Parser->set_ProjectData(projectData);           //übergib den Parser projectData
     if(!spf_Parser->scann_ForData())                    //Suche in den SPF Files nach Project Name_Stand_Spannung
@@ -189,8 +201,11 @@ void MainWindow::slot_NewProject()
     if(!spf_Parser->scann_ForTools())                   // Scanne SPF Files nach Werkzeugen
         return;                                         // wenn das fehlschlägt brich die Funktion ab
 
-    if(!spf_Parser->scann_ForNoXY())
-        return;
+    if(projectData->tension == "Sp1")                   // Scanne nur bei Sp1 nach NoXY
+    {
+        if(!spf_Parser->scann_ForNoXY())
+            return;
+    }
 
     //lade den Standart Comment für Spannung 0 und Spannung1
     if(projectData->tension == "Sp0" || projectData->tension == "Sp1")
@@ -244,6 +259,8 @@ void MainWindow::slot_OpenProject(QString string_ProjectId)
     qDebug() << Q_FUNC_INFO;
     projectData = dataBase->get_Project(string_ProjectId);                  //Lade die Projekdaten aus der DatenBank
     projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
+    projectData->string_LocalDir    = dialog_Settings->get_LocalDir();
+    projectData->string_RemoteDir   = dialog_Settings->get_RemoteDir();
     ui->tab_Project->set_ProjectData(projectData);                          //Zeige die Projektaten im Tab Projekt an
     ui->tab_ToolSheet->showTable(projectData);
     ui->tab_Touchprobe->clear();
@@ -259,6 +276,8 @@ void MainWindow::slot_OpenProject(QString string_Name, QString string_Tension)
 {
     projectData = dataBase->get_Project(string_Name, string_Tension);       //Lade die Projekdaten aus der DatenBank
     projectData->string_ProgrammDir = dialog_Settings->get_ProgrammDir();
+    projectData->string_LocalDir    = dialog_Settings->get_LocalDir();
+    projectData->string_RemoteDir   = dialog_Settings->get_RemoteDir();
     ui->tab_Project->set_ProjectData(projectData);                          //Zeige die Projektaten im Tab Projekt an
     ui->tab_ToolSheet->showTable(projectData);
     ui->tab_Touchprobe->clear();
@@ -674,6 +693,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
         }
         else
         {
+            qDebug() << Q_FUNC_INFO;
             event->ignore();
             dialog_Save->show();
         }
@@ -716,4 +736,33 @@ void MainWindow::slot_Close()
 void MainWindow::slot_PopupOpen(bool b)
 {
     isPopupOpen = b;
+}
+
+
+void MainWindow::slot_ValidLicense(bool bool_Valid)
+{
+    if(bool_Valid)
+    {
+        QTimer::singleShot(500, this, SLOT(slot_InitApp()));
+        logging->successful("Gültige Lizenz gefunden");
+    }
+    else
+    {
+        ui->toolButton_Project->setEnabled(false);
+        ui->toolButton_ToolList->setEnabled(false);
+        ui->toolButton_TouchProbe->setEnabled(false);
+        ui->toolButton_Check->setEnabled(false);
+        ui->toolButton_Open->setEnabled(false);
+        ui->toolButton_New->setEnabled(false);
+        ui->toolButton_ToolMagazin->setEnabled(false);
+        ui->toolButton_Settings->setEnabled(false);
+        ui->toolButton_Log->setEnabled(false);
+
+        logging->vailed(" ");
+        logging->vailed("   +-------------------------------+");
+        logging->vailed("   | KEINE Gültige Lizenz gefunden |");
+        logging->vailed("   +-------------------------------+");
+        ui->stackedWidget->setCurrentWidget(ui->tab_Logging);
+        dialog_LicenseKey->show();
+    }
 }

@@ -34,6 +34,8 @@ public:
     bool checkSettings();
     int     get_MagazinCapacity()   {return settings->get_ToolPlaces();}
     QString get_ProgrammDir()       {return settings->get_ProgrammDir();}
+    QString get_LocalDir()          {return settings->get_LocalDir();}
+    QString get_RemoteDir()         {return settings->get_RemoteDir();}
     QString get_ToolDB()            {return settings->get_ToolDB();}
 
 signals:
@@ -44,6 +46,8 @@ public slots:
     void toolButton_ProgrammDir_clicked(bool);
     void toolButton_ToolMagazin_clicked(bool);
     void toolButton_ToolDB_clicked(bool);
+    void toolButton_LocalDir_clicked(bool);
+    void toolButton_RemoteDir_clicked(bool);
 };
 
 #endif // DIALOGSETTINGS_H

@@ -75,6 +75,7 @@ public:
     void insert_ZeroPoint(ProjectData*);               //Schreibt den Nullpunkt in ein Projekt
     void insert_OffsetRawPart(ProjectData*);           //Schreibt die Rohteil Aufmasse ins Projekt
     void insert_Programm(ProjectData*);
+    void insert_Tags(ProjectData*);
     void insert_TouchProbe(ProjectData*);
     bool insert_Tool(Tool*, QString, QString);
 
