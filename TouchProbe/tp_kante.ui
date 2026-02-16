@@ -30,6 +30,10 @@ QLineEdit:focus{color:rgb(192,192,192);
 
 QComboBox{color:rgb(192,192,192);
                         background-color: rgba(255, 255, 255,32);
+                         border-radius:3px;}
+
+QPushButton{color:rgb(192,192,192);
+                        background-color: rgba(255, 255, 255,32);
                          border-radius:3px;}</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -49,7 +53,7 @@ QComboBox{color:rgb(192,192,192);
     <number>0</number>
    </property>
    <item>
-    <widget class="MComboBox" name="comboBox_Frame">
+    <widget class="TPComboBox" name="comboBox_Frame">
      <item>
       <property name="text">
        <string>Oben</string>
@@ -172,34 +176,22 @@ QComboBox{color:rgb(192,192,192);
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
+         <width>30</width>
          <height>20</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit_Aktive_NPV">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
+      <widget class="QPushButton" name="pushButton_NPV">
        <property name="minimumSize">
         <size>
          <width>120</width>
          <height>0</height>
         </size>
        </property>
-       <property name="maximumSize">
-        <size>
-         <width>120</width>
-         <height>20</height>
-        </size>
-       </property>
        <property name="text">
         <string>aktive NPV</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </item>
@@ -294,7 +286,7 @@ QComboBox{color:rgb(192,192,192);
       </spacer>
      </item>
      <item>
-      <widget class="MComboBox" name="comboBox_Messrichtung">
+      <widget class="TPComboBox" name="comboBox_Messrichtung">
        <property name="minimumSize">
         <size>
          <width>40</width>
@@ -320,7 +312,7 @@ QComboBox{color:rgb(192,192,192);
       </widget>
      </item>
      <item>
-      <widget class="MComboBox" name="comboBox_Messachse">
+      <widget class="TPComboBox" name="comboBox_Messachse">
        <property name="minimumSize">
         <size>
          <width>40</width>
@@ -571,9 +563,9 @@ QComboBox{color:rgb(192,192,192);
    <header location="global">Classes/mlineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>MComboBox</class>
+   <class>TPComboBox</class>
    <extends>QComboBox</extends>
-   <header>Classes/mcombobox.h</header>
+   <header location="global">Classes/tpcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

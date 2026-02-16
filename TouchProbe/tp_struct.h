@@ -40,6 +40,9 @@ struct Struct_Kante
     QString string_DFA;
     QString string_TSA;
     QString string_Anfahren;
+    QString string_X;
+    QString string_Y;
+    QString string_Z;
 
     bool operator==(const Struct_Kante& other) const
     {

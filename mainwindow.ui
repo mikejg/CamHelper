@@ -715,7 +715,7 @@ QFrame{border-radius:10px;
         </widget>
        </item>
        <item>
-        <widget class="QToolButton" name="toolButton_Log">
+        <widget class="MToolbutton" name="toolButton_Log">
          <property name="minimumSize">
           <size>
            <width>64</width>
@@ -1072,6 +1072,11 @@ font: 9pt &quot;Lucida Console&quot;;</string>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>MToolbutton</class>
+   <extends>QToolButton</extends>
+   <header>Classes/mtoolbutton.h</header>
+  </customwidget>
   <customwidget>
    <class>Logging</class>
    <extends>QTextEdit</extends>

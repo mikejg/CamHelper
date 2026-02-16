@@ -1048,7 +1048,7 @@ bool DataBase::create_TPKante(Struct_Kante kante, QString string_ProjectID)
     QSqlQuery query (main_DataBase);
 
     query.prepare("INSERT INTO TP_Kante (Project_ID, Project, Pos, Frame, Messrichtung, "
-                  "Messachse, Wert, DFA, TSA, Anfahren) "
+                  "Messachse, Wert, DFA, TSA, Anfahren, X, Y, Z) "
                   "VALUES (:Project_ID, "
                   ":Project, "
                   ":Pos, "
@@ -1058,7 +1058,10 @@ bool DataBase::create_TPKante(Struct_Kante kante, QString string_ProjectID)
                   ":Wert, "
                   ":DFA, "
                   ":TSA, "
-                  ":Anfahren)");
+                  ":Anfahren,"
+                  ":X,"
+                  ":Y,"
+                  ":Z)");
     query.bindValue(":Project_ID", string_ProjectID);
     query.bindValue(":Project", " ");
     query.bindValue(":Pos", kante.string_Pos);
@@ -1069,6 +1072,9 @@ bool DataBase::create_TPKante(Struct_Kante kante, QString string_ProjectID)
     query.bindValue(":DFA", kante.string_DFA);
     query.bindValue(":TSA", kante.string_TSA);
     query.bindValue(":Anfahren", kante.string_Anfahren);
+    query.bindValue(":X", kante.string_X);
+    query.bindValue(":Y", kante.string_Y);
+    query.bindValue(":Z", kante.string_Z);
 
     if(!query.exec())
     {
@@ -1675,6 +1681,9 @@ void DataBase::insert_TouchProbe(ProjectData* projectData)
         struct_Kante.string_DFA = query.value("DFA").toString();
         struct_Kante.string_TSA = query.value("TSA").toString();
         struct_Kante.string_Anfahren = query.value("Anfahren").toString();
+        struct_Kante.string_X = query.value("X").toString();
+        struct_Kante.string_Y = query.value("Y").toString();
+        struct_Kante.string_Z = query.value("Z").toString();
 
         item.state = Item_TouchProbe::Kante;
         item.Pos = struct_Kante.string_Pos.toInt();

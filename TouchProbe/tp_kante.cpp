@@ -40,6 +40,7 @@ TP_Kante::TP_Kante(QWidget *parent) :
     connect(ui->lineEdit_DFA, SIGNAL(editingFinished()), this, SIGNAL(sig_ReCreate()));
     connect(ui->lineEdit_TSA, SIGNAL(editingFinished()), this, SIGNAL(sig_ReCreate()));
     connect(ui->toolButton_Paste, SIGNAL(released()),this, SLOT(slot_setTextFromCilpBoard()));
+    connect(ui->pushButton_NPV, SIGNAL(released()), this, SLOT(slot_NPVClicked()));
 }
 
 TP_Kante::~TP_Kante()
@@ -51,13 +52,16 @@ Struct_Kante TP_Kante::get_Data()
 {
     Struct_Kante struct_Kante;
 
-    struct_Kante.string_Frame = ui->comboBox_Frame->currentText();
-    struct_Kante.string_Messrichtung = ui->comboBox_Messrichtung->currentText();
-    struct_Kante.string_Messachse = ui->comboBox_Messachse->currentText();
-    struct_Kante.string_Wert = ui->lineEdit_Wert->text();
-    struct_Kante.string_DFA = ui->lineEdit_DFA->text();
-    struct_Kante.string_TSA = ui->lineEdit_TSA->text();
-    struct_Kante.string_Anfahren = ui->textEdit_Anfahren->toPlainText();
+    struct_Kante.string_Frame =         ui->comboBox_Frame->currentText();
+    struct_Kante.string_Messrichtung =  ui->comboBox_Messrichtung->currentText();
+    struct_Kante.string_Messachse =     ui->comboBox_Messachse->currentText();
+    struct_Kante.string_Wert =          ui->lineEdit_Wert->text();
+    struct_Kante.string_DFA =           ui->lineEdit_DFA->text();
+    struct_Kante.string_TSA =           ui->lineEdit_TSA->text();
+    struct_Kante.string_Anfahren =      ui->textEdit_Anfahren->toPlainText();
+    struct_Kante.string_X =              string_X;
+    struct_Kante.string_Y =              string_Y;
+    struct_Kante.string_Z =              string_Z;
 
     return struct_Kante;
 }
@@ -71,6 +75,14 @@ void TP_Kante::set_Data(Struct_Kante struct_Kante)
     ui->lineEdit_DFA->setText(struct_Kante.string_DFA);
     ui->lineEdit_TSA->setText(struct_Kante.string_TSA);
     ui->textEdit_Anfahren->append(struct_Kante.string_Anfahren);
+
+    string_X = struct_Kante.string_X;
+    string_Y = struct_Kante.string_Y;
+    string_Z = struct_Kante.string_Z;
+
+    qDebug() << Q_FUNC_INFO << "string_X" << string_X;
+    qDebug() << Q_FUNC_INFO << "string_Y" << string_Y;
+    qDebug() << Q_FUNC_INFO << "string_Z" << string_Z;
 }
 
 void TP_Kante::slot_AxesSignsChanged(QString str)
@@ -306,14 +318,20 @@ QStringList TP_Kante::postProcessing()
         string_CYCLE978 = "CYCLE978(100,9000,,1,$Wert$,$DFA$,$TSA$,3,2,1,\"\",,0,1.01,1.01,-1.01,0.34,1,0,,1,1)";
     }
 
+    if(ui->pushButton_NPV->text() == "nur Messen")
+        string_CYCLE978 = string_CYCLE978.replace("100,9000", "0,");
     //Tisch schwenken
     stringList_PostProcessing.append("                                                                          ");
     create_NewHeaderLine();
     stringList_PostProcessing.append(frame_HeaderLine());
     stringList_PostProcessing.append("G75 Z1");
     stringList_PostProcessing.append(string_CYCL800);
+
     //Body_Kante
-    mfile->setFileName(QDir::homePath() + "/CamHelper/config/TouchProbe/Body_Kante.txt");
+    if(ui->pushButton_NPV->text() == "nur Messen")
+        mfile->setFileName(QDir::homePath() + "/CamHelper/config/TouchProbe/Body_Kante_Messen.txt");
+    else
+        mfile->setFileName(QDir::homePath() + "/CamHelper/config/TouchProbe/Body_Kante.txt");
     mfile->read_Content();
     stringList_Content = mfile->get_Content();
     foreach(QString str, stringList_Content)
@@ -338,6 +356,10 @@ QStringList TP_Kante::postProcessing()
             foreach (QString str_Anfahren, ui->textEdit_Anfahren->toPlainText().split("\n"))
             {
                 str_Anfahren = str_Anfahren.replace(",", ".");
+                str_Anfahren = str_Anfahren.replace("$CYCLE978$", string_CYCLE978);
+                str_Anfahren = str_Anfahren.replace("$Wert$", replace_Comma(ui->lineEdit_Wert->text()));
+                str_Anfahren = str_Anfahren.replace("$DFA$", replace_Comma(ui->lineEdit_DFA->text()));
+                str_Anfahren = str_Anfahren.replace("$TSA$", replace_Comma(ui->lineEdit_TSA->text()));
                 stringList_PostProcessing.append(str_Anfahren);
             }
         }
@@ -454,15 +476,28 @@ void TP_Kante::slot_setTextFromCilpBoard()
     QString text = clipboard->text();
 
     if(!text.isEmpty())
-            check_Clipboard(text);
+        check_Clipboard(text);
+
+    set_TextEditAnfahren();
+}
+
+void TP_Kante::set_TextEditAnfahren()
+{
+    QString string;
+    this->read_Anfahren();
+    ui->textEdit_Anfahren->clear();
+    set_Anfahren();
 
     if(string_X.isEmpty() || string_Y.isEmpty() || string_Z.isEmpty())
             return;
 
     if(ui->comboBox_Messachse->currentText() == "Z")
        read_Anfahren("Anfahren_KanteZ.txt");
+    else if (ui->pushButton_NPV->text() == "nur Messen")
+        read_Anfahren("Anfahren_KanteXY_Messen.txt");
     else
-       read_Anfahren("Anfahren_KanteXY.txt");
+        read_Anfahren("Anfahren_KanteXY.txt");
+
     ui->textEdit_Anfahren->clear();
 
     //Wenn die Messrichtung in Z ist
@@ -482,11 +517,11 @@ void TP_Kante::slot_setTextFromCilpBoard()
     if(ui->comboBox_Messachse->currentText() == "X" && ui->comboBox_Messrichtung->currentText() == "+")
     {
         ui->lineEdit_Wert->setText(string_X);
-        string_X = "=(" + string_X + "-7)";
+        string = "=(" + string_X + "-7)";
         foreach(QString str, stringList_ContentAnfahren)
         {
             str = str.replace("$Z$", string_Z);
-            str = str.replace("$X$", string_X);
+            str = str.replace("$X$", string);
             str = str.replace("$Y$", string_Y);
 
             ui->textEdit_Anfahren->append(str);
@@ -496,11 +531,11 @@ void TP_Kante::slot_setTextFromCilpBoard()
     if(ui->comboBox_Messachse->currentText() == "X" && ui->comboBox_Messrichtung->currentText() == "-")
     {
         ui->lineEdit_Wert->setText(string_X);
-        string_X = "=(" + string_X + "+7)";
+        string = "=(" + string_X + "+7)";
         foreach(QString str, stringList_ContentAnfahren)
         {
             str = str.replace("$Z$", string_Z);
-            str = str.replace("$X$", string_X);
+            str = str.replace("$X$", string);
             str = str.replace("$Y$", string_Y);
 
             ui->textEdit_Anfahren->append(str);
@@ -510,12 +545,12 @@ void TP_Kante::slot_setTextFromCilpBoard()
     if(ui->comboBox_Messachse->currentText() == "Y" && ui->comboBox_Messrichtung->currentText() == "+")
     {
         ui->lineEdit_Wert->setText(string_Y);
-        string_Y = "=(" + string_Y + "-7)";
+        string = "=(" + string_Y + "-7)";
         foreach(QString str, stringList_ContentAnfahren)
         {
             str = str.replace("$Z$", string_Z);
             str = str.replace("$X$", string_X);
-            str = str.replace("$Y$", string_Y);
+            str = str.replace("$Y$", string);
 
             ui->textEdit_Anfahren->append(str);
         }
@@ -524,15 +559,29 @@ void TP_Kante::slot_setTextFromCilpBoard()
     if(ui->comboBox_Messachse->currentText() == "Y" && ui->comboBox_Messrichtung->currentText() == "-")
     {
         ui->lineEdit_Wert->setText(string_Y);
-        string_Y = "=(" + string_Y + "+7)";
+        string = "=(" + string_Y + "+7)";
         foreach(QString str, stringList_ContentAnfahren)
         {
             str = str.replace("$Z$", string_Z);
             str = str.replace("$X$", string_X);
-            str = str.replace("$Y$", string_Y);
+            str = str.replace("$Y$", string);
 
             ui->textEdit_Anfahren->append(str);
         }
     }
     clipboard->clear(QClipboard::Clipboard);
+}
+
+void TP_Kante::slot_NPVClicked()
+{
+    if(ui->pushButton_NPV->text() == "aktive NPV")
+    {
+        ui->pushButton_NPV->setText("nur Messen");
+        set_TextEditAnfahren();
+    }
+    else
+    {
+        ui->pushButton_NPV->setText("aktive NPV");
+        set_TextEditAnfahren();
+    }
 }

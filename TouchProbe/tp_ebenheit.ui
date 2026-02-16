@@ -69,7 +69,7 @@ QCheckBox::indicator:checked {
     <number>0</number>
    </property>
    <item>
-    <widget class="MComboBox" name="comboBox_Frame">
+    <widget class="TPComboBox" name="comboBox_Frame">
      <item>
       <property name="text">
        <string>Oben</string>
@@ -959,9 +959,9 @@ QCheckBox::indicator:checked {
    <header location="global">Classes/mlineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>MComboBox</class>
+   <class>TPComboBox</class>
    <extends>QComboBox</extends>
-   <header>Classes/mcombobox.h</header>
+   <header location="global">Classes/tpcombobox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

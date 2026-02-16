@@ -10,15 +10,15 @@ class MToolbutton : public QToolButton
     Q_OBJECT
 private:
     QMovie* movie = nullptr;
+    QIcon mIcon;
 public:
-    MToolbutton(QWidget *parent = nullptr);
-
-    void stopAnimation();
+    MToolbutton(QWidget *parent = nullptr);  
     void setGifAnimation(QString);
-    void startAnimation();
 
 public slots:
     void slot_FrameChanged(int);
+    void stopAnimation();
+    void startAnimation();
 };
 
 

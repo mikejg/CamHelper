@@ -1,5 +1,6 @@
 #include "magazin.h"
 #include "ui_magazin.h"
+//#include <QMetaMethod>
 
 Magazin::Magazin(QWidget *parent) :
     QWidget(parent),
@@ -281,7 +282,6 @@ void Magazin::slot_MagazinChanged(QString str)
     fileSystemWatcher.removePath(str);
 
     qDebug() << Q_FUNC_INFO << str;
-    //log->message("void Magazin::slot_MagazinChanged " + str);
 
     //Warte 10 Sekunden bis die Daten vollständig geschrieben wurden
     std::this_thread::sleep_for(std::chrono::milliseconds(10000));
@@ -291,5 +291,13 @@ void Magazin::slot_MagazinChanged(QString str)
     fileSystemWatcher.addPath(str);
     connect(&fileSystemWatcher, SIGNAL(fileChanged(QString)), this, SLOT(slot_MagazinChanged(QString)));
     qDebug() << Q_FUNC_INFO << "emit sig_NewMagazin()";
+
+    //const QMetaMethod signal = QMetaMethod::fromSignal(&Magazin::sig_NewMagazin);
+
+    // Prüfen, ob jemand verbunden ist
+   /* if (isSignalConnected(signal)) {
+        qDebug() << Q_FUNC_INFO << "Signal verbunden";
+        this->dumpObjectInfo();
+    }*/
     emit sig_NewMagazin();
 }

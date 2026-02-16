@@ -34,6 +34,7 @@ public:
     void set_Data(Struct_Kante);
     QStringList postProcessing();
     void setPixmap();
+    void set_TextEditAnfahren();
     void create_NewHeaderLine();
     Struct_Kante get_Data();
 
@@ -41,7 +42,7 @@ public slots:
     void slot_AxesSignsChanged(QString);
     void slot_currentFrameChanged(QString);
     void slot_setTextFromCilpBoard();
-
+    void slot_NPVClicked();
 signals:
 };
 

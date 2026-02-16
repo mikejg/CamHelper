@@ -20,6 +20,7 @@ SOURCES += \
     Classes/roundedlabel.cpp \
     Classes/spf_parser.cpp \
     Classes/mtoolbutton.cpp \
+    Classes/tpcombobox.cpp \
     Dialoge/dialog_checkinout.cpp \
     Dialoge/dialog_init.cpp \
     Dialoge/dialog_licensekey.cpp \
@@ -82,6 +83,7 @@ HEADERS += \
     Classes/spf_parser.h \
     Classes/struct.h \
     Classes/mtoolbutton.h \
+    Classes/tpcombobox.h \
     Dialoge/dialog_checkinout.h \
     Dialoge/dialog_init.h \
     Dialoge/dialog_licensekey.h \

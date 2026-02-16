@@ -82,6 +82,8 @@ signals:
     void sig_ExportTouchprobe();
     void sig_ShowMainProgramm();
     void sig_PopupShown(bool);
+    void sig_InputCheck_Failed();
+    void sig_InputCheck_Successful();
 
 public slots:
     void slot_Export();

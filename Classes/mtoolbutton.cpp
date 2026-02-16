@@ -1,13 +1,16 @@
 #include "mtoolbutton.h"
 
 MToolbutton::MToolbutton(QWidget *parent) : QToolButton(parent)
-{}
+{
+
+}
 
 void MToolbutton::stopAnimation()
 {
     if(movie != nullptr)
         movie->stop();
-    this->setIcon(QIcon(":/Icons/Project/tag.png"));
+    //this->setIcon(QIcon(":/Icons/Project/tag.png"));
+    this->setIcon(mIcon);
 }
 
 void MToolbutton::startAnimation()
@@ -17,8 +20,10 @@ void MToolbutton::startAnimation()
         movie->start();
     }
 }
+
 void MToolbutton::setGifAnimation(QString string_Animation)
 {
+    mIcon = icon();
     movie = new QMovie(string_Animation, QByteArray(), this);
     connect(movie, SIGNAL(frameChanged(int)), this, SLOT(slot_FrameChanged(int)));
 }

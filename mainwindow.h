@@ -49,6 +49,7 @@ private:
     QIcon *ico;
     SPF_Parser* spf_Parser;
     MFile* mfile;
+
     bool forceClose;
     bool load_Programme(QStringList&);
     bool copyWerkzeugDB();

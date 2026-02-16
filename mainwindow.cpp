@@ -57,6 +57,8 @@ MainWindow::MainWindow(QWidget *parent)
     dialog_LicenseKey = new Dialog_LicenseKey(this);
     connect(dialog_LicenseKey, SIGNAL(accepted()), this, SLOT(slot_InitApp()));
 
+    ui->toolButton_Log->setGifAnimation(":/Icons/Main/Logfile2_gif.gif");
+
     //Verbinde die ToolButtons an der Seite mit Slots
     connect(ui->toolButton_Log, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
     connect(ui->toolButton_Project, SIGNAL(clicked()), this, SLOT(slot_ToolButtonClicked()));
@@ -75,6 +77,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->tab_Project, SIGNAL(sig_ShowMainProgramm()), this, SLOT(slot_ShowMainProgramm()));
 
     connect(ui->tab_Project, SIGNAL(sig_PopupShown(bool)), this, SLOT(slot_PopupOpen(bool)));
+    connect(ui->tab_Project, SIGNAL(sig_InputCheck_Failed()), ui->toolButton_Log, SLOT(startAnimation()));
+    connect(ui->tab_Project, SIGNAL(sig_InputCheck_Successful()), ui->toolButton_Log, SLOT(stopAnimation()));
+
+    connect(ui->tab_Magazin, SIGNAL(sig_NewMagazin()), this, SLOT(slot_NewToolList()));
 
     license->checkRemoteFile();
     //QTimer::singleShot(500, this, SLOT(slot_InitApp()));
@@ -94,6 +100,10 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *ev)
             ui->tab_MainProgramm->set_ProjectData(*projectData);
         }
     }
+
+    if(obj == ui->tab_Project && ev->type() == QEvent::Enter)
+        ui->toolButton_Log->stopAnimation();
+
     return true;
 }
 
@@ -168,7 +178,6 @@ void MainWindow::slot_InitApp()
     ui->toolButton_Settings->setEnabled(true);
     ui->toolButton_Log->setEnabled(true);
 }
-
 
 void MainWindow::slot_NewProject()
 {

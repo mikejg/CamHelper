@@ -42,7 +42,10 @@ void ToolSheet::set_DataBase(DataBase *db)
 
 void ToolSheet::showTable(ProjectData* pd, bool bool_Print)
 {
+    qDebug() << Q_FUNC_INFO;
+    if(pd == nullptr) return;
     projectData = pd;
+
 
     toolList_IN->clear();
     toolList_OUT->clear();

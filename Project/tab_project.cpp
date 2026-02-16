@@ -259,13 +259,18 @@ bool Tab_Project::check_InputFields(bool bool_Warning)
 
     if(!bool_Return && bool_Warning)
     {
+        /*
         msgBox->setWindowTitle(QObject::tr("Fehlerhafte Eingabe"));
         msgBox->setText(QObject::tr("Unvollständige oder fehlerhafte Eingabe im Projekt"));
         msgBox->setStandardButtons(QMessageBox::Ok);
         msgBox->setDefaultButton(QMessageBox::Ok);
         msgBox->show();
+        */
+        emit sig_InputCheck_Failed();
     }
 
+    if(bool_Return)
+        emit sig_InputCheck_Successful();
     return bool_Return;
 }
 

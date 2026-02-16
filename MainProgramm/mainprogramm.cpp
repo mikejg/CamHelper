@@ -52,6 +52,7 @@ QStringList MainProgramm::number_Programm(QStringList stringList)
     }
     return stringList_Return;
 }
+
 void MainProgramm::set_ProjectData(ProjectData pd)
 {
     projectData = pd;
@@ -174,7 +175,8 @@ QStringList MainProgramm::set_PlaceHolder(QStringList stringList_Content)
                 if(programm.TOFFL)
                 {
                     //Füge TOFFL = 0 ein
-                    stringList_Content.append("TOFFL = 0");
+                    stringList_Content.append("STOPRE");
+                    stringList_Content.append("TOFFL = real_TOFFL");
                 }
                 if(programm.NoXY)
                 {
@@ -191,6 +193,7 @@ QStringList MainProgramm::set_PlaceHolder(QStringList stringList_Content)
                 if(programm.TOFFL)
                 {
                     //Füge TOFFL = 0 ein
+                    stringList_Content.append("STOPRE");
                     stringList_Content.append("TOFFL = 0");
                 }
                 stringList_Content.append(" ");
