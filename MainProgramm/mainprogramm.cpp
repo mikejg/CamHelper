@@ -59,6 +59,8 @@ void MainProgramm::set_ProjectData(ProjectData pd)
     QString string_MainProgramm;
     this->clear();
 
+    if(pd.tension == "Sp0")
+        string_MainProgramm = QDir::homePath()+"/CamHelper/Vorlagen/Hauptprogramme/Hauptprogramm_SP0.MPF";
     if(pd.tension == "Sp1")
         string_MainProgramm = QDir::homePath()+"/CamHelper/Vorlagen/Hauptprogramme/Hauptprogramm_SP1.MPF";
     if(pd.tension == "Sp2")

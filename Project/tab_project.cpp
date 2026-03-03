@@ -129,7 +129,7 @@ bool Tab_Project::check_InputFields(bool bool_Warning)
         bool_Return = false;
     }
 
-    if(ui->lineEdit_Tension->text() == "Sp1")                       //Wird nur bei Sp1 Überprüft
+    if(ui->lineEdit_Tension->text() == "Sp1" || ui->lineEdit_Tension->text() == "Sp0")                       //Wird nur bei Sp1 Überprüft
     {
         if(!ui->lineEdit_RawPartX->check())                         //Rohteil X
         {
@@ -147,7 +147,10 @@ bool Tab_Project::check_InputFields(bool bool_Warning)
             log->vailed("Eingabefeld Rohteil Z ist fehlerhaft");
             bool_Return = false;
         }
+    }
 
+    if(ui->lineEdit_Tension->text() == "Sp1")                       //Wird nur bei Sp1 Überprüft
+    {
         if(!ui->lineEdit_FinishPartX->check())                      //Fertigteil X
         {
             log->vailed(("Eingabefeld Bauteil X ist fehlerhat"));
@@ -579,6 +582,13 @@ void Tab_Project::set_ProjectData(ProjectData* pd)
         ui->lineEdit_FinishPartZ->set_TextNecessary(true);
 
         ui->doubleSpinBox_ZRawPart->set_Zero(false);
+    }
+
+    if(projectData->tension == "Sp0")
+    {
+        ui->lineEdit_RawPartX->set_TextNecessary(true);
+        ui->lineEdit_RawPartY->set_TextNecessary(true);
+        ui->lineEdit_RawPartZ->set_TextNecessary(true);
     }
 
     //Befülle die Felder mit Daten

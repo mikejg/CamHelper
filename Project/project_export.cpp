@@ -153,12 +153,21 @@ void Project_Export::slot_NextProgramm()
                 return;
         }
 
+        if(projectData->tension == "Sp0")
+        {
+            if(!replace_Wildcart(dir_Destination.path() + "/_Sp0_Rohteil_antasten.SPF"))
+                return;
+
+            if(!replace_Wildcart(dir_Destination.path() + "/_Sp0_Reinigen.SPF"))
+                return;
+        }
+
         if(!finish_Load())
             return;
 
         dialog_Progress->hide();
 
-        if(projectData->tension != "Sp1")
+        if(projectData->tension != "Sp1" || projectData->tension != "Sp0")
             sig_Export_TouchProbe();
     }
 }
