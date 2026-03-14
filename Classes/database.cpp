@@ -320,7 +320,7 @@ QStringList DataBase::get_ToolData(QString toolID)
     return returnList;
 }
 
-bool DataBase::get_Project(ProjectData* pd)
+bool DataBase::get_Project(ProjectData* pd, bool with_ToolList)
 {
     QSqlQuery query(main_DataBase);
 
@@ -358,12 +358,15 @@ bool DataBase::get_Project(ProjectData* pd)
         insert_FinishPart(pd);     //Schreib die Fertigteilmasse ins Projekt
         insert_Picutres(pd);       //Schreib die Bilder ins Projekt
         insert_RawPart(pd);        //Schreib die Rohteilmasse ins Projekt
-        insert_ToolList(pd);       //Schreib die Werkzeuge ins Projekt
+
         insert_ZeroPoint(pd);      //Schreib den Nullpunkt ins Projekt
         insert_OffsetRawPart(pd);  //Schreib die Rohteil Aufmasse ins Projekt
         //insert_Programm(pd);       //Schreib die Programm ins Projekt
         insert_TouchProbe(pd);     //Schreib die Antastzyklen in das Project
         insert_Tags(pd);           //Schreib die Tags in das Project
+
+        if(with_ToolList)
+           insert_ToolList(pd);   //Schreib die Werkzeuge ins Projekt
     }
 
     return true;

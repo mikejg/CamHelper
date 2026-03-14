@@ -245,7 +245,7 @@ void MainWindow::slot_NewProject()
         projectData->material = database_ProjectData->material;
     }
 
-    dataBase->get_Project(projectData);
+    dataBase->get_Project(projectData, false); // Hole die Projektdaten ohne Werkzeuge
 
     ui->tab_Project->set_ProjectData(projectData);
     ui->tab_ToolSheet->showTable(projectData);

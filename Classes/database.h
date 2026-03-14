@@ -40,7 +40,7 @@ public:
     QStringList         get_LastOpenList();             //Hole mir eine Liste mit den letzten 10 ProjectNamen
     ProjectData*        get_Project(QString);           //Hole mir ein Project mit der ProjctId aus der Datenbank
     ProjectData*        get_Project(QString, QString);
-    bool                get_Project(ProjectData*);
+    bool                get_Project(ProjectData*, bool with_ToolList = true);
     bool                get_ProjectID(ProjectData*);
     bool                check_ProjectID(QString, QString);
     QString             get_ProjectID(QString, QString);
